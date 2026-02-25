@@ -17,3 +17,5 @@ matplotlib
 seaborn
 weaviate-client
 chainlit
+spacy
+biopython
