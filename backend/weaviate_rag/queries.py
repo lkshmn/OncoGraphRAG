@@ -1,66 +1,71 @@
-SPARQL_QUERY_ENTITIES = """
+ONCOLOGY_ONTOLOGY_URI = "http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#"
+
+SPARQL_QUERY_ENTITIES = f"""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX c: <http://www.semanticweb.org/lecualexandru/ontologies/2024/11/CausalAMD#>
+PREFIX ont: <{ONCOLOGY_ONTOLOGY_URI}>
 
 SELECT DISTINCT ?entity ?label ?comment ?entityType
-WHERE {
+WHERE {{
   ?entity a ?entityType .
   
-  FILTER NOT EXISTS {
+  FILTER NOT EXISTS {{
     ?subClass rdfs:subClassOf+ ?entityType .
     ?entity a ?subClass .
-  }
+  }}
   
-  ?entityType rdfs:subClassOf* c:Entity .
+  # Ensure we capture things that are subclasses of the top-level concepts
+  # Adjust 'Entity' if your top-level class is named differently (e.g., owl:Thing or specific root)
+  # For now, fetching everything that has valid types in our domain
+  ?entityType rdfs:subClassOf* ont:Entity .
 
-  OPTIONAL { ?entity rdfs:label ?label }
-  OPTIONAL { ?entity rdfs:comment ?comment }
-}
+  OPTIONAL {{ ?entity rdfs:label ?label }}
+  OPTIONAL {{ ?entity rdfs:comment ?comment }}
+}}
 """
 
-SPARQL_QUERY_PUBLICATIONS = """
+SPARQL_QUERY_PUBLICATIONS = f"""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX c: <http://www.semanticweb.org/lecualexandru/ontologies/2024/11/CausalAMD#>
+PREFIX ont: <{ONCOLOGY_ONTOLOGY_URI}>
 SELECT ?pub ?label ?comment
-WHERE {
-  ?pub a c:PUBLICATION .
-  OPTIONAL { ?pub rdfs:label ?label . }
-  OPTIONAL { ?pub rdfs:comment ?comment . }
-}
+WHERE {{
+  ?pub a ont:PUBLICATION .
+  OPTIONAL {{ ?pub rdfs:label ?label . }}
+  OPTIONAL {{ ?pub rdfs:comment ?comment . }}
+}}
 """
 
-SPARQL_QUERY_RELATIONS = """
-PREFIX c: <http://www.semanticweb.org/lecualexandru/ontologies/2024/11/CausalAMD#>
+SPARQL_QUERY_RELATIONS = f"""
+PREFIX ont: <{ONCOLOGY_ONTOLOGY_URI}>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
 
 SELECT ?subj ?pred ?obj ?publication ?subjLabel ?objLabel ?relLabel ?relComment
-WHERE {
-  {
+WHERE {{
+  {{
     SELECT ?subj ?pred ?obj ?publication
-    WHERE {
-      VALUES ?pred { 
-        c:cause c:affect c:prevent c:aggravate c:diagnose c:improve 
-        c:present c:progression c:test c:treat
-      }
+    WHERE {{
+      VALUES ?pred {{ 
+        ont:cause ont:affect ont:prevent ont:aggravate ont:diagnose ont:improve 
+        ont:present ont:progression ont:test ont:treat
+      }}
       ?subj ?pred ?obj .
-      OPTIONAL { ?subj prov:wasDerivedFrom ?publication . }
-    }
-  }
+      OPTIONAL {{ ?subj prov:wasDerivedFrom ?publication . }}
+    }}
+  }}
   UNION
-  {
-    ?rel a c:RELATION .
-    OPTIONAL { ?rel c:relation_subject   ?subj . }
-    OPTIONAL { ?rel c:relation_predicate ?pred . }
-    OPTIONAL { ?rel c:relation_object    ?obj . }
-    OPTIONAL { ?rel prov:wasDerivedFrom ?publication . }
-  }
+  {{
+    ?rel a ont:RELATION .
+    OPTIONAL {{ ?rel ont:relation_subject   ?subj . }}
+    OPTIONAL {{ ?rel ont:relation_predicate ?pred . }}
+    OPTIONAL {{ ?rel ont:relation_object    ?obj . }}
+    OPTIONAL {{ ?rel prov:wasDerivedFrom ?publication . }}
+  }}
 
-  OPTIONAL { ?subj rdfs:label ?subjLabel . }
-  OPTIONAL { ?obj  rdfs:label ?objLabel . }
-  OPTIONAL {
+  OPTIONAL {{ ?subj rdfs:label ?subjLabel . }}
+  OPTIONAL {{ ?obj  rdfs:label ?objLabel . }}
+  OPTIONAL {{
     ?pred rdfs:label ?relLabel ;
           rdfs:comment ?relComment .
-  }
-}
+  }}
+}}
 """

@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#"
+     xml:base="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:prov="http://www.w3.org/ns/prov#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG">
+        <owl:imports rdf:resource="https://www.w3.org/ns/prov-o"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral -->
+
+    <rdfs:Datatype rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral"/>
+    
+
+
+    <!-- http://www.w3.org/2001/XMLSchema#nonNegativeInteger -->
+
+    <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+    
+
+
+    <!-- http://www.w3.org/2001/XMLSchema#string -->
+
+    <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#string"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#affect -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#affect">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity affects another.</rdfs:comment>
+        <rdfs:label>Affect</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#aggravate -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#aggravate">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity aggravates another.</rdfs:comment>
+        <rdfs:label>Aggravate</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#cause -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#cause">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity causes another.</rdfs:comment>
+        <rdfs:label>Cause</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#diagnose -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#diagnose">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity diagnoses another.</rdfs:comment>
+        <rdfs:label>Diagnose</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#improve -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#improve">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity improves another.</rdfs:comment>
+        <rdfs:label>Improve</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#present -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#present">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity presents another.</rdfs:comment>
+        <rdfs:label>Present</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#prevent -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#prevent">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity prevents another.</rdfs:comment>
+        <rdfs:label>Prevent</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#progression -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#progression">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates the progression of one entity to another.</rdfs:comment>
+        <rdfs:label>Progression</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#relation_object -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#relation_object">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RELATION"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>The object entity in the relation.</rdfs:comment>
+        <rdfs:label>Relation Object</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#relation_predicate -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#relation_predicate">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RELATION"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>The predicate indicating the type of relation.</rdfs:comment>
+        <rdfs:label>Relation Predicate</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#relation_subject -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#relation_subject">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RELATION"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>The subject entity in the relation.</rdfs:comment>
+        <rdfs:label>Relation Subject</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#test -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#test">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity tests another.</rdfs:comment>
+        <rdfs:label>Test</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#treat -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#treat">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+        <rdfs:comment>Indicates that one entity treats another.</rdfs:comment>
+        <rdfs:label>Treat</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#BIOMARKER -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#BIOMARKER">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#BODY_PART -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#BODY_PART">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#COMORBIDITY -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#COMORBIDITY">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#COMPLICATION -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#COMPLICATION">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#DISEASE -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#DISEASE">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity">
+        <rdfs:comment>A general class for all entities involved in relations.</rdfs:comment>
+        <rdfs:label>Entity</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#GENE -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#GENE">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#PROGNOSIS -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#PROGNOSIS">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#PROGRESSION -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#PROGRESSION">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#PUBLICATION -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#PUBLICATION">
+        <rdfs:comment>A publication from which the relation was derived.</rdfs:comment>
+        <rdfs:label>Publication</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RELATION -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RELATION">
+        <rdfs:comment>An n-ary relation between two entities with provenance.</rdfs:comment>
+        <rdfs:label>Relation</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RISK_FACTOR -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#RISK_FACTOR">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#SYMPTOM -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#SYMPTOM">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#TEST -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#TEST">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#TREATMENT -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#TREATMENT">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#Entity"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+

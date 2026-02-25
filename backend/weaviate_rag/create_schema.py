@@ -17,35 +17,49 @@ def main():
     client = weaviate.connect_to_local()
 
     try:
+        # Check if we can connect
+        client.get_meta()
+    except Exception as e:
+        logger.error(f"Could not connect to Weaviate: {e}. Is it running?")
+        return
+
+    try:
         client.collections.delete_all()
-        logger.info("Deleted existing schema.")
+        logger.info("Deleted existing schema (Entities, Relations, Publications).")
     except Exception as e:
         logger.error(f"Error deleting schema: {e}")
 
     try:
+        # 1. Create Entity Class
         client.collections.create(
             name="Entity",
             properties=[
                 Property(name="name", data_type=DataType.TEXT),
-                Property(name="type", data_type=DataType.TEXT),
+                Property(name="type", data_type=DataType.TEXT), 
+                # e.g., Disease, Treatment, Gene
             ],
+            # Using basic text2vec-transformers (assumes container is running)
+            # If no vectorizer is configured in your docker-compose, remove vectorizer_config
             vectorizer_config=Configure.Vectorizer.text2vec_transformers()
         )
         logger.info("Created class: Entity")
 
+        # 2. Create Publication Class
         client.collections.create(
             name="Publication",
             properties=[
-                Property(name="name", data_type=DataType.TEXT),
+                Property(name="name", data_type=DataType.TEXT), # ID or Title
+                Property(name="content", data_type=DataType.TEXT), # Abstract text
             ],
             vectorizer_config=Configure.Vectorizer.text2vec_transformers()
         )
         logger.info("Created class: Publication")
 
+        # 3. Create Relation Class
         client.collections.create(
             name="Relation",
             properties=[
-                Property(name="relation_predicate", data_type=DataType.TEXT),
+                Property(name="relation_predicate", data_type=DataType.TEXT), # e.g., treats, causes
             ],
             references=[
                 ReferenceProperty(name="relation_subject", target_collection="Entity"),
@@ -61,7 +75,9 @@ def main():
 
     try:
         final_schema = client.collections.list_all()
-        logger.info("\nFinal schema in Weaviate:\n%s", final_schema)
+        # Simplified logging
+        names = [k for k in final_schema.keys()]
+        logger.info(f"Final schema classes in Weaviate: {names}")
     except Exception as e:
         logger.error(f"Error retrieving schema: {e}")
     finally:

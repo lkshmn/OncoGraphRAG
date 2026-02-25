@@ -13,13 +13,4 @@
 
 ---
 
-## Quick Links 🔗
-
-- [Chainlit Documentation](https://docs.chainlit.io) 📘
-- [Source Code](https://github.com/AlexLecu/LLMKGraph) 💻 
-- [Publications Sources](https://www.dimensions.ai) 🔍
-- [Research Team Contact](https://users.utcluj.ro/~alexlecu/) ✉️
-
----
- 
 🚀 Start chatting to explore AMD advancements!

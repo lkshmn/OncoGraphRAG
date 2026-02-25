@@ -50,7 +50,8 @@ def analyze_query(query: str) -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
-    user_query = "Can wet AMD lead to complete blindness?"
+    # Updated example for Oncology context
+    user_query = "Can immunotherapy drugs lead to skin toxicity in Melanoma patients?"
 
     total_start = time.time()
 

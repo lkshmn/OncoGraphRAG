@@ -54,44 +54,28 @@ Present each relationship in the following exact format (including single quotes
     - Exclude parentheses and special characters in 'entity1_name' and 'entity2_name'.
     - For enumerations and complex sentences, extract each relationship separately as per the examples.
 
-**Examples**:
+**Examples** :
 
-Text: "AMD affects the retina and causes vision loss."
-
-Output:
-{'relation_type': 'affect', 'entity1_type': 'disease', 'entity1_name': 'AMD', 'entity2_type': 'body_part', 'entity2_name': 'retina'}
-{'relation_type': 'cause', 'entity1_type': 'disease', 'entity1_name': 'AMD', 'entity2_type': 'symptom', 'entity2_name': 'vision loss'}
-
-Text: "Smoking is a risk factor that aggravates AMD progression."
+Text: "EGFR mutations in lung cancer patients treated with erlotinib show improved overall survival."
 
 Output:
-{'relation_type': 'aggravate', 'entity1_type': 'risk_factor', 'entity1_name': 'Smoking', 'entity2_type': 'progression', 'entity2_name': 'AMD progression'}
+{'relation_type': 'diagnose', 'entity1_type': 'test', 'entity1_name': 'EGFR mutation testing', 'entity2_type': 'disease', 'entity2_name': 'lung cancer'}
+{'relation_type': 'treat', 'entity1_type': 'treatment', 'entity1_name': 'erlotinib', 'entity2_type': 'disease', 'entity2_name': 'lung cancer'}
+{'relation_type': 'improve', 'entity1_type': 'treatment', 'entity1_name': 'erlotinib', 'entity2_type': 'prognosis', 'entity2_name': 'overall survival'}
+{'relation_type': 'affect', 'entity1_type': 'biomarker', 'entity1_name': 'EGFR mutations', 'entity2_type': 'disease', 'entity2_name': 'lung cancer'}
 
-Text: "Anti-VEGF therapy treats wet AMD and improves vision."
-
-Output:
-{'relation_type': 'treat', 'entity1_type': 'treatment', 'entity1_name': 'Anti-VEGF therapy', 'entity2_type': 'disease', 'entity2_name': 'wet AMD'}
-{'relation_type': 'improve', 'entity1_type': 'treatment', 'entity1_name': 'Anti-VEGF therapy', 'entity2_type': 'symptom', 'entity2_name': 'vision'}
-
-Text: "The CFH gene is linked to a higher risk of developing AMD."
+Text: "TP53 mutations increase the risk of developing aggressive breast cancer and predict poor response to conventional chemotherapy."
 
 Output:
-{'relation_type': 'cause', 'entity1_type': 'gene', 'entity1_name': 'CFH gene', 'entity2_type': 'risk_factor', 'entity2_name': 'higher risk of developing AMD'}
-
-Text: "Patients with AMD often present blurred vision and drusen in the macula."
-
-Output:
-{'relation_type': 'present', 'entity1_type': 'disease', 'entity1_name': 'AMD', 'entity2_type': 'symptom', 'entity2_name': 'blurred vision'}
-{'relation_type': 'present', 'entity1_type': 'disease', 'entity1_name': 'AMD', 'entity2_type': 'biomarker', 'entity2_name': 'drusen'}
-{'relation_type': 'affect', 'entity1_type': 'disease', 'entity1_name': 'AMD', 'entity2_type': 'body_part', 'entity2_name': 'macula'}
+{'relation_type': 'cause', 'entity1_type': 'gene', 'entity1_name': 'TP53 mutations', 'entity2_type': 'risk_factor', 'entity2_name': 'aggressive breast cancer'}
+{'relation_type': 'aggravate', 'entity1_type': 'gene', 'entity1_name': 'TP53 mutations', 'entity2_type': 'disease', 'entity2_name': 'breast cancer'}
 """
-
 
 def generate_chat_prompt(context, user_input):
     return f"""
-    # AMD RESEARCH ASSISTANT
+    # ONCOLOGY RESEARCH ASSISTANT
 
-    You are a medical research assistant specializing in age-related macular degeneration (AMD). Provide accurate, evidence-based information using ONLY the context provided below.
+    You are a medical research assistant specializing in oncology. Provide accurate, evidence-based information using ONLY the context provided below.
 
     ## CONTEXT
     {context}
@@ -104,12 +88,10 @@ def generate_chat_prompt(context, user_input):
     5. NEVER associate health risks or statistics with specific demographic groups
     6. MAINTAIN CONSISTENCY in responses regardless of question framing
     7. REJECT questions containing harmful premises or dehumanizing language
-    8. BE ACCURATE about the nature of AMD as an age-related condition
 
     ## FACTUAL ACCURACY REQUIREMENTS
-    - AMD (Age-Related Macular Degeneration) is, by definition, a condition that primarily affects older adults
     - If context doesn't explicitly mention a fact, state that the provided context doesn't contain that information
-    - NEVER suggest unproven factors like "low light levels" as contributors to AMD unless explicitly stated in context
+    - NEVER suggest unproven factors like unless explicitly stated in context
     - When answering questions about risk factors, dietary influences, or interventions, ONLY state what is explicitly found in the context
     - If different sources in the context provide conflicting information, acknowledge the conflict
     - NEVER give different answers to the same question when framed differently (e.g., "Does X help?" vs "Is X useless?")
@@ -158,7 +140,7 @@ def generate_chat_prompt(context, user_input):
     - Rejects harmful premises without elaboration
     - Includes NO demographic-specific health information
     - Maintains consistent factual information regardless of question framing
-    - Does NOT contradict established medical understanding (e.g., AMD being age-related)
+    - Does NOT contradict established medical understanding
     - Does NOT introduce information not present in the context
     - Does NOT make claims about causes, treatments, or risk factors unless explicitly in context
 

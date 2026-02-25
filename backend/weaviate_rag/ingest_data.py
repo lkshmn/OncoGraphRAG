@@ -1,16 +1,19 @@
 import weaviate
 import logging
+import os
 from SPARQLWrapper import SPARQLWrapper, JSON
 from dotenv import load_dotenv
 from queries import SPARQL_QUERY_ENTITIES, SPARQL_QUERY_RELATIONS, SPARQL_QUERY_PUBLICATIONS
 
 logger = logging.getLogger(__name__)
-
-
-GRAPHDB_SPARQL_ENDPOINT = "http://localhost:7200/repositories/amd_repo_gpt_4o_mini"
-WEAVIATE_URL = "http://localhost:8080"
-
 load_dotenv()
+
+# Configuration
+GRAPHDB_BASE = os.getenv("GRAPHDB_URL", "http://localhost:7200")
+REPO_ID = os.getenv("REPO_ID", "oncograph")
+GRAPHDB_SPARQL_ENDPOINT = f"{GRAPHDB_BASE}/repositories/{REPO_ID}"
+
+WEAVIATE_URL = os.getenv("WEAVIATE_URL", "http://localhost:8080")
 
 client = weaviate.connect_to_local()
 
@@ -58,7 +61,8 @@ def create_publication(iri: str, label: str, comment: str) -> str:
         name_val = label if label else uri_to_local_name(iri)
 
         data = {
-            "name": name_val
+            "name": name_val,
+            "content": comment if comment else "" # Map comment or text to content
         }
 
         publication = client.collections.get("Publication")
@@ -75,13 +79,18 @@ def create_relation(subj_uuid: str, pred_str: str, obj_uuid: str, pub_uuid: str 
     """
     try:
         relations = client.collections.get("Relation")
+        
+        refs = {
+            "relation_subject": subj_uuid,
+            "relation_object": obj_uuid,
+        }
+        
+        if pub_uuid:
+            refs["hasPublication"] = pub_uuid
+
         result = relations.data.insert(
             properties={"relation_predicate": pred_str},
-            references={
-                "relation_subject": subj_uuid,
-                "relation_object": obj_uuid,
-                "hasPublication": pub_uuid
-            }
+            references=refs
         )
         return result
     except Exception as e:
@@ -100,7 +109,8 @@ def ingest_entities():
         for row in bindings:
             try:
                 entity_iri = row["entity"]["value"]
-                entity_type_iri = row["entityType"]["value"]
+                # Use safe get for optional bindings
+                entity_type_iri = row.get("entityType", {}).get("value", "http://...#Entity")
                 label = row.get("label", {}).get("value", "")
                 comment = row.get("comment", {}).get("value", "")
 
@@ -167,8 +177,8 @@ def ingest_relations():
                 pub_uuid = publication_uuid_map.get(publication_iri, None)
 
                 if not subj_uuid or not obj_uuid:
-                    logger.warning("Skipping relation %s-%s-%s (missing references)",
-                                   subj_iri, pred_iri, obj_iri)
+                    # Often happens if entities weren't ingested properly
+                    # logger.warning("Skipping relation %s-%s-%s (missing references)", subj_iri, pred_iri, obj_iri)
                     continue
 
                 relation_name = uri_to_local_name(pred_iri)
@@ -190,12 +200,11 @@ def ingest_relations():
 def main():
     """Main ingestion workflow"""
     logging.basicConfig(
-        level=logging.WARNING,
+        level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
     )
-
-    app_logger = logging.getLogger(__name__)
-    app_logger.setLevel(logging.INFO)
+    
+    logger.info(f"Connecting to GraphDB at {GRAPHDB_SPARQL_ENDPOINT}")
 
     try:
         ingest_entities()

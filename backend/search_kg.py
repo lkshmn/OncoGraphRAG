@@ -2,7 +2,7 @@ from SPARQLWrapper import SPARQLWrapper, POST, JSON
 import re
 import os
 
-ONT_NAMESPACE = 'http://www.semanticweb.org/lecualexandru/ontologies/2024/11/CausalAMD#'
+ONT_NAMESPACE = 'http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#'
 GRAPHDB_URL = os.getenv('GRAPHDB_URL', 'http://localhost:7200')
 
 def construct_sparql_query(query_text, filter_type):

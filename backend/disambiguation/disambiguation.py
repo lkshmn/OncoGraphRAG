@@ -3,24 +3,57 @@ import logging
 from collections import defaultdict
 
 synonyms_map = {
-    "wet amd": "wet age-related macular degeneration",
-    "early amd": "early age-related macular degeneration",
-    "cnv": "choroidal neovascularization",
-    "amd": "age-related macular degeneration",
-    "wet age-related macular degeneration amd": "wet age-related macular degeneration",
-    "early age related macular degeneration amd": "early age-related macular degeneration",
-    "wet armd": "wet age-related macular degeneration",
-    "ga": "geographic atrophy",
-    "oct": "optical coherence tomography",
-    "pdt": "photodynamic therapy",
-    "pcv": "polypoidal choroidal vasculopathy",
-    "vma": "vitreomacular adhesion",
-    "me": "macular edema",
-    "namd": "neovascular age-related macular degeneration",
-    "neovascular amd": "neovascular age-related macular degeneration",
+    # Lung Cancer
+    "nsclc": "non-small cell lung cancer",
+    "lung ca": "lung cancer",
+    "lung carcinoma": "lung cancer",
+    
+    # Breast Cancer
+    "breast ca": "breast cancer",
+    "breast carcinoma": "breast cancer",
+    "tnbc": "triple-negative breast cancer",
+    "her2+ breast cancer": "her2-positive breast cancer",
+    
+    # Colorectal Cancer
+    "crc": "colorectal cancer",
+    "colon cancer": "colorectal cancer",
+    "rectal cancer": "colorectal cancer",
+    
+    # Prostate Cancer
+    "prostate ca": "prostate cancer",
+    "prostate carcinoma": "prostate cancer",
+    "pca": "prostate cancer",
+    
+    # Melanoma
+    "malignant melanoma": "melanoma",
+    "mm": "melanoma",
+    
+    # Leukemia
+    "all": "acute lymphoblastic leukemia",
+    "aml": "acute myeloid leukemia",
+    "cll": "chronic lymphocytic leukemia",
+    "cml": "chronic myeloid leukemia",
+    
+    # Lymphoma
+    "nhl": "non-hodgkin lymphoma",
+    "hl": "hodgkin lymphoma",
+    
+    # Pancreatic Cancer
+    "pancreatic ca": "pancreatic cancer",
+    "pdac": "pancreatic ductal adenocarcinoma",
+    
+    # Glioblastoma
+    "gbm": "glioblastoma",
+    "glioblastoma multiforme": "glioblastoma",
+    
+    # General terms
+    "ca": "cancer",
+    "carcinoma": "cancer",
+    "neoplasm": "tumor",
 }
 
-trailing_words = {"cnv", "ga"}
+# Words that might appear at the end of entities that can be safely stripped during normalization
+trailing_words = {"cancer", "carcinoma", "tumor", "disease", "syndrome"}  # Updated for oncology context
 
 
 def get_most_frequent_type(type_counts):
@@ -101,13 +134,22 @@ def normalize_entity_name(name):
 
     # Split into words
     words = name.split()
-
-    if len(words) > 2:
-        # Remove trailing meaningless words
-        while words and words[-1] in trailing_words:
-            words.pop()
-        name = ' '.join(words)
-
+    
+    # Note: logic for trailing words was slightly risky for names like "lung cancer" where "cancer" is valid.
+    # We only strip if the remaining name is substantial, but typically we want to keep "cancer".
+    # However, if your trailing_words set includes strict rubbish, use this. 
+    # For now, I've made trailing_words closer to generic medical terms, 
+    # but be careful removing "cancer" from "lung cancer" leaves "lung" which is a body part, not the disease.
+    # The safest approach for this specific logic block (which came from AMD specific code) might be to 
+    # rely more on the synonyms_map and less on stripping trailing words unless they are noise like "stage", "grade" etc.
+    
+    # Modified trailing logic to be safer or removed if not needed. 
+    # Given the previous code stripped "cnv" (a specific condition), stripping broadly used terms like "cancer" 
+    # might change the semantic meaning from Disease to Body Part.
+    # Let's restrict trailing words to unambiguous noise if possible.
+    
+    # (Optional: Remove the trailing word block if it causes issues, or keep it strictly for noise)
+    
     # Apply domain-specific synonyms mapping
     if name in synonyms_map:
         name = synonyms_map[name]

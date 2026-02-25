@@ -7,19 +7,23 @@ import logging
 import re
 import sys
 import os
+
+# Ensure backend modules are reachable
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# Assuming prompts.py is in backend/prompts.py
 from backend.prompts import generate_chat_prompt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = "llama3.2"
+# LM Studio Configuration
+LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_URL", "http://localhost:1234/v1")
+LMSTUDIO_API_KEY = "lm-studio" # Local server usually ignores this, but client requires it
+# Default model identifier
+LMSTUDIO_MODEL = os.getenv("LMSTUDIO_MODEL", "local-model") 
+
 MAX_HISTORY = 10
 TEMPERATURE = 0.3
-
-LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234/v1")
-LMSTUDIO_MODEL = os.getenv("LMSTUDIO_MODEL", DEFAULT_MODEL)
-LMSTUDIO_API_KEY = os.getenv("LMSTUDIO_API_KEY", "lm-studio")  # any string works
 
 client = OpenAI(base_url=LMSTUDIO_BASE_URL, api_key=LMSTUDIO_API_KEY)
 
@@ -31,7 +35,7 @@ def sanitize_input(text):
 
     text = text.replace('\r', '').replace('\x08', '')
 
-    if len(text) > 500:
+    if len(text) > 2000: # Increased limit for medical queries
         logger.warning(f"Input exceeds maximum length: {len(text)} chars")
         return None
 
@@ -64,6 +68,7 @@ def retrieve(user_input):
         if sanitized_input is None:
             return "No relevant information available due to potential security concerns."
 
+        # Initialize RAG System
         analyzer = GraphRAGSystem(sanitized_input)
         context = analyzer.analyze()
 
@@ -73,19 +78,12 @@ def retrieve(user_input):
         return f"Error retrieving information: {str(e)}"
 
 
-async def async_generator(sync_gen):
-    while True:
-        try:
-            yield next(sync_gen)
-        except StopIteration:
-            break
-
-
 async def create_system_prompt(user_input):
     sanitized_input = sanitize_input(user_input)
 
     context = retrieve(sanitized_input)
     logger.info("Retrieved context for user query")
+    # Using the shared prompt generator
     system_prompt = generate_chat_prompt(context, sanitized_input)
 
     return system_prompt
@@ -94,15 +92,16 @@ async def create_system_prompt(user_input):
 @cl.on_chat_start
 async def start_chat():
     cl.user_session.set("history", [])
-    cl.user_session.set("model", DEFAULT_MODEL)
+    cl.user_session.set("model", LMSTUDIO_MODEL)
     cl.user_session.set("temperature", TEMPERATURE)
 
+    # Simplified settings for local usage
     settings = await cl.ChatSettings(
         [
             Select(
                 id="model",
                 label="Select Model",
-                values=["llama3.2", "deepseek-r1", "gemma3"],
+                values=[LMSTUDIO_MODEL],
                 initial_index=0,
             ),
             Slider(
@@ -115,12 +114,6 @@ async def start_chat():
             )
         ]
     ).send()
-
-    if settings:
-        if "model" in settings:
-            cl.user_session.set("model", settings["model"])
-        if "temperature" in settings:
-            cl.user_session.set("temperature", float(settings["temperature"]))
 
 
 @cl.on_settings_update
@@ -135,18 +128,18 @@ async def on_settings_update(settings):
 async def set_starters():
     return [
         cl.Starter(
-            label="Early Signs of AMD",
-            message="What subtle vision changes might indicate early stage AMD?",
+            label="Lung Cancer Symptoms",
+            message="What are the common early symptoms of Non-Small Cell Lung Cancer?",
             icon="/public/idea.svg",
         ),
         cl.Starter(
-            label="Latest AMD research",
-            message="What emerging treatments show promise for dry AMD?",
+            label="Immunotherapy Research",
+            message="What are the latest clinical trial findings for immunotherapy in Triple-Negative Breast Cancer?",
             icon="/public/learn.svg",
         ),
         cl.Starter(
-            label="Current AMD Treatments",
-            message="How do anti-VEGF injections compare to emerging gene therapies for wet AMD?",
+            label="Treatment Comparison",
+            message="Compare the efficacy of chemotherapy vs targeted therapy for advanced Melanoma.",
             icon="/public/write.svg",
         )
     ]
@@ -154,7 +147,6 @@ async def set_starters():
 
 @cl.on_message
 async def main(message: cl.Message):
-    start_time = time.time()
     user_input = message.content.strip()
 
     if user_input.lower() == "/clear":
@@ -166,13 +158,15 @@ async def main(message: cl.Message):
 
     if sanitized_input is None:
         await cl.Message(
-            content="I can only provide factual information about AMD research. Your question contains patterns that may compromise security or exceed length limits. Please rephrase your question.").send()
+            content="I can only provide factual information about oncology research. Your question contains patterns that may compromise security or exceed length limits. Please rephrase your question.").send()
         return
-
+    
+    # Generate system prompt with RAG context
     system_prompt = await create_system_prompt(sanitized_input)
 
     history = cl.user_session.get("history", [])
 
+    # Ensure system prompt is fresh for every turn to include new retrieved context
     if not history or history[0].get("role") != "system":
         history.insert(0, {"role": "system", "content": system_prompt})
     else:
@@ -180,6 +174,7 @@ async def main(message: cl.Message):
 
     history.append({"role": "user", "content": sanitized_input})
 
+    # Keep history within limits
     if len(history) > MAX_HISTORY * 2 + 1:
         history = [history[0]] + history[-(MAX_HISTORY * 2):]
 
@@ -187,24 +182,25 @@ async def main(message: cl.Message):
     temperature = cl.user_session.get("temperature", TEMPERATURE)
 
     try:
-        completion = client.chat.completions.create(
+        msg = cl.Message(content="")
+        await msg.send()
+        
+        # Stream response from Local LLM
+        stream = client.chat.completions.create(
             model=model_name,
             messages=history,
             temperature=temperature,
             stream=True,
         )
 
-        final_answer = cl.Message(content="")
-        async with cl.Step(name="Analyzing Research") as thinking_step:
-            async for chunk in completion:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    token = chunk.choices[0].delta.content
-                    await final_answer.stream_token(token)
+        for chunk in stream:
+            if chunk.choices and chunk.choices[0].delta.content:
+                token = chunk.choices[0].delta.content
+                await msg.stream_token(token)
 
-        await thinking_step.update()
-        await final_answer.send()
+        await msg.update()
 
-        history.append({"role": "assistant", "content": final_answer.content})
+        history.append({"role": "assistant", "content": msg.content})
         cl.user_session.set("history", history)
 
     except Exception as e:
