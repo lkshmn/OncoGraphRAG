@@ -35,40 +35,47 @@ You are an AI language model tasked with:
     - **improve**: Entity1 enhances or makes Entity2 better.
     - **affect**: Entity1 influences or has an impact on Entity2.
 
-**Instructions**:
+3. **Efficacy Extraction**:
+   - For every relationship involving a **treatment**, **test**, or **risk_factor**, extract the statistical efficacy or outcome.
+   - **Applicability**: Efficacy is primarily for experimental findings. For basic facts (e.g., "Lung cancer affects the lungs", "Cough is a symptom of cancer"), efficacy is usually not applicable.
+   - **Mandatory Format**: Start the efficacy value with one of the following tags followed by the evidence:
+     - **Positive**: If the text indicates significant improvement, p<0.05, increased survival, or effectiveness.
+     - **Negative**: If the text indicates no significant difference, did not improve, ineffective, or failed.
+     - **Neutral**: If results are inconclusive, conflicting, or require further study.
+     - **Not Stated**: If no outcome data is mentioned OR if efficacy is not applicable (e.g., symptom descriptions).
 
+   - **Examples**:
+     - "Positive: improved overall survival (p=0.001)"
+     - "Negative: no significant difference in recurrence"
+     - "Neutral: results were inconclusive"
+     - "Not Stated"
+
+**Instructions**:
 - **Consistency Rule**: Assign the same entity type to an entity whenever it appears, based on the definitions provided.
 - **Ambiguous Entities**: If an entity could belong to multiple types, refer to the definitions and choose the most appropriate type based on context.
-- **Important**: Use **only** the specified labels for entity and relation types. Do not use synonyms, variations, or introduce new labels.
+- **Important**: Do NOT ignore relationships just because they lack efficacy data. Extract ALL relationships found.
+- Use **only** the specified labels for entity and relation types. Do not use synonyms, variations, or introduce new labels.
 
 **Output Format**:
 
 Present each relationship in the following exact format (including single quotes and braces):
 
-{'relation_type': 'relation_type_value', 'entity1_type': 'entity1_type_value', 'entity1_name': 'entity1_name_value', 'entity2_type': 'entity2_type_value', 'entity2_name': 'entity2_name_value'}
+{'relation_type': 'relation_type_value', 'entity1_type': 'entity1_type_value', 'entity1_name': 'entity1_name_value', 'entity2_type': 'entity2_type_value', 'entity2_name': 'entity2_name_value', 'efficacy': 'efficacy_value'}
 
 **Output Only the Relationships**:
     - Replace placeholders with appropriate values from the text.
     - **Ensure 'entity1_type' and 'entity2_type' are **only** from the specified labels.**
     - **Do not include any additional text, explanations, or numbers.**
     - Exclude parentheses and special characters in 'entity1_name' and 'entity2_name'.
-    - For enumerations and complex sentences, extract each relationship separately as per the examples.
+    - For enumerations and complex sentences, extract each relationship separately.
 
 **Examples** :
 
-Text: "EGFR mutations in lung cancer patients treated with erlotinib show improved overall survival."
+Text: "EGFR mutations in lung cancer patients treated with erlotinib show improved overall survival (p=0.001)."
 
 Output:
-{'relation_type': 'diagnose', 'entity1_type': 'test', 'entity1_name': 'EGFR mutation testing', 'entity2_type': 'disease', 'entity2_name': 'lung cancer'}
-{'relation_type': 'treat', 'entity1_type': 'treatment', 'entity1_name': 'erlotinib', 'entity2_type': 'disease', 'entity2_name': 'lung cancer'}
-{'relation_type': 'improve', 'entity1_type': 'treatment', 'entity1_name': 'erlotinib', 'entity2_type': 'prognosis', 'entity2_name': 'overall survival'}
-{'relation_type': 'affect', 'entity1_type': 'biomarker', 'entity1_name': 'EGFR mutations', 'entity2_type': 'disease', 'entity2_name': 'lung cancer'}
-
-Text: "TP53 mutations increase the risk of developing aggressive breast cancer and predict poor response to conventional chemotherapy."
-
-Output:
-{'relation_type': 'cause', 'entity1_type': 'gene', 'entity1_name': 'TP53 mutations', 'entity2_type': 'risk_factor', 'entity2_name': 'aggressive breast cancer'}
-{'relation_type': 'aggravate', 'entity1_type': 'gene', 'entity1_name': 'TP53 mutations', 'entity2_type': 'disease', 'entity2_name': 'breast cancer'}
+{'relation_type': 'diagnose', 'entity1_type': 'test', 'entity1_name': 'EGFR mutation testing', 'entity2_type': 'disease', 'entity2_name': 'lung cancer', 'efficacy': 'Not Stated'}
+{'relation_type': 'treat', 'entity1_type': 'treatment', 'entity1_name': 'erlotinib', 'entity2_type': 'disease', 'entity2_name': 'lung cancer', 'efficacy': 'Positive: improved overall survival (p=0.001)'}
 """
 
 def generate_chat_prompt(context, user_input):
@@ -112,11 +119,11 @@ def generate_chat_prompt(context, user_input):
 
     ### FOR HARMFUL OR DEHUMANIZING QUESTIONS
     If a question contains stigmatizing language:
-    "I cannot provide information that frames individuals with medical conditions in a stigmatizing way. People with medical conditions deserve dignity and respect. I'd be happy to provide factual information about AMD using respectful language."
+    "I cannot provide information that frames individuals with medical conditions in a stigmatizing way. People with medical conditions deserve dignity and respect. I'd be happy to provide factual information about cancer using respectful language."
 
     ### FOR PERSONAL MEDICAL ADVICE REQUESTS
     If a question asks for personalized guidance:
-    "I cannot provide personalized medical advice. The information I can share is general in nature and based solely on the provided research context. For guidance specific to individual situations, consultation with qualified healthcare providers specializing in ophthalmology is essential."
+    "I cannot provide personalized medical advice. The information I can share is general in nature and based solely on the provided research context. For guidance specific to individual situations, consultation with qualified healthcare providers specializing in oncology is essential."
 
     ### FOR GENERAL QUESTIONS
     1. Begin with: "According to the provided research context..."

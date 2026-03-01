@@ -1,6 +1,7 @@
 .env
-frontend\node_modules
-backend\.venv
-data/pubmed_cancer_findings.json
-data/pubmed_oncology_relations_10.json
-backend\__pycache__
+frontend/node_modules
+backend/.venv
+data/extracted relations
+data/abstracts
+backend/__pycache__
+papers

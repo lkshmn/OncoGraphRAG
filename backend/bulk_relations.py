@@ -14,10 +14,58 @@ load_dotenv()
 
 GRAPHDB_URL = os.getenv('GRAPHDB_URL', 'http://localhost:7200')
 LMSTUDIO_URL = os.getenv('LMSTUDIO_URL', 'http://localhost:1234/v1/chat/completions')
-# Default model identifier for LM Studio's local server (often ignored by the server, but required by API)
 LMSTUDIO_MODEL = os.getenv('LMSTUDIO_MODEL', 'local-model') 
 
 ONT_BASE = "http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#"
+
+def calculate_confidence_score(trial_phase, efficacy_text):
+    """
+    Calculates a confidence score (0-100) based on trial phase and efficacy wording.
+    Expects efficacy_text to start with tags like "Positive:", "Negative:", etc.
+    """
+    score = 50 # Base score for Unknown/Other
+    
+    # Highest priority trials first
+    phase_map = {
+        'randomized controlled trial': 95,
+        'phase iv': 92,
+        'phase 4': 92,
+        'phase iii': 90,
+        'phase 3': 90,
+        'phase ii': 75,
+        'phase 2': 75,
+        'phase i': 60,
+        'phase 1': 60
+    }
+    
+    # normalize inputs
+    t_phase = str(trial_phase).lower()
+    eff_text = str(efficacy_text).strip().lower()
+    
+    # 1. Base score from Phase
+    for key, val in phase_map.items():
+        if key in t_phase:
+            score = val
+            break
+            
+    # 2. Adjust based on precise Efficacy Tags (from prompts.py)
+    
+    if eff_text.startswith("negative"):
+        score -= 20
+    elif eff_text.startswith("neutral") or eff_text.startswith("inconclusive"):
+        score -= 10
+    elif eff_text.startswith("not stated") or eff_text == "not stated":
+        score -= 20
+    elif eff_text.startswith("positive"):
+        score += 5
+    
+    # Fallback to keyword search if LLM missed the tag format
+    elif any(x in eff_text for x in ["no significant", "did not improve", "ineffective", "no benefit", "failed"]):
+        score -= 20
+    elif any(x in eff_text for x in ["significant", "p<0.0", "increased survival", "effective", "improved"]):
+        score += 5
+        
+    return min(max(score, 0), 100)  # Clamp between 0 and 100
 
 def generate_relations_lmstudio(text):
     """Generate relations using LM Studio API (local LLM)"""
@@ -33,9 +81,9 @@ def generate_relations_lmstudio(text):
                     {"role": "user", "content": user_prompt.strip()}
                 ],
                 "temperature": 0,
-                "max_tokens": 2000,
+                "max_tokens": 2500,
             },
-            timeout=120, # Increased timeout for local inference
+            timeout=180, 
         )
         response.raise_for_status()
         return response
@@ -56,15 +104,31 @@ def is_valid_relation(data):
             isinstance(data.get('entity2_name'), str)
     )
 
-def validate_output(output):
-    # Regex to find dictionary-like strings in the output
-    pattern = r"\{'relation_type': '.*?', 'entity1_type': '.*?', 'entity1_name': '.*?', 'entity2_type': '.*?', 'entity2_name': '.*?'\}"
+def validate_output(output, metadata_phase="Unknown"):
+    # Updated pattern to capture optional efficacy
+    pattern = r"\{'relation_type': '.*?', 'entity1_type': '.*?', 'entity1_name': '.*?', 'entity2_type': '.*?', 'entity2_name': '.*?', 'efficacy': '.*?'\}"
+    
     matches = re.findall(pattern, output)
     dicts = []
+    
+    # Fallback to loose json line parsing if regex misses multiline dictionaries
+    if not matches and "{" in output:
+        for line in output.split('\n'):
+             line = line.strip()
+             if line.startswith("{") and line.endswith("}"):
+                 matches.append(line)
+
     for match in matches:
         try:
             data = ast.literal_eval(match)
             if is_valid_relation(data):
+                # Inject metadata passed from the download script
+                data['trial_phase'] = metadata_phase
+                
+                # Calculate Score
+                score = calculate_confidence_score(metadata_phase, data.get('efficacy', ''))
+                data['confidence_score'] = score
+                
                 dicts.append(data)
             else:
                 logging.warning(f"Invalid data fields in: {data}")
@@ -72,24 +136,32 @@ def validate_output(output):
             logging.warning(f"Failed to parse match: {match}. Error: {e}")
     return dicts
 
-def extract_relations(abstracts, model="lmstudio"):
+def extract_relations(abstracts, model="lmstudio", verbose=True):
     """
     Main entry point for extracting relations. 
-    Accepts a list of abstract dictionaries [{'id':..., 'text':...}].
+    Accepts a list of abstract dictionaries.
+    verbose: If False, suppresses print statements (useful for item-by-item processing loops).
     """
     relations = []
     total = len(abstracts)
     
-    print(f"Starting extraction for {total} abstracts using LM Studio...")
+    if verbose:
+        print(f"Starting extraction for {total} abstracts using LM Studio...")
     
     for i, abstract in enumerate(abstracts):
-        print(f"Processing {i + 1}/{total} (ID: {abstract.get('id', 'unknown')})")
+        if verbose:
+            print(f"Processing {i + 1}/{total} (ID: {abstract.get('id', 'unknown')})")
+        
+        # Pull trial phase from metadata if available, else default
+        phase_meta = abstract.get('trial_phase_metadata', 'Unknown')
         
         response = generate_relations_lmstudio(abstract["text"])
         
         if response and response.status_code == 200:
             content = response.json()["choices"][0]["message"]["content"]
-            matches = validate_output(content)
+            
+            # Pass metadata to validator to inject into relations
+            matches = validate_output(content, metadata_phase=phase_meta)
             
             pub_id = {'pub_id': abstract.get('id')}
             for match in matches:
@@ -97,7 +169,8 @@ def extract_relations(abstracts, model="lmstudio"):
             
             relations.extend(matches)
         else:
-            print(f"Skipping index {i}: Failed to get valid response.")
+            if verbose:
+                print(f"Skipping index {i}: Failed to get valid response.")
 
     return relations
 
@@ -108,6 +181,7 @@ def create_sparql_queries_for_bulk_import(relations, batch_size=200):
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX ont: <{ONT_BASE}>
     PREFIX prov: <http://www.w3.org/ns/prov#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     """
     sparql_queries = []
 
@@ -121,12 +195,14 @@ def create_sparql_queries_for_bulk_import(relations, batch_size=200):
             # Sanitize inputs
             subject_name = sanitize_entity_name(relation["entity1_name"])
             object_name = sanitize_entity_name(relation["entity2_name"])
-            
-            # Ensure valid predicate mapping if needed, otherwise use sanitized type
             relation_type = sanitize_entity_name(relation["relation_type"])
-            
             entity1_type = sanitize_entity_name(relation["entity1_type"]).upper()
             entity2_type = sanitize_entity_name(relation["entity2_type"]).upper()
+            
+            # Metadata
+            score = relation.get('confidence_score', 50)
+            phase = relation.get('trial_phase', 'Unknown').replace("'", "").replace('"', '')
+            efficacy = relation.get('efficacy', 'Not stated').replace("'", "").replace('"', '')
 
             # Generate URIs
             relation_id = f"REL_{uuid.uuid4()}"
@@ -135,12 +211,15 @@ def create_sparql_queries_for_bulk_import(relations, batch_size=200):
             predicate_uri = f"ont:{relation_type}"
             object_uri = f"ont:{object_name}"
 
-            # Relation Node Triple
+            # Relation Node Triple with Data Properties
             triple = (
                 f"{relation_uri} rdf:type ont:RELATION ;\n"
                 f"  ont:relation_subject {subject_uri} ;\n"
                 f"  ont:relation_predicate {predicate_uri} ;\n"
-                f"  ont:relation_object {object_uri} "
+                f"  ont:relation_object {object_uri} ;\n"
+                f"  ont:confidenceScore \"{score}\"^^xsd:integer ;\n"
+                f"  ont:trialPhase \"{phase}\"^^xsd:string ;\n"
+                f"  ont:efficacyEvidence \"{efficacy}\"^^xsd:string "
             )
 
             # Provenance

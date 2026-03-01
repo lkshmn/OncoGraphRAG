@@ -23,9 +23,30 @@ LMSTUDIO_API_KEY = "lm-studio"
 LMSTUDIO_MODEL = os.getenv("LMSTUDIO_MODEL", "local-model") 
 
 # initialize GraphDB connection
+# FIX: Removed the specific named GRAPH clause. Now querying the default graph so it finds schema regardless of context.
 graph = OntotextGraphDBGraph(
     query_endpoint=f"{GRAPHDB_BASE_URL}/repositories/{REPO_ID}",
-    query_ontology=f"CONSTRUCT {{?s ?p ?o}} FROM <{ONTOLOGY_BASE_URI}> WHERE {{?s ?p ?o}}",
+    query_ontology="""
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+        CONSTRUCT {
+            ?s rdf:type ?type .
+            ?s rdfs:subClassOf ?super .
+            ?s rdfs:domain ?domain .
+            ?s rdfs:range ?range .
+            ?s rdfs:label ?label .
+        } 
+        WHERE {
+            ?s rdf:type ?type .
+            FILTER (?type IN (owl:Class, owl:ObjectProperty, owl:DatatypeProperty))
+            OPTIONAL { ?s rdfs:subClassOf ?super }
+            OPTIONAL { ?s rdfs:domain ?domain }
+            OPTIONAL { ?s rdfs:range ?range }
+            OPTIONAL { ?s rdfs:label ?label }
+        }
+    """,
 )
 
 # Initialize Local LLM
@@ -36,17 +57,27 @@ llm = ChatOpenAI(
     temperature=0, 
 )
 
-# Custom Prompt to force fetching Citations (PMIDs)
-# FIX: Added strict formatting instructions to preventing Markdown wrapping
+# Custom Prompt to force fetching Citations (PMIDs) and Confidence Scores
 GRAPH_QA_PROMPT_TEMPLATE = """
-Task: Generate a SPARQL query to answer the user's question.
+Task: Generate a SPARQL query to answer the user's question with evidence confidence.
 You are querying an Oncology Knowledge Graph.
 The graph structure uses Reification for relations:
 - Relations are nodes of type <{ontology_uri}RELATION>.
-- A relation node links a Subject, Predicate, and Object via:
-  <{ontology_uri}relation_subject>, <{ontology_uri}relation_predicate>, <{ontology_uri}relation_object>.
-- Provenance/Citation is linked to the RELATION node via <http://www.w3.org/ns/prov#wasDerivedFrom>.
-- The object of 'wasDerivedFrom' is a Publication URI (e.g., ont:PUB_123456). Extract the numeric ID part for the citation.
+- A relation node has:
+  * <{ontology_uri}relation_subject> (The source entity)
+  * <{ontology_uri}relation_predicate> (The type of relation, e.g., <{ontology_uri}treat>)
+  * <{ontology_uri}relation_object> (The target entity)
+  * <{ontology_uri}confidenceScore> (Integer 0-100)
+  * <{ontology_uri}trialPhase> (String)
+  * <{ontology_uri}efficacyEvidence> (String)
+- Provenance is linked via <http://www.w3.org/ns/prov#wasDerivedFrom>.
+
+**IMPORTANT DATA FORMAT NOTES:**
+1. Entities do NOT have rdfs:label. You must filter by the URI string.
+   - INCORRECT: ?s rdfs:label "Trastuzumab"
+   - CORRECT: FILTER(REGEX(STR(?s), "Trastuzumab", "i"))
+2. Relation predicates are objects of the triplet.
+   - Example: ?rel <{ontology_uri}relation_predicate> <{ontology_uri}treat> .
 
 The ontology schema is:
 {schema}
@@ -54,13 +85,14 @@ The ontology schema is:
 Question: {prompt}
 
 Guideline:
-- Always select ?citation (the PMID or source ID) alongside the answer fields.
-- If multiple publications support a fact, group them using GROUP_CONCAT.
+- Select ?subject ?object ?score ?phase ?efficacy ?citation
+- Use FILTER(REGEX(STR(?var), "SearchTerm", "i")) to find entities.
+- Order results by DESC(?score).
+- Limit to 10 results.
 
 CRITICAL: 
-- DO NOT use Markdown backticks (```).
-- DO NOT include explanations.
 - Output ONLY the raw SPARQL query starting with PREFIX.
+- Do NOT use Markdown backticks.
 
 SPARQL Query:
 """
@@ -70,16 +102,6 @@ PROMPT = PromptTemplate(
     partial_variables={"ontology_uri": ONTOLOGY_BASE_URI},
     template=GRAPH_QA_PROMPT_TEMPLATE,
 )
-
-# Subclass to Clean SPARQL if the LLM ignores instructions (Local LLMs often do)
-class RobustGraphQAChain(OntotextGraphDBQAChain):
-    def _call(self, inputs):
-        # Intercept mostly to ensure we can debug or patch if needed, 
-        # but LangChain doesn't make it easy to hook just the SPARQL generation output 
-        # without overriding `_call` or `_get_sparql`.
-        # For simplicity, we stick to the prompt engineering fix first.
-        # However, checking if existing `ontotext_graphdb` chain has a hook.
-        return super()._call(inputs)
 
 # Create QA Chain with the custom prompt
 chain = OntotextGraphDBQAChain.from_llm(
@@ -92,14 +114,15 @@ chain = OntotextGraphDBQAChain.from_llm(
 
 def get_response(user_input):
     try:
+        # Enhanced input description for the answer generation step (which happens inside the chain after SPARQL execution)
         enhanced_input = (
             f"{user_input} "
-            "Important: specify the answer and list the supporting PubMed IDs (PMIDs). "
-            "Format citations as markdown links: [PMID](https://pubmed.ncbi.nlm.nih.gov/PMID/)."
+            "Important: Answer based on the graph results. "
+            "For each finding, mention the Confidence Score (0-100), Trial Phase, and specific Efficacy found in the data. "
+            "List supporting PMIDs as [PMID](url)."
         )
         
-        # The chain takes 'query' as the input key for the generic Invoke method,
-        # and blindly maps it to the 'prompt' variable inside the template.
+        # The chain takes the input and runs the SPARQL generation -> Execution -> Answer generation
         response = chain.invoke({chain.input_key: enhanced_input})
         
         return response[chain.output_key]
@@ -118,16 +141,6 @@ if "chat_history" not in st.session_state:
         AIMessage(content="Hello! I am an oncology assistant powered by your local Knowledge Graph. Ask me about cancer types, treatments, or clinical findings."),
     ]
 
-# User input
-user_query = st.chat_input("Type your medical question here...")
-if user_query is not None and user_query != "":
-    st.session_state.chat_history.append(HumanMessage(content=user_query))
-    
-    with st.spinner("Querying Knowledge Graph..."):
-        response_text = get_response(user_query)
-        
-    st.session_state.chat_history.append(AIMessage(content=response_text))
-
 # Render Conversation
 for message in st.session_state.chat_history:
     if isinstance(message, AIMessage):
@@ -136,3 +149,19 @@ for message in st.session_state.chat_history:
     elif isinstance(message, HumanMessage):
         with st.chat_message("Human"):
             st.write(message.content)
+
+# User input
+user_query = st.chat_input("Type your medical question here...")
+if user_query is not None and user_query != "":
+    # Add user message to history
+    st.session_state.chat_history.append(HumanMessage(content=user_query))
+    with st.chat_message("Human"):
+        st.write(user_query)
+    
+    # Get and add AI response
+    with st.chat_message("AI"):
+        with st.spinner("Querying Knowledge Graph..."):
+            response_text = get_response(user_query)
+            st.write(response_text)
+            
+    st.session_state.chat_history.append(AIMessage(content=response_text))

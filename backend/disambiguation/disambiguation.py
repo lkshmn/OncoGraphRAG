@@ -3,53 +3,63 @@ import logging
 from collections import defaultdict
 
 synonyms_map = {
-    # Lung Cancer
-    "nsclc": "non-small cell lung cancer",
-    "lung ca": "lung cancer",
-    "lung carcinoma": "lung cancer",
-    
     # Breast Cancer
     "breast ca": "breast cancer",
     "breast carcinoma": "breast cancer",
     "tnbc": "triple-negative breast cancer",
     "her2+ breast cancer": "her2-positive breast cancer",
-    
+    "dcis": "breast cancer",
+
+    # Lung Cancer
+    "nsclc": "non-small cell lung cancer",
+    "sclc": "small cell lung cancer",
+    "lung ca": "lung cancer",
+    "lung carcinoma": "lung cancer",
+    "bronchogenic carcinoma": "lung cancer",
+
     # Colorectal Cancer
     "crc": "colorectal cancer",
     "colon cancer": "colorectal cancer",
     "rectal cancer": "colorectal cancer",
+    "colon ca": "colorectal cancer",
     
     # Prostate Cancer
     "prostate ca": "prostate cancer",
     "prostate carcinoma": "prostate cancer",
     "pca": "prostate cancer",
-    
+    "castration-resistant prostate cancer": "prostate cancer", 
+    "crpc": "prostate cancer",
+
     # Melanoma
     "malignant melanoma": "melanoma",
     "mm": "melanoma",
-    
+    "cutaneous melanoma": "melanoma",
+
+    # Oral Cancer
+    "oral cavity cancer": "oral cancer",
+    "mouth cancer": "oral cancer",
+    "oral squamous cell carcinoma": "oral cancer",
+    "oscc": "oral cancer",
+    "tongue cancer": "oral cancer",
+
     # Leukemia
     "all": "acute lymphoblastic leukemia",
     "aml": "acute myeloid leukemia",
     "cll": "chronic lymphocytic leukemia",
     "cml": "chronic myeloid leukemia",
+    "leukaemia": "leukemia",
     
-    # Lymphoma
-    "nhl": "non-hodgkin lymphoma",
-    "hl": "hodgkin lymphoma",
-    
-    # Pancreatic Cancer
-    "pancreatic ca": "pancreatic cancer",
-    "pdac": "pancreatic ductal adenocarcinoma",
-    
-    # Glioblastoma
-    "gbm": "glioblastoma",
-    "glioblastoma multiforme": "glioblastoma",
-    
+    # Cervical Cancer
+    "cervical ca": "cervical cancer",
+    "cervix cancer": "cervical cancer",
+    "cc": "cervical cancer",
+    "cervical intraepithelial neoplasia": "cervical cancer", # often precursor but grouped for retrieval context
+
     # General terms
     "ca": "cancer",
     "carcinoma": "cancer",
     "neoplasm": "tumor",
+    "metastasis": "metastatic",
 }
 
 # Words that might appear at the end of entities that can be safely stripped during normalization
@@ -158,62 +168,59 @@ def normalize_entity_name(name):
 
 
 def refine_relations(relations):
-    unique_relations_set = set()
-    refined_relations = []
+    """
+    Processes a list of raw relations to:
+    1. Sanitize entity names
+    2. Resolve synonyms (simple distinct)
+    3. Deduplicate exact relationship matches
+    4. PRESERVE Metadata (efficacy, phase, scores)
+    """
+    
+    unique_rels = {}
+    refined_list = []
 
     for rel in relations:
-        entity1_name = normalize_entity_name(rel.get("entity1_name", ""))
-        entity2_name = normalize_entity_name(rel.get("entity2_name", ""))
+        s_name = sanitize_entity_name(rel.get('entity1_name'))
+        o_name = sanitize_entity_name(rel.get('entity2_name'))
+        pred = sanitize_entity_name(rel.get('relation_type'))
+        
+        # Create a unique key for deduplication
+        # Now including efficacy/phase in key to distinguish different findings for same entity pair
+        # If you want to merge findings, key would just be s_name+pred+o_name
+        # Here we treat unique findings (even same entities) as distinct if the evidence differs
+        
+        # However, GraphDB needs distinct Reified Relation nodes. 
+        # We will pass through all valid relations, sanitized.
+        
+        new_rel = {
+            "entity1_name": s_name,
+            "entity1_type": rel.get('entity1_type'),
+            "relation_type": pred,
+            "entity2_name": o_name,
+            "entity2_type": rel.get('entity2_type'),
+            # Preserving Metadata
+            "confidence_score": rel.get('confidence_score', 50),
+            "trial_phase": rel.get('trial_phase', 'Unknown'),
+            "efficacy": rel.get('efficacy', 'Not stated'),
+            "pub_id": rel.get('pub_id')
+        }
+        
+        refined_list.append(new_rel)
 
-        # Check if names are empty after normalization
-        if not entity1_name or not entity2_name:
-            logging.warning(f"Empty entity names after normalization in relation: {rel}")
-            continue
-
-        # Check for self-relations if not desired
-        if entity1_name == entity2_name:
-            logging.warning(f"Self-relation detected and skipped: {rel}")
-            continue
-
-        rel_tuple = (
-            rel.get("relation_type"),
-            rel.get("entity1_type"),
-            entity1_name,
-            rel.get("entity2_type"),
-            entity2_name,
-            rel.get("pub_id")
-        )
-
-        if rel_tuple not in unique_relations_set:
-            unique_relations_set.add(rel_tuple)
-            refined_relations.append({
-                "relation_type": rel.get("relation_type"),
-                "entity1_type": rel.get("entity1_type"),
-                "entity1_name": entity1_name,
-                "entity2_type": rel.get("entity2_type"),
-                "entity2_name": entity2_name,
-                "pub_id": rel.get("pub_id")
-            })
-        else:
-            logging.info(f"Duplicate relation skipped: {rel}")
-
-    refined_relations = resolve_entity_types(refined_relations)
-
-    return refined_relations
+    return refined_list
 
 
 def sanitize_entity_name(name):
-    replacements = {
-        'µ': 'u',
-        'ö': 'o',
-        'é': 'e',
-    }
-
-    for char, replacement in replacements.items():
-        name = name.replace(char, replacement)
-
-    # Replace spaces and special characters with underscores
-    name = re.sub(r'[\s\W]+', '_', name)
-    # Remove leading and trailing underscores
-    name = name.strip('_')
-    return name
+    """
+    Cleans up entity names for URI generation.
+    - Replaces spaces with underscores
+    - Removes special characters
+    - Lowercase
+    """
+    if not name:
+        return "unknown"
+    
+    # Remove special characters except alphanumeric, hyphen, underscore
+    clean = re.sub(r'[^a-zA-Z0-9\-\_ ]', '', str(name))
+    clean = clean.strip().replace(" ", "_").lower()
+    return clean
