@@ -3,5 +3,7 @@ frontend/node_modules
 backend/.venv
 data/extracted relations
 data/abstracts
+data/evaluation
 backend/__pycache__
 papers
+extra

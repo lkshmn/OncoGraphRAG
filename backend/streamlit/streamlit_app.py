@@ -14,7 +14,7 @@ load_dotenv()
 GRAPHDB_BASE_URL = os.getenv("GRAPHDB_URL", "http://localhost:7200")
 REPO_ID = os.getenv("REPO_ID", "oncograph")
 
-# Ontology Namespace
+# Obsidian/Ontology Namespace
 ONTOLOGY_BASE_URI = "http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#"
 
 # LM Studio Configuration
@@ -23,7 +23,6 @@ LMSTUDIO_API_KEY = "lm-studio"
 LMSTUDIO_MODEL = os.getenv("LMSTUDIO_MODEL", "local-model") 
 
 # initialize GraphDB connection
-# FIX: Removed the specific named GRAPH clause. Now querying the default graph so it finds schema regardless of context.
 graph = OntotextGraphDBGraph(
     query_endpoint=f"{GRAPHDB_BASE_URL}/repositories/{REPO_ID}",
     query_ontology="""
@@ -33,17 +32,11 @@ graph = OntotextGraphDBGraph(
         
         CONSTRUCT {
             ?s rdf:type ?type .
-            ?s rdfs:subClassOf ?super .
-            ?s rdfs:domain ?domain .
-            ?s rdfs:range ?range .
             ?s rdfs:label ?label .
         } 
         WHERE {
             ?s rdf:type ?type .
             FILTER (?type IN (owl:Class, owl:ObjectProperty, owl:DatatypeProperty))
-            OPTIONAL { ?s rdfs:subClassOf ?super }
-            OPTIONAL { ?s rdfs:domain ?domain }
-            OPTIONAL { ?s rdfs:range ?range }
             OPTIONAL { ?s rdfs:label ?label }
         }
     """,
@@ -57,38 +50,58 @@ llm = ChatOpenAI(
     temperature=0, 
 )
 
-# Custom Prompt to force fetching Citations (PMIDs) and Confidence Scores
+# Custom Prompt with CORRECTED Directionality
 GRAPH_QA_PROMPT_TEMPLATE = """
-Task: Generate a SPARQL query to answer the user's question with evidence confidence.
+Task: Generate a SPARQL query to answer the user's question.
 You are querying an Oncology Knowledge Graph.
-The graph structure uses Reification for relations:
-- Relations are nodes of type <{ontology_uri}RELATION>.
-- A relation node has:
-  * <{ontology_uri}relation_subject> (The source entity)
-  * <{ontology_uri}relation_predicate> (The type of relation, e.g., <{ontology_uri}treat>)
-  * <{ontology_uri}relation_object> (The target entity)
-  * <{ontology_uri}confidenceScore> (Integer 0-100)
-  * <{ontology_uri}trialPhase> (String)
-  * <{ontology_uri}efficacyEvidence> (String)
-- Provenance is linked via <http://www.w3.org/ns/prov#wasDerivedFrom>.
 
-**IMPORTANT DATA FORMAT NOTES:**
-1. Entities do NOT have rdfs:label. You must filter by the URI string.
-   - INCORRECT: ?s rdfs:label "Trastuzumab"
-   - CORRECT: FILTER(REGEX(STR(?s), "Trastuzumab", "i"))
-2. Relation predicates are objects of the triplet.
-   - Example: ?rel <{ontology_uri}relation_predicate> <{ontology_uri}treat> .
+**PREFIXES (REQUIRED):**
+PREFIX ont: <{ontology_uri}>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+**DATA STRUCTURE:**
+1. **Treatments** are usually the SUBJECT (Source).
+2. **Diseases** are usually the OBJECT (Target).
+   - Triple Pattern: `<Treatment> <treats> <Disease>`
+   - Query Pattern: `?treatment ont:treat ?disease` (via Reification node)
+
+**INSTRUCTIONS:**
+1. **Finding Treatments**: 
+   - Look for `?rel ont:relation_object ?disease`.
+   - Look for `?rel ont:relation_subject ?treatment`.
+2. **Filtering**: Apply regex filter to the `?disease` label (The Object).
+3. **Labels**: Always join `rdfs:label` to get readable names.
+
+**EXAMPLE:**
+*Question:* "What treats breast cancer?"
+*Query:*
+SELECT ?treatmentLabel ?score ?phase ?efficacy ?citation WHERE {{
+    ?rel a ont:RELATION .
+    ?rel ont:relation_predicate ont:treat .
+    
+    # Direction: Treatment (Subject) -> treats -> Disease (Object)
+    ?rel ont:relation_subject ?treatment .
+    ?rel ont:relation_object ?disease .
+
+    # Filter the Disease (Object)
+    ?disease rdfs:label ?diseaseLabel .
+    FILTER(REGEX(?diseaseLabel, "Breast.*Cancer", "i")) . 
+
+    # Get Treatment Label
+    OPTIONAL {{ ?treatment rdfs:label ?treatmentLabel }} .
+
+    # Metadata
+    OPTIONAL {{ ?rel ont:confidenceScore ?score }} .
+    OPTIONAL {{ ?rel ont:trialPhase ?phase }} .
+    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacy }} .
+    OPTIONAL {{ ?rel prov:wasDerivedFrom ?citation }} .
+}} ORDER BY DESC(?score) LIMIT 10
 
 The ontology schema is:
 {schema}
 
 Question: {prompt}
-
-Guideline:
-- Select ?subject ?object ?score ?phase ?efficacy ?citation
-- Use FILTER(REGEX(STR(?var), "SearchTerm", "i")) to find entities.
-- Order results by DESC(?score).
-- Limit to 10 results.
 
 CRITICAL: 
 - Output ONLY the raw SPARQL query starting with PREFIX.
@@ -103,7 +116,7 @@ PROMPT = PromptTemplate(
     template=GRAPH_QA_PROMPT_TEMPLATE,
 )
 
-# Create QA Chain with the custom prompt
+# Create QA Chain
 chain = OntotextGraphDBQAChain.from_llm(
     llm,
     graph=graph,
@@ -114,7 +127,7 @@ chain = OntotextGraphDBQAChain.from_llm(
 
 def get_response(user_input):
     try:
-        # Enhanced input description for the answer generation step (which happens inside the chain after SPARQL execution)
+        # Enhanced input description
         enhanced_input = (
             f"{user_input} "
             "Important: Answer based on the graph results. "
@@ -122,12 +135,10 @@ def get_response(user_input):
             "List supporting PMIDs as [PMID](url)."
         )
         
-        # The chain takes the input and runs the SPARQL generation -> Execution -> Answer generation
         response = chain.invoke({chain.input_key: enhanced_input})
         
         return response[chain.output_key]
     except Exception as e:
-        # Fallback error handling if parsing failed due to markdown
         if "Expected {SelectQuery" in str(e):
              return "The model generated an invalid query format (Markdown). Please try again."
         return f"Error processing query: {str(e)}"
@@ -138,7 +149,7 @@ st.title("Chat with Oncology Knowledge Graph")
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
-        AIMessage(content="Hello! I am an oncology assistant powered by your local Knowledge Graph. Ask me about cancer types, treatments, or clinical findings."),
+        AIMessage(content="Hello! I am an oncology research assistant powered by a Knowledge Graph. Ask me about cancer types, treatments, or clinical findings."),
     ]
 
 # Render Conversation
@@ -153,12 +164,10 @@ for message in st.session_state.chat_history:
 # User input
 user_query = st.chat_input("Type your medical question here...")
 if user_query is not None and user_query != "":
-    # Add user message to history
     st.session_state.chat_history.append(HumanMessage(content=user_query))
     with st.chat_message("Human"):
         st.write(user_query)
     
-    # Get and add AI response
     with st.chat_message("AI"):
         with st.spinner("Querying Knowledge Graph..."):
             response_text = get_response(user_query)
