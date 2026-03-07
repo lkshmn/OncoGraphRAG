@@ -100,7 +100,7 @@ llm = ChatOpenAI(
     temperature=0,
 )
 
-# Custom Prompt with CORRECTED Directionality
+# SPARQL QueryGeneration Prompt
 GRAPH_QA_PROMPT_TEMPLATE = """
 Task: Generate a SPARQL query to answer the user's question.
 You are querying an Oncology Knowledge Graph.
@@ -111,84 +111,151 @@ PREFIX prov: <http://www.w3.org/ns/prov#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 **DATA STRUCTURE:**
-1. **Treatments** are usually the SUBJECT (Source).
-2. **Diseases** are usually the OBJECT (Target).
-   - Triple Pattern: `<Treatment> <treats> <Disease>`
-   - Query Pattern: `?treatment ont:treat ?disease` (via Reification node)
+Relations are stored as reified nodes of type `ont:RELATION` with:
+- `ont:relation_subject` — the source entity
+- `ont:relation_predicate` — one of: `ont:cause`, `ont:treat`, `ont:present`, `ont:diagnose`, `ont:aggravate`, `ont:prevent`, `ont:improve`, `ont:affect`
+- `ont:relation_object` — the target entity
+
+Entity types: DISEASE, SYMPTOM, TREATMENT, RISK_FACTOR, TEST, GENE, BIOMARKER, COMPLICATION, PROGNOSIS, COMORBIDITY, PROGRESSION, BODY_PART
+
+Any entity type can be subject or object. Do NOT assume treatments are always subjects or diseases are always objects.
+
+**RELATION DEFINITIONS (use these to choose the correct predicate):**
+- `ont:treat` — Subject is used to manage or cure Object
+- `ont:cause` — Subject results in or is the reason for Object
+- `ont:present` — Subject exhibits or shows signs of Object
+- `ont:diagnose` — Subject identifies the presence of Object
+- `ont:aggravate` — Subject worsens or intensifies Object
+- `ont:prevent` — Subject stops or hinders the occurrence of Object
+- `ont:improve` — Subject enhances or makes Object better
+- `ont:affect` — Subject influences or has an impact on Object
 
 **INSTRUCTIONS:**
-1. **Finding Entities**: 
-   - Look for `?rel ont:relation_object ?disease`.
-   - Look for `?rel ont:relation_subject ?treatment`.
-2. **Filtering**: ALWAYS use case-insensitive substring matching using `REGEX(STR(?label), "search.*term", "i")`. Replace spaces in the user's search term with `.*` to handle complex multi-word entities (e.g., "Breast.*Cancer", "anthracyclines.*plus.*vinorelbine").
-3. **Labels**: Always join `rdfs:label` to get readable names for entities (treatments, diseases, etc.).
-4. **Citations/PMIDs**: Publications are linked via `prov:wasDerivedFrom` and the PMID is encoded directly in the URI (e.g., `ont:12345678`). Publications do NOT have `rdfs:label`. Always select the citation URI directly as `?citation` — do NOT attempt `?citation rdfs:label ?pmidLabel` or any label lookup on citations.
+1. **Choosing the predicate**: Map the user's question to the correct relation predicate. "treats" → `ont:treat`, "causes" → `ont:cause`, "diagnoses" → `ont:diagnose`, "improves" → `ont:improve`, "aggravates/worsens" → `ont:aggravate`, "prevents" → `ont:prevent`, "presents/symptoms" → `ont:present`, "affects" → `ont:affect`.
+2. **When the relation type is unknown**: If the user asks a general question like "What do we know about X?" without specifying a relation type, do NOT filter by `ont:relation_predicate`. Instead, select `?predicateLabel` and retrieve all relations involving the entity.
+3. **Filtering**: ALWAYS use case-insensitive regex: `FILTER(REGEX(STR(?label), "search.*term", "i"))`. Replace spaces with `.*`.
+4. **Labels**: Always join `rdfs:label` to get readable names.
+5. **Citations/PMIDs**: Publications are linked via `prov:wasDerivedFrom`. The PMID is in the URI itself (e.g., `ont:pmid12345678`). Publications do NOT have `rdfs:label`. Select the citation URI directly as `?citation`.
+6. **Metadata columns**: Use EXACTLY these variable names:
+   - `?reliabilityScore` — integer (0-100) from `ont:reliabilityScore`
+   - `?trialPhase` — string from `ont:trialPhase`
+   - `?efficacyEvidence` — text from `ont:efficacyEvidence`
+   These are DIFFERENT fields. Do NOT confuse them.
 
-**EXAMPLE 1: User asks for treatments for a specific disease**
+**EXAMPLE 1: Specific relation type — "What does X treat?"**
 *Question:* "What are the various treatments for breast cancer?"
 *Query:*
-SELECT ?treatmentLabel ?score ?phase ?efficacy ?citation WHERE {{
-
+SELECT ?subjectLabel ?reliabilityScore ?trialPhase ?efficacyEvidence ?citation WHERE {{
     ?rel a ont:RELATION .
     ?rel ont:relation_predicate ont:treat .
-    
-    # Direction: Treatment (Subject) -> treats -> Disease (Object)
-    ?rel ont:relation_subject ?treatment .
-    ?rel ont:relation_object ?disease .
+    ?rel ont:relation_subject ?subject .
+    ?rel ont:relation_object ?object .
 
-    # Filter the Disease (Object) using broad regex and STR() conversion
-    ?disease rdfs:label ?diseaseLabel .
-    FILTER(REGEX(STR(?diseaseLabel), "breast.*cancer", "i")) . 
+    ?object rdfs:label ?objectLabel .
+    FILTER(REGEX(STR(?objectLabel), "breast.*cancer", "i")) .
 
-    # Get Treatment Label
-    OPTIONAL {{ ?treatment rdfs:label ?treatmentLabel }} .
-
-    # Metadata
-    OPTIONAL {{ ?rel ont:reliabilityScore ?score }} .
-    OPTIONAL {{ ?rel ont:trialPhase ?phase }} .
-    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacy }} .
-
-    # Citation: select URI directly (PMID is in the URI, no rdfs:label exists)
+    OPTIONAL {{ ?subject rdfs:label ?subjectLabel }} .
+    OPTIONAL {{ ?rel ont:reliabilityScore ?reliabilityScore }} .
+    OPTIONAL {{ ?rel ont:trialPhase ?trialPhase }} .
+    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacyEvidence }} .
     OPTIONAL {{ ?rel prov:wasDerivedFrom ?citation }} .
-}} ORDER BY DESC(?score) LIMIT 10
+}} ORDER BY DESC(?reliabilityScore) LIMIT 10
 
-**EXAMPLE 2: User asks what a specific treatment is used for**
-*Question:* "What diseases are treated by vinorelbine?"
+**EXAMPLE 2: Specific relation type — "What does X improve?"**
+*Question:* "What improves sentinel node biopsy?"
 *Query:*
-SELECT ?diseaseLabel ?score ?phase ?efficacy ?citation WHERE {{
-
+SELECT ?subjectLabel ?reliabilityScore ?trialPhase ?efficacyEvidence ?citation WHERE {{
     ?rel a ont:RELATION .
-    ?rel ont:relation_predicate ont:treat .
-    
-    # Direction: Treatment (Subject) -> treats -> Disease (Object)
-    ?rel ont:relation_subject ?treatment .
-    ?rel ont:relation_object ?disease .
+    ?rel ont:relation_predicate ont:improve .
+    ?rel ont:relation_subject ?subject .
+    ?rel ont:relation_object ?object .
 
-    # Filter the Treatment (Subject) using broad regex and STR() conversion
-    ?treatment rdfs:label ?treatmentLabel .
-    FILTER(REGEX(STR(?treatmentLabel), "vinorelbine", "i")) . 
+    ?object rdfs:label ?objectLabel .
+    FILTER(REGEX(STR(?objectLabel), "sentinel.*node.*biopsy", "i")) .
 
-    # Get Disease Label
-    OPTIONAL {{ ?disease rdfs:label ?diseaseLabel }} .
-
-    # Metadata
-    OPTIONAL {{ ?rel ont:reliabilityScore ?score }} .
-    OPTIONAL {{ ?rel ont:trialPhase ?phase }} .
-    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacy }} .
-
-    # Citation: select URI directly (PMID is in the URI, no rdfs:label exists)
+    OPTIONAL {{ ?subject rdfs:label ?subjectLabel }} .
+    OPTIONAL {{ ?rel ont:reliabilityScore ?reliabilityScore }} .
+    OPTIONAL {{ ?rel ont:trialPhase ?trialPhase }} .
+    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacyEvidence }} .
     OPTIONAL {{ ?rel prov:wasDerivedFrom ?citation }} .
-}} ORDER BY DESC(?score) LIMIT 10
+}} ORDER BY DESC(?reliabilityScore) LIMIT 10
+
+**EXAMPLE 3: Specific relation type — "What aggravates X?"**
+*Question:* "What risk factors aggravate sentinel node biopsy?"
+*Query:*
+SELECT ?subjectLabel ?reliabilityScore ?trialPhase ?efficacyEvidence ?citation WHERE {{
+    ?rel a ont:RELATION .
+    ?rel ont:relation_predicate ont:aggravate .
+    ?rel ont:relation_subject ?subject .
+    ?rel ont:relation_object ?object .
+
+    ?object rdfs:label ?objectLabel .
+    FILTER(REGEX(STR(?objectLabel), "sentinel.*node.*biopsy", "i")) .
+
+    OPTIONAL {{ ?subject rdfs:label ?subjectLabel }} .
+    OPTIONAL {{ ?rel ont:reliabilityScore ?reliabilityScore }} .
+    OPTIONAL {{ ?rel ont:trialPhase ?trialPhase }} .
+    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacyEvidence }} .
+    OPTIONAL {{ ?rel prov:wasDerivedFrom ?citation }} .
+}} ORDER BY DESC(?reliabilityScore) LIMIT 10
+
+**EXAMPLE 4: General query — all relations for an entity**
+*Question:* "What do we know about preoperative lymphoscintigraphy?"
+*Query:*
+SELECT ?subjectLabel ?predicateLabel ?objectLabel ?reliabilityScore ?trialPhase ?efficacyEvidence ?citation WHERE {{
+    ?rel a ont:RELATION .
+    ?rel ont:relation_predicate ?predicate .
+    ?rel ont:relation_subject ?subject .
+    ?rel ont:relation_object ?object .
+
+    {{
+        ?subject rdfs:label ?subjectLabel .
+        FILTER(REGEX(STR(?subjectLabel), "preoperative.*lymphoscintigraphy", "i")) .
+        OPTIONAL {{ ?object rdfs:label ?objectLabel }} .
+    }} UNION {{
+        ?object rdfs:label ?objectLabel .
+        FILTER(REGEX(STR(?objectLabel), "preoperative.*lymphoscintigraphy", "i")) .
+        OPTIONAL {{ ?subject rdfs:label ?subjectLabel }} .
+    }}
+
+    OPTIONAL {{ ?predicate rdfs:label ?predicateLabel }} .
+    OPTIONAL {{ ?rel ont:reliabilityScore ?reliabilityScore }} .
+    OPTIONAL {{ ?rel ont:trialPhase ?trialPhase }} .
+    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacyEvidence }} .
+    OPTIONAL {{ ?rel prov:wasDerivedFrom ?citation }} .
+}} ORDER BY DESC(?reliabilityScore) LIMIT 10
+
+**EXAMPLE 5: Specific relation — "What does X diagnose?"**
+*Question:* "What does preoperative lymphoscintigraphy diagnose?"
+*Query:*
+SELECT ?objectLabel ?reliabilityScore ?trialPhase ?efficacyEvidence ?citation WHERE {{
+    ?rel a ont:RELATION .
+    ?rel ont:relation_predicate ont:diagnose .
+    ?rel ont:relation_subject ?subject .
+    ?rel ont:relation_object ?object .
+
+    ?subject rdfs:label ?subjectLabel .
+    FILTER(REGEX(STR(?subjectLabel), "preoperative.*lymphoscintigraphy", "i")) .
+
+    OPTIONAL {{ ?object rdfs:label ?objectLabel }} .
+    OPTIONAL {{ ?rel ont:reliabilityScore ?reliabilityScore }} .
+    OPTIONAL {{ ?rel ont:trialPhase ?trialPhase }} .
+    OPTIONAL {{ ?rel ont:efficacyEvidence ?efficacyEvidence }} .
+    OPTIONAL {{ ?rel prov:wasDerivedFrom ?citation }} .
+}} ORDER BY DESC(?reliabilityScore) LIMIT 10
 
 The ontology schema is:
 {schema}
 
 Question: {prompt}
 
-CRITICAL: 
+CRITICAL:
 - Output ONLY the raw SPARQL query starting with PREFIX.
 - Do NOT use Markdown backticks.
-- For citations, select `?citation` directly from `prov:wasDerivedFrom`. Do NOT use rdfs:label on citations.
+- Choose the correct `ont:relation_predicate` based on the user's question. Do NOT default to `ont:treat` for every question.
+- For general questions about an entity, use UNION to search both subject and object positions.
+- For citations, select `?citation` directly. Do NOT use rdfs:label on citations.
+- Use EXACTLY these variable names: `?reliabilityScore`, `?trialPhase`, `?efficacyEvidence`. Do NOT rename or shorten them.
 
 SPARQL Query:
 """
@@ -218,8 +285,11 @@ def get_response(user_input: str) -> str:
     try:
         enhanced_input = (
             f"{user_input} "
-            "Important: Answer based on the graph results. "
-            "For each finding, mention the Reliability Score (0-100), Trial Phase, and specific Efficacy found in the data. "
+            "Important: Answer ONLY based on the graph query results. "
+            "For each finding, report the EXACT values returned in the query results: "
+            "the reliabilityScore column value (integer 0-100), the trialPhase column value, "
+            "and the efficacyEvidence column value. Do NOT calculate, override, or invent these values — "
+            "use the exact data from the SPARQL results. "
             "List supporting PMIDs as [PMID](url)."
         )
 
