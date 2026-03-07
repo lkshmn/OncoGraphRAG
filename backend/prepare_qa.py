@@ -4,13 +4,21 @@ from pathlib import Path
 from collections import defaultdict
 
 # Config
-INPUT_FILES = [
-    Path("d:/Projects/OncoGraphRAG/data/abstracts/Breast_Cancer.jsonl"),
-    # Add other files if needed
-]
+ABSTRACTS_DIR = Path("d:/Projects/OncoGraphRAG/data/abstracts")
 RELATIONS_DIR = Path("d:/Projects/OncoGraphRAG/data/extracted relations")
 OUTPUT_DIR = Path("d:/Projects/OncoGraphRAG/data/evaluation/prompts")
-SAMPLES_PER_FILE = 1
+GROUND_TRUTH_DIR = Path("d:/Projects/OncoGraphRAG/data/evaluation/ground_truth")
+
+CANCER_CONFIG = {
+    "Breast_Cancer": 3,
+    "Cervical_Cancer": 3,
+    "Colorectal_Cancer": 3,
+    "Leukemia": 3,
+    "Lung_Cancer": 3,
+    "Melanoma": 3,
+    "Oral_Cancer": 3,
+    "Prostate_Cancer": 3,
+}
 
 
 def load_relations_by_pub_id(cancer_type_stem: str) -> dict[str, list[dict]]:
@@ -57,14 +65,19 @@ def format_relations(relations: list[dict]) -> str:
 
 def prepare_prompt():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    GROUND_TRUTH_DIR.mkdir(parents=True, exist_ok=True)
 
-    for file_path in INPUT_FILES:
+    total_abstracts = 0
+    total_questions = 0
+
+    for cancer_type_stem, num_samples in CANCER_CONFIG.items():
+        file_path = ABSTRACTS_DIR / f"{cancer_type_stem}.jsonl"
         if not file_path.exists():
+            print(f"Skipping {cancer_type_stem}: abstracts file not found.")
             continue
 
-        cancer_type = file_path.stem.lower()
-        # Load relations indexed by PMID for this cancer type
-        relations_by_id = load_relations_by_pub_id(file_path.stem)
+        cancer_type = cancer_type_stem.lower()
+        relations_by_id = load_relations_by_pub_id(cancer_type_stem)
 
         if not relations_by_id:
             print(f"Skipping {cancer_type}: no extracted relations found.")
@@ -87,7 +100,7 @@ def prepare_prompt():
 
         selected = random.sample(
             abstracts_with_relations,
-            min(len(abstracts_with_relations), SAMPLES_PER_FILE)
+            min(len(abstracts_with_relations), num_samples)
         )
 
         for data in selected:
@@ -118,7 +131,7 @@ The chatbot retrieves these relations via SPARQL and uses them to generate answe
 {formatted_rels}
 
 **TASK:**
-Generate at least 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
 
 **CRITICAL REQUIREMENT 1: Answerability from Relations**
 Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
@@ -164,11 +177,23 @@ Return valid JSON list:
 
             full_content = prompt_header + "\n\n" + snippet
 
+            # Save prompt file
             output_file = OUTPUT_DIR / f"{cancer_type}_q_{safe_id}.txt"
             with open(output_file, 'w', encoding='utf-8') as out_f:
                 out_f.write(full_content)
 
-            print(f"Prompt generated at: {output_file} ({len(rels)} relations included)")
+            # Save empty ground truth file
+            gt_file = GROUND_TRUTH_DIR / f"{cancer_type}_a_{safe_id}.txt"
+            with open(gt_file, 'w', encoding='utf-8') as gt_f:
+                pass  # empty file for pasting output
+
+            total_abstracts += 1
+            total_questions += 5
+            print(f"  Prompt: {output_file.name} | Ground truth: {gt_file.name} ({len(rels)} relations)")
+
+        print(f"  [{cancer_type}] {len(selected)} abstracts → {len(selected) * 5} questions\n")
+
+    print(f"Total: {total_abstracts} abstracts, {total_questions} target questions")
 
 
 if __name__ == "__main__":
