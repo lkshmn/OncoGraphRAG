@@ -17,9 +17,10 @@ LMSTUDIO_URL = os.getenv('LMSTUDIO_URL', 'http://localhost:1234/v1/chat/completi
 LMSTUDIO_MODEL = os.getenv('LMSTUDIO_MODEL', 'local-model') 
 ONT_BASE = "http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#"
 
-def calculate_confidence_score(trial_phase, efficacy_text):
+def calculate_reliability_score(trial_phase, efficacy_text):
     """
-    Calculates a confidence score (0-100) based on trial phase and efficacy wording.
+    Calculates a reliability score (0-100) based on trial phase and efficacy wording.
+    Renamed from confidence_score.
     """
     score = 50 
     phase_map = {
@@ -53,7 +54,7 @@ def generate_relations_lmstudio(text):
             json={
                 "model": LMSTUDIO_MODEL, 
                 "messages": [{"role": "system", "content": system_prompt.strip()}, {"role": "user", "content": user_prompt.strip()}],
-                "temperature": 0, "max_tokens": 2500,
+                "temperature": 0.1, "max_tokens": 3000,
             }, timeout=180, 
         )
         response.raise_for_status()
@@ -80,8 +81,8 @@ def validate_output(output, metadata_phase="Unknown"):
             data = ast.literal_eval(match)
             if is_valid_relation(data):
                 data['trial_phase'] = metadata_phase
-                score = calculate_confidence_score(metadata_phase, data.get('efficacy', ''))
-                data['confidence_score'] = score
+                score = calculate_reliability_score(metadata_phase, data.get('efficacy', ''))
+                data['reliability_score'] = score # Renamed key
                 dicts.append(data)
             else: logging.warning(f"Invalid data fields in: {data}")
         except (SyntaxError, ValueError) as e: logging.warning(f"Failed to parse match: {match}. Error: {e}")
@@ -128,14 +129,14 @@ def create_sparql_queries_for_bulk_import(relations, batch_size=200):
             entity1_type = sanitize_entity_name(relation["entity1_type"]).upper()
             entity2_type = sanitize_entity_name(relation["entity2_type"]).upper()
             
-            # Escape strings for Labels
-            subj_label = relation["entity1_name"].strip().replace('"', '\\"')
-            obj_label = relation["entity2_name"].strip().replace('"', '\\"')
+            # Escape strings for Labels and Literals (Very Important for SPARQL)
+            subj_label = relation["entity1_name"].strip().replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ')
+            obj_label = relation["entity2_name"].strip().replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ')
             
-            # Metadata
-            score = relation.get('confidence_score', 50)
-            phase = relation.get('trial_phase', 'Unknown').replace("'", "").replace('"', '')
-            efficacy = relation.get('efficacy', 'Not stated').replace("'", "").replace('"', '')
+            # Metadata - Renamed key
+            score = relation.get('reliability_score', 50)
+            phase = relation.get('trial_phase', 'Unknown').replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ')
+            efficacy = relation.get('efficacy', 'Not stated').replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ')
 
             # Generate URIs
             relation_id = f"REL_{uuid.uuid4()}"
@@ -144,13 +145,13 @@ def create_sparql_queries_for_bulk_import(relations, batch_size=200):
             predicate_uri = f"ont:{relation_type}"
             object_uri = f"ont:{object_name}"
 
-            # Relation Node Triple
+            # Relation Node Triple - Renamed Property
             triple = (
                 f"{relation_uri} rdf:type ont:RELATION ;\n"
                 f"  ont:relation_subject {subject_uri} ;\n"
                 f"  ont:relation_predicate {predicate_uri} ;\n"
                 f"  ont:relation_object {object_uri} ;\n"
-                f"  ont:confidenceScore \"{score}\"^^xsd:integer ;\n"
+                f"  ont:reliabilityScore \"{score}\"^^xsd:integer ;\n"
                 f"  ont:trialPhase \"{phase}\"^^xsd:string ;\n"
                 f"  ont:efficacyEvidence \"{efficacy}\"^^xsd:string "
             )
@@ -171,7 +172,6 @@ def create_sparql_queries_for_bulk_import(relations, batch_size=200):
             query_body += f'{object_uri} rdf:type ont:{entity2_type} ; rdfs:label "{obj_label}" .\n'
 
         if query_body:
-            # FIX: REMOVED "GRAPH <URI> { ... }" wrapper to insert into Default Graph
             full_query = prefixes + f"INSERT DATA {{\n{query_body}\n}}"
             sparql_queries.append(full_query)
 

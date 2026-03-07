@@ -7,3 +7,4 @@ data/evaluation
 backend/__pycache__
 papers
 extra
+backend/streamlit/logs

@@ -62,9 +62,6 @@ synonyms_map = {
     "metastasis": "metastatic",
 }
 
-# Words that might appear at the end of entities that can be safely stripped during normalization
-trailing_words = {"cancer", "carcinoma", "tumor", "disease", "syndrome"}  # Updated for oncology context
-
 
 def get_most_frequent_type(type_counts):
     type_priority = {
@@ -145,21 +142,6 @@ def normalize_entity_name(name):
     # Split into words
     words = name.split()
     
-    # Note: logic for trailing words was slightly risky for names like "lung cancer" where "cancer" is valid.
-    # We only strip if the remaining name is substantial, but typically we want to keep "cancer".
-    # However, if your trailing_words set includes strict rubbish, use this. 
-    # For now, I've made trailing_words closer to generic medical terms, 
-    # but be careful removing "cancer" from "lung cancer" leaves "lung" which is a body part, not the disease.
-    # The safest approach for this specific logic block (which came from AMD specific code) might be to 
-    # rely more on the synonyms_map and less on stripping trailing words unless they are noise like "stage", "grade" etc.
-    
-    # Modified trailing logic to be safer or removed if not needed. 
-    # Given the previous code stripped "cnv" (a specific condition), stripping broadly used terms like "cancer" 
-    # might change the semantic meaning from Disease to Body Part.
-    # Let's restrict trailing words to unambiguous noise if possible.
-    
-    # (Optional: Remove the trailing word block if it causes issues, or keep it strictly for noise)
-    
     # Apply domain-specific synonyms mapping
     if name in synonyms_map:
         name = synonyms_map[name]
@@ -198,8 +180,8 @@ def refine_relations(relations):
             "relation_type": pred,
             "entity2_name": o_name,
             "entity2_type": rel.get('entity2_type'),
-            # Preserving Metadata
-            "confidence_score": rel.get('confidence_score', 50),
+            # Preserving Metadata (Updated to reliability_score)
+            "reliability_score": rel.get('reliability_score', 50),
             "trial_phase": rel.get('trial_phase', 'Unknown'),
             "efficacy": rel.get('efficacy', 'Not stated'),
             "pub_id": rel.get('pub_id')

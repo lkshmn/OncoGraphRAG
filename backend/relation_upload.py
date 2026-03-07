@@ -3,11 +3,11 @@ import os
 from pathlib import Path
 from bulk_relations import add_bulk_relations_to_kg, refine_relations, create_sparql_queries_for_bulk_import
 
-# Path to the file containing relations extracted by relation_extraction.py
-INPUT_RELATIONS = Path(r"d:\Projects\OncoGraphRAG\data\extracted relations\Breast_Cancer_relations_500.jsonl")
+# Read all relation files from this directory
+INPUT_RELATIONS_DIR = Path(r"d:\Projects\OncoGraphRAG\data\extracted relations")
 
 # Define your GraphDB repository ID here
-REPO_ID = "oncograph" 
+REPO_ID = "oncograph"
 
 def load_relations_from_jsonl(file_path):
     """Reads relations from a JSONL file."""
@@ -15,41 +15,58 @@ def load_relations_from_jsonl(file_path):
     if not file_path.exists():
         print(f"Error: Input file {file_path} not found.")
         return []
-    
+
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
-            if not line: 
+            if not line:
                 continue
             try:
                 relations.append(json.loads(line))
             except json.JSONDecodeError as e:
-                print(f"Skipping invalid JSON line: {e}")
-                
+                print(f"Skipping invalid JSON line in {file_path.name}: {e}")
+
     return relations
 
+def load_relations_from_directory(directory: Path):
+    """Reads relations from all .jsonl files in a directory."""
+    all_relations = []
+    files = sorted(directory.glob("*.jsonl"))
+
+    if not files:
+        print(f"No .jsonl files found in {directory}")
+        return []
+
+    print(f"Found {len(files)} files in {directory}")
+    for file_path in files:
+        file_relations = load_relations_from_jsonl(file_path)
+        print(f"Loaded {len(file_relations)} relations from {file_path.name}")
+        all_relations.extend(file_relations)
+
+    return all_relations
+
 def main():
-    if not INPUT_RELATIONS.exists():
-        print(f"Error: Input file {INPUT_RELATIONS} not found.")
-        print("Please run 'relation_extraction.py' first to generate the relations.")
+    if not INPUT_RELATIONS_DIR.exists():
+        print(f"Error: Directory {INPUT_RELATIONS_DIR} not found.")
+        print("Please run 'relation_extraction.py' first to generate relation files.")
         return
 
-    print(f"Loading relations from {INPUT_RELATIONS}...")
-    relations = load_relations_from_jsonl(INPUT_RELATIONS)
+    print(f"Loading relations from all JSONL files in {INPUT_RELATIONS_DIR}...")
+    relations = load_relations_from_directory(INPUT_RELATIONS_DIR)
 
     if not relations:
-        print("No relations found in the file.")
+        print("No relations found in the directory.")
         return
 
-    print(f"Loaded {len(relations)} raw relations.")
-    
+    print(f"Loaded {len(relations)} raw relations in total.")
+
     # Check if new metadata keys exist in the first relation (sanity check)
     first_rel = relations[0]
-    if 'confidence_score' in first_rel:
-        print(f"Sample Metadata found -> Score: {first_rel.get('confidence_score')}, "
+    if 'reliability_score' in first_rel:
+        print(f"Sample Metadata found -> Score: {first_rel.get('reliability_score')}, "
               f"Phase: {first_rel.get('trial_phase')}, Efficacy: {first_rel.get('efficacy')}")
     else:
-        print("Warning: Confidence scores or trial metadata missing from input. Scores will default to 50.")
+        print("Warning: Reliability scores or trial metadata missing from input. Scores will default to 50.")
 
     # Step 1: Test Refinement locally
     print("\n--- Testing Refinement Logic ---")
@@ -63,7 +80,6 @@ def main():
     # Step 2: Test SPARQL Query Generation locally
     print("\n--- Testing SPARQL Query Generation (Metadata Enabled) ---")
     try:
-        # Note: refine_relations might return fewer items than input
         queries = create_sparql_queries_for_bulk_import(refined, batch_size=5)
         print(f"Generated {len(queries)} SPARQL batches.")
         if queries:
@@ -78,7 +94,6 @@ def main():
     confirm = input(f"Are you sure you want to upload to {REPO_ID}? (y/n): ")
     if confirm.lower() == 'y':
         try:
-            # Re-using the logic from bulk_relations to handle final upload
             add_bulk_relations_to_kg(relations, REPO_ID)
             print("Full upload process completed.")
         except Exception as e:

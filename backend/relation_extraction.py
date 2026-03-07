@@ -5,8 +5,10 @@ from bulk_relations import extract_relations
 
 # Define the list of files to process
 INPUT_FILES = [
-    Path(r"d:\Projects\OncoGraphRAG\data\abstracts\Lung_Cancer.jsonl"),
-    Path(r"d:\Projects\OncoGraphRAG\data\abstracts\Colorectal_Cancer.jsonl") 
+    Path(r"d:\Projects\OncoGraphRAG\data\abstracts\Prostate_Cancer.jsonl"),
+    Path(r"d:\Projects\OncoGraphRAG\data\abstracts\Cervical_Cancer.jsonl"),
+    Path(r"d:\Projects\OncoGraphRAG\data\abstracts\Leukemia.jsonl"),
+    Path(r"d:\Projects\OncoGraphRAG\data\abstracts\Oral_Cancer.jsonl"),
 ]
 
 OUTPUT_DIR = Path(r"d:\Projects\OncoGraphRAG\data\extracted relations")
