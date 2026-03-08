@@ -20,7 +20,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from ragas.run_config import RunConfig
 
 # --- Configuration ---
-RESULTS_FILE = Path("d:/Projects/OncoGraphRAG/data/evaluation/results/eval_results_20260307_192431.jsonl")
+RESULTS_FILE = Path("d:/Projects/OncoGraphRAG/data/evaluation/results/baseline_results_20260308_123041.jsonl")
 MAX_EVAL = None  # Set to None to evaluate all
 OUTPUT_FILE = RESULTS_FILE.parent / "metrics_results.json"
 PROMPTS_DIR = RESULTS_FILE.parent / "gemini_prompts"
