@@ -1,0 +1,1212 @@
+{
+  "overall": {
+    "faithfulness": 0.65,
+    "answer_relevancy": 0.56,
+    "context_recall": 0.5267,
+    "semantic_similarity": 0.2239
+  },
+  "total_evaluated": 120,
+  "gemini_responses_found": 120,
+  "per_question": [
+    {
+      "question_id": 1,
+      "question": "What disease does sentinel node biopsy treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:15661548",
+      "semantic_similarity": 0.3835375725549106,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 2,
+      "question": "What is the specific positive efficacy outcome when preoperative lymphoscintigraphy is used to improve sentinel node biopsy?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:15661548",
+      "semantic_similarity": 0.4858675450109365,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 3,
+      "question": "Which of the following patient groups act as risk factors that aggravate sentinel node biopsy?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:15661548",
+      "semantic_similarity": -0.019272800467568615,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 4,
+      "question": "True or False: Preoperative lymphoscintigraphy is a test used to diagnose breast cancer.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:15661548",
+      "semantic_similarity": 0.047742443472106995,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 5,
+      "question": "What trial phase evaluated the use of blue dye mapping to treat sentinel node biopsy?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:15661548",
+      "semantic_similarity": 0.18335125241624234,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 6,
+      "question": "What symptom is caused by mitoxantrone?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:8075031",
+      "semantic_similarity": 0.03947993182105497,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 7,
+      "question": "True or False: Mitoxantrone has a documented positive efficacy of complete remissions in breast cancer.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:8075031",
+      "semantic_similarity": -0.023104249796200696,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 8,
+      "question": "Which of the following diseases is treated by intraperitoneal carboplatin according to the extracted relations?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:8075031",
+      "semantic_similarity": 0.04179102264949937,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 9,
+      "question": "What complications are caused by mitoxantrone?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:8075031",
+      "semantic_similarity": 0.01415505916889177,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 10,
+      "question": "What was the trial phase for evaluating mitoxantrone as a treatment for mesothelioma?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:8075031",
+      "semantic_similarity": 0.21629668628238102,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.6
+    },
+    {
+      "question_id": 11,
+      "question": "What disease is treated with paclitaxel according to the extracted relation?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:9862057",
+      "semantic_similarity": 0.17516739926304753,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 12,
+      "question": "What was the reported efficacy of paclitaxel in treating breast cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:9862057",
+      "semantic_similarity": 0.1791912068887561,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.2
+    },
+    {
+      "question_id": 13,
+      "question": "True or False: The data regarding paclitaxel treating breast cancer was derived from a Phase III trial.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:9862057",
+      "semantic_similarity": 0.3592932544332333,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.2
+    },
+    {
+      "question_id": 14,
+      "question": "What phase was the trial evaluating paclitaxel for breast cancer?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:9862057",
+      "semantic_similarity": 0.04566936546488542,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 15,
+      "question": "What is the reliability score for the finding that paclitaxel treats breast cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:9862057",
+      "semantic_similarity": -0.01935395829286565,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 16,
+      "question": "Which diseases are treated by irinotecan?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:23781580",
+      "semantic_similarity": 0.0918230643427738,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 17,
+      "question": "True or False: The efficacy of CPT-P therapy for treating ovarian carcinoma is explicitly stated as positive.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:23781580",
+      "semantic_similarity": 0.6586660596933441,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 18,
+      "question": "Which risk factor affects irinotecan RD?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:23781580",
+      "semantic_similarity": 0.42331742297810043,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 19,
+      "question": "What phase of trial is associated with the use of cisplatin for treating cervical cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:23781580",
+      "semantic_similarity": 0.12261524920568874,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 20,
+      "question": "What does CPT-P therapy treat in addition to cervical cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:23781580",
+      "semantic_similarity": 0.47882330153014463,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.6
+    },
+    {
+      "question_id": 21,
+      "question": "What clinical trial phase evaluated the use of Polyphenon E for cervical cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:24388920",
+      "semantic_similarity": 0.07161124420760547,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 22,
+      "question": "True or False: Polyphenon E aggravates the progression of cervical intraepithelial neoplasia.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:24388920",
+      "semantic_similarity": 0.06421798740470477,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 23,
+      "question": "Which of the following conditions is affected by Polyphenon E?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:24388920",
+      "semantic_similarity": 0.09148380836050285,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.2,
+      "context_recall": 0.2
+    },
+    {
+      "question_id": 24,
+      "question": "What specific diseases does Polyphenon E aim to prevent?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:24388920",
+      "semantic_similarity": 0.5317018545677865,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 25,
+      "question": "What is the reliability score for the extracted relations involving Polyphenon E in this data?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:24388920",
+      "semantic_similarity": 0.11166307896480965,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 26,
+      "question": "What phase of clinical trial demonstrated that the 9vHPV vaccine prevents high-grade cervical dysplasia?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:29269325",
+      "semantic_similarity": 0.09637613150623248,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 27,
+      "question": "What was the reported efficacy of the 9vHPV vaccine in preventing high-grade vulvar dysplasia?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:29269325",
+      "semantic_similarity": 0.1563513475391018,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 28,
+      "question": "True or False: Evidence shows that the 9vHPV vaccine prevents high-grade vaginal dysplasia.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:29269325",
+      "semantic_similarity": 0.06421798740470477,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 29,
+      "question": "Which specific types of high-grade dysplasia does the 9vHPV vaccine prevent?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:29269325",
+      "semantic_similarity": 0.13449458430528843,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 30,
+      "question": "What is the reliability score for the extraction indicating the 9vHPV vaccine prevents high-grade cervical dysplasia?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:29269325",
+      "semantic_similarity": 0.22778335698827096,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 31,
+      "question": "What disease does chemotherapy treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:23517248",
+      "semantic_similarity": 0.34180544120673484,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 32,
+      "question": "True or False: The efficacy of chemotherapy for stage IV colorectal cancer is explicitly stated as positive.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:23517248",
+      "semantic_similarity": 0.5179688263570126,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.6
+    },
+    {
+      "question_id": 33,
+      "question": "How do eligibility criteria affect overall survival?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:23517248",
+      "semantic_similarity": 0.7436668054875634,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 34,
+      "question": "What is the reliability score for the recorded relationship between eligibility criteria and overall survival?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:23517248",
+      "semantic_similarity": 0.16108268185079844,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.6
+    },
+    {
+      "question_id": 35,
+      "question": "What clinical trial phase evaluated the effect of eligibility criteria on overall survival?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:23517248",
+      "semantic_similarity": 0.22327550084353998,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 36,
+      "question": "What disease is treated by TAS-102 plus bevacizumab?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:31999946",
+      "semantic_similarity": 0.3021769528143744,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 37,
+      "question": "True or False: TAS-102 monotherapy treats metastatic colorectal cancer.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:31999946",
+      "semantic_similarity": -0.03461596947431088,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 38,
+      "question": "Which symptom is present when using TAS-102 plus bevacizumab?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:31999946",
+      "semantic_similarity": 0.36962379257985206,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 39,
+      "question": "What was the efficacy outcome of TAS-102 plus bevacizumab for treating metastatic colorectal cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:31999946",
+      "semantic_similarity": 0.5233312193643177,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 40,
+      "question": "What phase was the trial for TAS-102 monotherapy in treating metastatic colorectal cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:31999946",
+      "semantic_similarity": 0.2131979399489051,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 41,
+      "question": "What disease do fluoropyrimidines treat according to the extracted data?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:9548610",
+      "semantic_similarity": 0.4704715294587105,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 42,
+      "question": "Which treatment for liver metastases derived from colorectal cancer has an efficacy outcome of increased mean survival from 17 to 26 months?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:9548610",
+      "semantic_similarity": 0.06219985610447758,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 43,
+      "question": "True or False: The use of isolated hepatic perfusion to treat liver metastases derived from colorectal cancer was evaluated in a Phase II trial.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:9548610",
+      "semantic_similarity": 0.023673231649704286,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 44,
+      "question": "What is the stated efficacy of fluoropyrimidines for treating liver metastases derived from colorectal cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:9548610",
+      "semantic_similarity": 0.23632315442151722,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 45,
+      "question": "What clinical trial phase is associated with the use of mitomycin C for treating liver metastases derived from colorectal cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:9548610",
+      "semantic_similarity": 0.08093086274849089,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 46,
+      "question": "What disease is decitabine used to treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:28718760",
+      "semantic_similarity": 0.0792788322166823,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 47,
+      "question": "What risk factor is caused by the biomarker CD25 expression?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:28718760",
+      "semantic_similarity": 0.3368068841607271,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 48,
+      "question": "True or False: CD25 expression aggravates overall survival, resulting in inferior survival.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:28718760",
+      "semantic_similarity": 0.0854712118890665,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 49,
+      "question": "What clinical trial phase evaluated plerixafor for the treatment of acute myelogenous leukemia?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:28718760",
+      "semantic_similarity": 0.33097111721670647,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 50,
+      "question": "What is the statistical p-value associated with CD25 expression causing increased odds of resistance to therapy?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:28718760",
+      "semantic_similarity": 0.06501001288544561,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 51,
+      "question": "What is the reported efficacy outcome of the combination treatment of azacitidine, venetoclax and pevonedistat for acute myeloid leukemia?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:37422688",
+      "semantic_similarity": 0.35631595528823967,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 52,
+      "question": "What was the overall response rate for the combination of azacitidine, venetoclax and pevonedistat when treating myelodysplastic syndromes or chronic myelomonocytic leukemia?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:37422688",
+      "semantic_similarity": 0.018411169566824682,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 53,
+      "question": "True or False: TP53 mutation is identified as a risk factor that affects acute myeloid leukemia.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:37422688",
+      "semantic_similarity": 0.0585360788997357,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 54,
+      "question": "What overall survival (OS) efficacy is reported for pevonedistat in the treatment of acute myeloid leukemia?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:37422688",
+      "semantic_similarity": 0.11160536408211562,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 55,
+      "question": "What trial phase evaluated azacitidine for the treatment of acute myeloid leukemia?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:37422688",
+      "semantic_similarity": 0.07161124420760547,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 56,
+      "question": "What disease does the treatment MST-16 treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:8384067",
+      "semantic_similarity": 0.2225821189641131,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 57,
+      "question": "Which of the following complications is affected by MST-16?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:8384067",
+      "semantic_similarity": 0.35505305886350513,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 58,
+      "question": "True or False: The trial phase evaluating the relation between MST-16 and adult T-cell leukemia lymphoma is Phase III.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:8384067",
+      "semantic_similarity": 0.5640551766160479,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 59,
+      "question": "What is the efficacy outcome of MST-16 for treating adult T-cell leukemia lymphoma?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:8384067",
+      "semantic_similarity": 0.4223963396416639,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 60,
+      "question": "What is the reliability score for the relation showing MST-16 affects anemia?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:8384067",
+      "semantic_similarity": 0.05496695221800276,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 61,
+      "question": "What disease is treated by the combination of bexarotene with cisplatin and vinorelbine?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:11352954",
+      "semantic_similarity": 0.500370923674528,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 62,
+      "question": "True or False: The trial evaluating bexarotene with cisplatin and vinorelbine for non-small-cell lung cancer was a Phase III trial.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:11352954",
+      "semantic_similarity": 0.5992215732770338,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 63,
+      "question": "What was the efficacy outcome for the treatment of non-small-cell lung cancer using bexarotene with cisplatin and vinorelbine?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:11352954",
+      "semantic_similarity": 0.16011571874419211,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 64,
+      "question": "What median survival time was achieved when non-small-cell lung cancer was treated with bexarotene, cisplatin, and vinorelbine?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:11352954",
+      "semantic_similarity": 0.6467361788891042,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 65,
+      "question": "What is the reliability score for the finding that bexarotene with cisplatin and vinorelbine treats non-small-cell lung cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:11352954",
+      "semantic_similarity": 0.013514923971218805,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.4,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 66,
+      "question": "What disease does racotumomab alum treat according to the Phase III trial relations?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:24788102",
+      "semantic_similarity": 0.07956990875898967,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 67,
+      "question": "Which symptoms are presented as associated with racotumomab alum treatment?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:24788102",
+      "semantic_similarity": -0.013250425500409668,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 68,
+      "question": "True or False: An anti neuGcgm3 antibody response negatively affects survival times in non small cell lung cancer.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:24788102",
+      "semantic_similarity": 0.17175158435357635,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 69,
+      "question": "What was the specific efficacy on overall survival and progression free survival when racotumomab alum was used to treat non small cell lung cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:24788102",
+      "semantic_similarity": 0.5460844104242284,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 70,
+      "question": "What clinical trial phase evaluated racotumomab alum for treating non small cell lung cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:24788102",
+      "semantic_similarity": 0.17865076273311264,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 71,
+      "question": "What is the reported efficacy of nivolumab ipilimumab for treating non-small cell lung cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:37402581",
+      "semantic_similarity": 0.2934621672610268,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 72,
+      "question": "What trial phase is associated with the evaluation of stereotactic radiosurgery for treating brain metastasis?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:37402581",
+      "semantic_similarity": 0.048093217447036804,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 73,
+      "question": "True or False: The efficacy of nivolumab ipilimumab for treating brain metastasis is reported as positive with an encouraging intracranial treatment response.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:37402581",
+      "semantic_similarity": -0.0015463617617322532,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 74,
+      "question": "Which three treatments are noted to treat brain metastasis with an efficacy of 'Not Stated'?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:37402581",
+      "semantic_similarity": 0.6066806988959138,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 75,
+      "question": "What is the reliability score for the treatment relation between nivolumab ipilimumab and non-small cell lung cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:37402581",
+      "semantic_similarity": -0.032166893907521775,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 76,
+      "question": "What diseases does the semiallogeneic vaccine treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:10746551",
+      "semantic_similarity": 0.6607264314366776,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 77,
+      "question": "True or False: The use of the semiallogeneic vaccine for metastatic melanoma was evaluated in a Phase II trial.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:10746551",
+      "semantic_similarity": -0.03601178199645282,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 78,
+      "question": "What is the reported efficacy of the semiallogeneic vaccine when treating metastatic adenocarcinoma?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:10746551",
+      "semantic_similarity": 0.4841789307756064,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 79,
+      "question": "What is the reliability score for the data on using the semiallogeneic vaccine to treat metastatic melanoma?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:10746551",
+      "semantic_similarity": 0.1023600041250627,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 80,
+      "question": "What phase of trial investigated the semiallogeneic vaccine for metastatic adenocarcinoma?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:10746551",
+      "semantic_similarity": 0.13229071165030992,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 81,
+      "question": "What disease does the anti-CTLA-4 antibody treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:16283570",
+      "semantic_similarity": 0.00829041036680737,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 82,
+      "question": "True or False: Anti-CTLA-4 administration causes autoimmune toxicities.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:16283570",
+      "semantic_similarity": 0.09107160923060688,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 83,
+      "question": "What was the reported efficacy of the anti-CTLA-4 antibody in treating metastatic melanoma?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:16283570",
+      "semantic_similarity": 0.2934684858303904,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 84,
+      "question": "In what clinical trial phase was IL-2 therapy evaluated for metastatic melanoma?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:16283570",
+      "semantic_similarity": 0.3715006032509664,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 85,
+      "question": "What complication is identified as being caused by anti-CTLA-4 administration?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:16283570",
+      "semantic_similarity": 0.3173303217193509,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.4,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 86,
+      "question": "What disease is treated by valproic acid plus chemoimmunotherapy?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:19127265",
+      "semantic_similarity": 0.5884552225679112,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 87,
+      "question": "True or False: Valproic acid dosage aggravates side effects.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:19127265",
+      "semantic_similarity": 0.018583023142929513,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 88,
+      "question": "Which condition is treated by interferon alpha?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:19127265",
+      "semantic_similarity": 0.4508566876494904,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 89,
+      "question": "What biomarker is diagnosed using a target inhibition measurement?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:19127265",
+      "semantic_similarity": 0.0744463578979489,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 90,
+      "question": "In what phase of clinical trials was valproic acid evaluated for the treatment of advanced melanoma?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:19127265",
+      "semantic_similarity": 0.23010722243871806,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 91,
+      "question": "What disease does the mixed tea product treat?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:10202392",
+      "semantic_similarity": 0.29883640006447726,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.4,
+      "context_recall": 0.6
+    },
+    {
+      "question_id": 92,
+      "question": "True or False: Placebo and glycerin treatment results in significant improvement for oral mucosa leukoplakia.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:10202392",
+      "semantic_similarity": 0.17948943332114156,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 93,
+      "question": "What is the effect of the mixed tea product on the biomarker AgNOR number and total volume?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:10202392",
+      "semantic_similarity": 0.26887256978001267,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 94,
+      "question": "How does the mixed tea product affect the rate of micronucleated exfoliated oral mucosa cells?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:10202392",
+      "semantic_similarity": 0.20330558746223953,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 95,
+      "question": "What is used to diagnose oral mucosa leukoplakia according to the extracted relation?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:10202392",
+      "semantic_similarity": 0.07077922817449785,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 96,
+      "question": "What risk factor is known to cause micronuclei frequency?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:10684124",
+      "semantic_similarity": 0.06146796906243304,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.2,
+      "context_recall": 0.4
+    },
+    {
+      "question_id": 97,
+      "question": "True or False: Mixed tea is shown to prevent oral cancer.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:10684124",
+      "semantic_similarity": 0.033937413289304205,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 98,
+      "question": "What effect does mixed tea have on micronuclei frequency?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:10684124",
+      "semantic_similarity": 0.2225249570664753,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.8
+    },
+    {
+      "question_id": 99,
+      "question": "What phase of clinical trial investigated the preventative effect of mixed tea on oral cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:10684124",
+      "semantic_similarity": 0.34087810427488163,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 100,
+      "question": "What is the specific efficacy outcome of using mixed tea for oral cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:10684124",
+      "semantic_similarity": 0.1133869444276662,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 101,
+      "question": "What type of clinical trial evaluated the medication reminder and symptom management intervention for oral oncolytic agents?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:30096441",
+      "semantic_similarity": 0.16381916500560628,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 102,
+      "question": "What target does the printed Medication Management and Symptom Management Toolkit aim to treat?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:30096441",
+      "semantic_similarity": 0.1540043375229881,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 103,
+      "question": "True or False: The efficacy of the medication reminder and symptom management intervention for oral oncolytic agents is listed as 'Not Stated'.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:30096441",
+      "semantic_similarity": 0.06257380511244634,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 104,
+      "question": "What was the specific efficacy outcome of the printed Medication Management and Symptom Management Toolkit for the 18 symptoms?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:30096441",
+      "semantic_similarity": 0.15716086410344354,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 105,
+      "question": "Which treatment intervention is recorded as actively treating 18 symptoms?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:30096441",
+      "semantic_similarity": 0.04564787617907093,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 106,
+      "question": "What clinical trial phase evaluated granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy for prostate cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:18801509",
+      "semantic_similarity": 0.15155369916594863,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 107,
+      "question": "True or False: Granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy affects prostate specific antigen kinetics.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:18801509",
+      "semantic_similarity": 0.07627751786627364,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 108,
+      "question": "Which disease is associated with the presence of the biomarker prostate specific antigen?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:18801509",
+      "semantic_similarity": 0.0673567290813551,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 109,
+      "question": "What is the reported efficacy of granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy in treating prostate cancer?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:18801509",
+      "semantic_similarity": 0.7228387679974551,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 110,
+      "question": "Which biomarker does an antibody response reactive against PC-3 affect?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:18801509",
+      "semantic_similarity": 0.6824055100997478,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 111,
+      "question": "What symptom is present in castration resistant prostate cancer?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:23871417",
+      "semantic_similarity": 0.09152156607619688,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 112,
+      "question": "True or False: The treatment combination of atrasentan and docetaxel showed a positive efficacy with significant improvement in overall survival for castration resistant prostate cancer.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:23871417",
+      "semantic_similarity": 0.6881028953504167,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 113,
+      "question": "Which body part is identified as having metastases present in castration resistant prostate cancer?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:23871417",
+      "semantic_similarity": 0.4507637897660493,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 0.2
+    },
+    {
+      "question_id": 114,
+      "question": "What was the efficacy outcome of treating castration resistant prostate cancer with atrasentan and docetaxel?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:23871417",
+      "semantic_similarity": 0.4695450226079822,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 115,
+      "question": "What disease does docetaxel treat according to Phase III trial data?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:23871417",
+      "semantic_similarity": 0.08928546081168787,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 116,
+      "question": "What disease is DIM evaluated to prevent?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:26313229",
+      "semantic_similarity": 0.1442149755040103,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 117,
+      "question": "In which body part is DIM reported to be present?",
+      "question_type": "Simple MCQ",
+      "source_id": "PMID:26313229",
+      "semantic_similarity": 0.02566281767641155,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 118,
+      "question": "True or False: BR-DIM affects the biomarker urinary 2-hydroxyestrone/16-hydroxyestrone ratio.",
+      "question_type": "Simple True/False",
+      "source_id": "PMID:26313229",
+      "semantic_similarity": 0.09107160923060688,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question_id": 119,
+      "question": "What trial phase was recorded for the treatment of prostate cancer with DIM?",
+      "question_type": "Simple Open-Ended",
+      "source_id": "PMID:26313229",
+      "semantic_similarity": 0.06933803786550266,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8,
+      "context_recall": 1.0
+    },
+    {
+      "question_id": 120,
+      "question": "What biomarker does the treatment BR-DIM affect?",
+      "question_type": "Simple 1-Hop",
+      "source_id": "PMID:26313229",
+      "semantic_similarity": 0.2861756037220117,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_recall": 0.0
+    }
+  ]
+}

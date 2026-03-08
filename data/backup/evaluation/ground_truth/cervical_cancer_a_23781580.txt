@@ -1,0 +1,69 @@
+[
+  {
+    "source_id": "PMID:23781580",
+    "type": "Simple 1-Hop",
+    "question": "Which diseases are treated by irinotecan?",
+    "options": null,
+    "ground_truth_answer": "Ovarian carcinoma and cervical cancer.",
+    "ground_truth_context": "1. [treatment] \"irinotecan\" --treat--> [disease] \"ovarian carcinoma\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40; 2. [treatment] \"irinotecan\" --treat--> [disease] \"cervical cancer\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "irinotecan",
+      "ovarian carcinoma",
+      "cervical cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23781580",
+    "type": "Simple True/False",
+    "question": "True or False: The efficacy of CPT-P therapy for treating ovarian carcinoma is explicitly stated as positive.",
+    "options": null,
+    "ground_truth_answer": "False, the efficacy is listed as Not Stated.",
+    "ground_truth_context": "5. [treatment] \"CPT-P therapy\" --treat--> [disease] \"ovarian carcinoma\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "CPT-P therapy",
+      "ovarian carcinoma"
+    ]
+  },
+  {
+    "source_id": "PMID:23781580",
+    "type": "Simple MCQ",
+    "question": "Which risk factor affects irinotecan RD?",
+    "options": [
+      "A) BRCA1 mutations",
+      "B) UGT1A1 polymorphisms",
+      "C) EGFR mutations",
+      "D) TP53 mutations"
+    ],
+    "ground_truth_answer": "B) UGT1A1 polymorphisms",
+    "ground_truth_context": "7. [risk_factor] \"UGT1A1 polymorphisms\" --affect--> [treatment] \"irinotecan RD\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "UGT1A1 polymorphisms",
+      "irinotecan RD"
+    ]
+  },
+  {
+    "source_id": "PMID:23781580",
+    "type": "Simple Open-Ended",
+    "question": "What phase of trial is associated with the use of cisplatin for treating cervical cancer?",
+    "options": null,
+    "ground_truth_answer": "Phase I",
+    "ground_truth_context": "4. [treatment] \"cisplatin\" --treat--> [disease] \"cervical cancer\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "cisplatin",
+      "cervical cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23781580",
+    "type": "Simple 1-Hop",
+    "question": "What does CPT-P therapy treat in addition to cervical cancer?",
+    "options": null,
+    "ground_truth_answer": "Ovarian carcinoma.",
+    "ground_truth_context": "5. [treatment] \"CPT-P therapy\" --treat--> [disease] \"ovarian carcinoma\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40; 6. [treatment] \"CPT-P therapy\" --treat--> [disease] \"cervical cancer\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "CPT-P therapy",
+      "ovarian carcinoma",
+      "cervical cancer"
+    ]
+  }
+]

@@ -1,0 +1,67 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "azacitidine" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: CR 50% | Phase: Phase II | Reliability: 80
+  2. [treatment] "venetoclax" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: CRi 16% | Phase: Phase II | Reliability: 80
+  3. [treatment] "pevonedistat" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: OS 8.1 months | Phase: Phase II | Reliability: 80
+  4. [treatment] "azacitidine, venetoclax and pevonedistat" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: CR/CRi 66% | Phase: Phase II | Reliability: 80
+  5. [treatment] "azacitidine, venetoclax and pevonedistat" --treat--> [disease] "myelodysplastic syndromes or chronic myelomonocytic leukemia" | Efficacy: Positive: overall response rate 75% | Phase: Phase II | Reliability: 80
+  6. [risk_factor] "TP53 mutation" --affect--> [disease] "acute myeloid leukemia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  7. [risk_factor] "MECOM rearrangement" --affect--> [disease] "acute myeloid leukemia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:37422688
+Title: A phase 1/2 study of azacitidine, venetoclax and pevonedistat in newly diagnosed secondary AML and in MDS or CMML after failure of hypomethylating agents.
+Phase: Phase II
+Abstract: BACKGROUND: Pevonedistat is a first-in-class, small molecular inhibitor of NEDD8-activating enzyme that has clinical activity in acute myeloid leukemia (AML) and myelodysplastic syndromes (MDS). Preclinical data suggest synergy of pevonedistat with azacitidine and venetoclax. METHODS: This single-center, phase 1/2 study evaluated the combination of azacitidine, venetoclax and pevonedistat in older adults with newly diagnosed secondary AML or with MDS or chronic myelomonocytic leukemia (CMML) after failure of hypomethylating agents. Patients received azacitidine 75 mg/m<sup>2</sup> IV on days 1-7, venetoclax at maximum dose of 200-400 mg orally on days 1-21 (AML cohort) or days 1-14 (MDS/CMML cohort) and pevonedistat 20 mg/m<sup>2</sup> IV on days 1, 3 and 5 for up to 24 cycles. The primary endpoints for the phase 2 portion of the study were the CR/CRi rate in the AML cohort and the overall response rate (CR + mCR + PR + HI) in the MDS/CMML cohort. FINDINGS: Forty patients were enrolled (32 with AML and 8 with MDS/CMML). In the AML cohort, the median age was 74 years (range 61-86 years), and 27 patients (84%) had at least one adverse risk cyto-molecular feature, including 15 (47%) with a TP53 mutation or MECOM rearrangement; seventeen patients (53%) had received prior therapy for a preceding myeloid disorder. The CR/CRi rate was 66% (CR 50%; CRi 16%), and the median overall survival (OS) was 8.1 months. In the MDS/CMML cohort, 7 patients (87%) were high or very high risk by the IPSS-R. The overall response rate was 75% (CR 13%; mCR with or without HI 50%; HI 13%). The most common grade 3-4 adverse events were infection in 16 patients (35%), febrile neutropenia in 10 patients (25%) and hypophosphatemia in 9 patients (23%). In an exploratory analysis, early upregulation of NOXA expression was observed, with subsequent decrease in MCL-1 and FLIP, findings consistent with preclinical mechanistic studies of pevonedistat. Upregulation of CD36 was observed, which may have contributed to therapeutic resistance. CONCLUSIONS: The triplet combination of azacitidine, venetoclax and pevonedistat shows encouraging activity in this very poor-risk population of patients with AML, MDS or CMML. Trial registration ClinicalTrials.gov (NCT03862157).

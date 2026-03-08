@@ -1,0 +1,166 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 21
+**Question:** What clinical trial phase evaluated the use of Polyphenon E for cervical cancer?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** Phase II
+**Ground Truth Context:** [treatment] "Polyphenon E" --prevent--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 22
+**Question:** True or False: Polyphenon E aggravates the progression of cervical intraepithelial neoplasia.
+**Answer:** I’m sorry, but I don’t have any information on that.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that.
+**Ground Truth Answer:** True
+**Ground Truth Context:** [treatment] "Polyphenon E" --aggravate--> [progression] "cervical intraepithelial neoplasia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 23
+**Question:** Which of the following conditions is affected by Polyphenon E?
+**Answer:** **Condition affected by Polyphenon E**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 55 | Phase II | Not Stated |
+
+*Supporting evidence:* [PMID24388920](https://pubmed.ncbi.nlm.nih.gov/24388920/)
+**Retrieved Context:** **Condition affected by Polyphenon E**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 55 | Phase II | Not Stated |
+
+*Supporting evidence:* [PMID24388920](https://pubmed.ncbi.nlm.nih.gov/24388920/)
+**Ground Truth Answer:** B) Human papillomavirus infection
+**Ground Truth Context:** [treatment] "Polyphenon E" --affect--> [disease] "human papillomavirus infection" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 24
+**Question:** What specific diseases does Polyphenon E aim to prevent?
+**Answer:** Polyphenon E is reported in the data to target the following diseases:
+
+| Disease | reliabilityScore | trialPhase | efficacyEvidence |
+|---------|------------------|------------|------------------|
+| cervical_cancer | 55 | Phase II | Not Stated |
+| cervical_intraepithelial_neoplasia | 55 | Phase II | Not Stated |
+
+Supporting evidence: [pmid24388920](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid24388920).
+**Retrieved Context:** Polyphenon E is reported in the data to target the following diseases:
+
+| Disease | reliabilityScore | trialPhase | efficacyEvidence |
+|---------|------------------|------------|------------------|
+| cervical_cancer | 55 | Phase II | Not Stated |
+| cervical_intraepithelial_neoplasia | 55 | Phase II | Not Stated |
+
+Supporting evidence: [pmid24388920](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid24388920).
+**Ground Truth Answer:** Cervical cancer and cervical intraepithelial neoplasia.
+**Ground Truth Context:** 1. [treatment] "Polyphenon E" --prevent--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+2. [treatment] "Polyphenon E" --prevent--> [disease] "cervical intraepithelial neoplasia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 25
+**Question:** What is the reliability score for the extracted relations involving Polyphenon E in this data?
+**Answer:** **Reliability score for the extracted relations involving Polyphenon E**
+
+| Reliability Score | Trial Phase | Efficacy Evidence | Supporting PMIDs |
+|--------------------|-------------|-------------------|------------------|
+| 55 | Phase II | Not Stated | [24388920](https://pubmed.ncbi.nlm.nih.gov/24388920/) |
+
+*The SPARQL query returned four identical rows, all with a reliability score of **55**, trial phase **Phase II**, and efficacy evidence marked as **Not Stated**. The PMID associated with these entries is 24388920.*
+**Retrieved Context:** **Reliability score for the extracted relations involving Polyphenon E**
+
+| Reliability Score | Trial Phase | Efficacy Evidence | Supporting PMIDs |
+|--------------------|-------------|-------------------|------------------|
+| 55 | Phase II | Not Stated | [24388920](https://pubmed.ncbi.nlm.nih.gov/24388920/) |
+
+*The SPARQL query returned four identical rows, all with a reliability score of **55**, trial phase **Phase II**, and efficacy evidence marked as **Not Stated**. The PMID associated with these entries is 24388920.*
+**Ground Truth Answer:** 55
+**Ground Truth Context:** [treatment] "Polyphenon E" --prevent--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 26
+**Question:** What phase of clinical trial demonstrated that the 9vHPV vaccine prevents high-grade cervical dysplasia?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** Phase III
+**Ground Truth Context:** [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade cervical dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 27
+**Question:** What was the reported efficacy of the 9vHPV vaccine in preventing high-grade vulvar dysplasia?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** C) 92.3%
+**Ground Truth Context:** [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade vulvar dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 28
+**Question:** True or False: Evidence shows that the 9vHPV vaccine prevents high-grade vaginal dysplasia.
+**Answer:** I’m sorry, but I don’t have any information on that.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that.
+**Ground Truth Answer:** True
+**Ground Truth Context:** [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade vaginal dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 29
+**Question:** Which specific types of high-grade dysplasia does the 9vHPV vaccine prevent?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** High-grade cervical dysplasia, high-grade vulvar dysplasia, and high-grade vaginal dysplasia.
+**Ground Truth Context:** 1. [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade cervical dysplasia" ... 2. [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade vulvar dysplasia" ... 3. [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade vaginal dysplasia"
+
+---
+
+### Question ID: 30
+**Question:** What is the reliability score for the extraction indicating the 9vHPV vaccine prevents high-grade cervical dysplasia?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** 95
+**Ground Truth Context:** [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade cervical dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+
+---
+

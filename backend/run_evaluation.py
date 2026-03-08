@@ -32,7 +32,7 @@ LMSTUDIO_MODEL = os.getenv("LMSTUDIO_MODEL", "local-model")
 
 GROUND_TRUTH_DIR = Path("d:/Projects/OncoGraphRAG/data/evaluation/ground_truth")
 OUTPUT_DIR = Path("d:/Projects/OncoGraphRAG/data/evaluation/results")
-MAX_QUESTIONS = None  # Set to None to run all questions
+MAX_QUESTIONS = 1  # Set to None to run all questions
 
 
 class EvalCallbackHandler(BaseCallbackHandler):
@@ -43,17 +43,16 @@ class EvalCallbackHandler(BaseCallbackHandler):
         self.sparql_results = ""
         self._llm_call_count = 0
 
-    def on_llm_end(self, response: Any, **kwargs: Any) -> None:
-        self._llm_call_count += 1
-        text = response.generations[0][0].text if response.generations else str(response)
-        if self._llm_call_count == 1:
-            self.sparql_query = text.strip()
-
     def on_llm_start(self, serialized: dict, prompts: list[str], **kwargs: Any) -> None:
         self._llm_call_count += 1
         # The 2nd LLM call's prompt contains SPARQL results as context
         if self._llm_call_count == 2:
             self.sparql_results = prompts[0]
+
+    def on_llm_end(self, response: Any, **kwargs: Any) -> None:
+        text = response.generations[0][0].text if response.generations else str(response)
+        if self._llm_call_count == 1:
+            self.sparql_query = text.strip()
 
     def on_chain_end(self, outputs: dict, **kwargs: Any) -> None:
         if not isinstance(outputs, dict):

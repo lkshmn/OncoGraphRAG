@@ -1,0 +1,72 @@
+[
+  {
+    "source_id": "PMID:37402581",
+    "type": "Simple Open-Ended",
+    "question": "What is the reported efficacy of nivolumab ipilimumab for treating non-small cell lung cancer?",
+    "options": null,
+    "ground_truth_answer": "Positive: encouraging treatment response.",
+    "ground_truth_context": "[treatment] \"nivolumab ipilimumab\" --treat--> [disease] \"non-small cell lung cancer\" | Efficacy: Positive: encouraging treatment response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "nivolumab ipilimumab",
+      "non-small cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:37402581",
+    "type": "Simple MCQ",
+    "question": "What trial phase is associated with the evaluation of stereotactic radiosurgery for treating brain metastasis?",
+    "options": [
+      "A) Phase I",
+      "B) Phase II",
+      "C) Phase III",
+      "D) Phase IV"
+    ],
+    "ground_truth_answer": "B) Phase II",
+    "ground_truth_context": "[treatment] \"stereotactic radiosurgery\" --treat--> [disease] \"brain metastasis\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "stereotactic radiosurgery",
+      "brain metastasis"
+    ]
+  },
+  {
+    "source_id": "PMID:37402581",
+    "type": "Simple True/False",
+    "question": "True or False: The efficacy of nivolumab ipilimumab for treating brain metastasis is reported as positive with an encouraging intracranial treatment response.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[treatment] \"nivolumab ipilimumab\" --treat--> [disease] \"brain metastasis\" | Efficacy: Positive: encouraging intracranial treatment response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "nivolumab ipilimumab",
+      "brain metastasis"
+    ]
+  },
+  {
+    "source_id": "PMID:37402581",
+    "type": "Simple 1-Hop",
+    "question": "Which three treatments are noted to treat brain metastasis with an efficacy of 'Not Stated'?",
+    "options": null,
+    "ground_truth_answer": "Radiation therapy, surgery, and stereotactic radiosurgery.",
+    "ground_truth_context": "[treatment] \"radiation therapy\" --treat--> [disease] \"brain metastasis\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55; [treatment] \"surgery\" --treat--> [disease] \"brain metastasis\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55; [treatment] \"stereotactic radiosurgery\" --treat--> [disease] \"brain metastasis\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "radiation therapy",
+      "surgery",
+      "stereotactic radiosurgery",
+      "brain metastasis"
+    ]
+  },
+  {
+    "source_id": "PMID:37402581",
+    "type": "Simple 1-Hop",
+    "question": "What is the reliability score for the treatment relation between nivolumab ipilimumab and non-small cell lung cancer?",
+    "options": null,
+    "ground_truth_answer": "80",
+    "ground_truth_context": "[treatment] \"nivolumab ipilimumab\" --treat--> [disease] \"non-small cell lung cancer\" | Efficacy: Positive: encouraging treatment response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "nivolumab ipilimumab",
+      "non-small cell lung cancer"
+    ]
+  }
+]

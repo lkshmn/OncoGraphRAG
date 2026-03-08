@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:24388920",
+    "type": "Simple 1-Hop",
+    "question": "What clinical trial phase evaluated the use of Polyphenon E for cervical cancer?",
+    "options": null,
+    "ground_truth_answer": "Phase II",
+    "ground_truth_context": "[treatment] \"Polyphenon E\" --prevent--> [disease] \"cervical cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "Polyphenon E",
+      "cervical cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:24388920",
+    "type": "Simple True/False",
+    "question": "True or False: Polyphenon E aggravates the progression of cervical intraepithelial neoplasia.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[treatment] \"Polyphenon E\" --aggravate--> [progression] \"cervical intraepithelial neoplasia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "Polyphenon E",
+      "cervical intraepithelial neoplasia"
+    ]
+  },
+  {
+    "source_id": "PMID:24388920",
+    "type": "Simple MCQ",
+    "question": "Which of the following conditions is affected by Polyphenon E?",
+    "options": [
+      "A) Breast cancer",
+      "B) Human papillomavirus infection",
+      "C) Melanoma",
+      "D) Lung cancer"
+    ],
+    "ground_truth_answer": "B) Human papillomavirus infection",
+    "ground_truth_context": "[treatment] \"Polyphenon E\" --affect--> [disease] \"human papillomavirus infection\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "Polyphenon E",
+      "human papillomavirus infection"
+    ]
+  },
+  {
+    "source_id": "PMID:24388920",
+    "type": "Simple Open-Ended",
+    "question": "What specific diseases does Polyphenon E aim to prevent?",
+    "options": null,
+    "ground_truth_answer": "Cervical cancer and cervical intraepithelial neoplasia.",
+    "ground_truth_context": "1. [treatment] \"Polyphenon E\" --prevent--> [disease] \"cervical cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55\n2. [treatment] \"Polyphenon E\" --prevent--> [disease] \"cervical intraepithelial neoplasia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "Polyphenon E",
+      "cervical cancer",
+      "cervical intraepithelial neoplasia"
+    ]
+  },
+  {
+    "source_id": "PMID:24388920",
+    "type": "Simple 1-Hop",
+    "question": "What is the reliability score for the extracted relations involving Polyphenon E in this data?",
+    "options": null,
+    "ground_truth_answer": "55",
+    "ground_truth_context": "[treatment] \"Polyphenon E\" --prevent--> [disease] \"cervical cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "Polyphenon E"
+    ]
+  }
+]

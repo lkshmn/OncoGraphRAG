@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:19127265",
+    "type": "Simple 1-Hop",
+    "question": "What disease is treated by valproic acid plus chemoimmunotherapy?",
+    "options": null,
+    "ground_truth_answer": "Advanced melanoma.",
+    "ground_truth_context": "[treatment] \"valproic acid plus chemoimmunotherapy\" --treat--> [disease] \"advanced melanoma\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "valproic acid plus chemoimmunotherapy",
+      "advanced melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:19127265",
+    "type": "Simple True/False",
+    "question": "True or False: Valproic acid dosage aggravates side effects.",
+    "options": null,
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"valproic acid dosage\" --aggravate--> [symptom] \"side effects\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "valproic acid dosage",
+      "side effects"
+    ]
+  },
+  {
+    "source_id": "PMID:19127265",
+    "type": "Simple MCQ",
+    "question": "Which condition is treated by interferon alpha?",
+    "options": [
+      "A) Early stage breast cancer",
+      "B) Advanced melanoma",
+      "C) Chronic leukemia",
+      "D) Non-small cell lung cancer"
+    ],
+    "ground_truth_answer": "B) Advanced melanoma",
+    "ground_truth_context": "[treatment] \"interferon alpha\" --treat--> [disease] \"advanced melanoma\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "interferon alpha",
+      "advanced melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:19127265",
+    "type": "Simple Open-Ended",
+    "question": "What biomarker is diagnosed using a target inhibition measurement?",
+    "options": null,
+    "ground_truth_answer": "Peripheral blood cells.",
+    "ground_truth_context": "[test] \"target inhibition measurement\" --diagnose--> [biomarker] \"peripheral blood cells\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "target inhibition measurement",
+      "peripheral blood cells"
+    ]
+  },
+  {
+    "source_id": "PMID:19127265",
+    "type": "Simple 1-Hop",
+    "question": "In what phase of clinical trials was valproic acid evaluated for the treatment of advanced melanoma?",
+    "options": null,
+    "ground_truth_answer": "Phase II.",
+    "ground_truth_context": "[treatment] \"valproic acid\" --treat--> [disease] \"advanced melanoma\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "valproic acid",
+      "advanced melanoma"
+    ]
+  }
+]

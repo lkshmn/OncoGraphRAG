@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:26313229",
+    "type": "Simple 1-Hop",
+    "question": "What disease is DIM evaluated to prevent?",
+    "options": null,
+    "ground_truth_answer": "Prostate cancer.",
+    "ground_truth_context": "[treatment] \"DIM\" --prevent--> [disease] \"prostate cancer\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "DIM",
+      "prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:26313229",
+    "type": "Simple MCQ",
+    "question": "In which body part is DIM reported to be present?",
+    "options": [
+      "A) Lung tissue",
+      "B) Brain tissue",
+      "C) Prostate tissue",
+      "D) Liver tissue"
+    ],
+    "ground_truth_answer": "C) Prostate tissue",
+    "ground_truth_context": "[treatment] \"DIM\" --present--> [body_part] \"prostate tissue\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "DIM",
+      "prostate tissue"
+    ]
+  },
+  {
+    "source_id": "PMID:26313229",
+    "type": "Simple True/False",
+    "question": "True or False: BR-DIM affects the biomarker urinary 2-hydroxyestrone/16-hydroxyestrone ratio.",
+    "options": null,
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"BR-DIM\" --affect--> [biomarker] \"urinary 2-hydroxyestrone/16-hydroxyestrone ratio\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "BR-DIM",
+      "urinary 2-hydroxyestrone/16-hydroxyestrone ratio"
+    ]
+  },
+  {
+    "source_id": "PMID:26313229",
+    "type": "Simple Open-Ended",
+    "question": "What trial phase was recorded for the treatment of prostate cancer with DIM?",
+    "options": null,
+    "ground_truth_answer": "Phase I.",
+    "ground_truth_context": "[treatment] \"DIM\" --treat--> [disease] \"prostate cancer\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "DIM",
+      "prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:26313229",
+    "type": "Simple 1-Hop",
+    "question": "What biomarker does the treatment BR-DIM affect?",
+    "options": null,
+    "ground_truth_answer": "The urinary 2-hydroxyestrone/16-hydroxyestrone ratio.",
+    "ground_truth_context": "[treatment] \"BR-DIM\" --affect--> [biomarker] \"urinary 2-hydroxyestrone/16-hydroxyestrone ratio\" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40",
+    "key_entities": [
+      "BR-DIM",
+      "urinary 2-hydroxyestrone/16-hydroxyestrone ratio"
+    ]
+  }
+]

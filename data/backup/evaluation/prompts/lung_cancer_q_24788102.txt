@@ -1,0 +1,63 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "racotumomab alum" --treat--> [disease] "non small cell lung cancer" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95
+  2. [treatment] "racotumomab alum" --present--> [symptom] "burning pain injection site bone pain asthenia" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+  3. [test] "anti neuGcgm3 antibody response" --affect--> [disease] "non small cell lung cancer" | Efficacy: Positive: longer median survival times | Phase: Phase III | Reliability: 95
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:24788102
+Title: A randomized, multicenter, placebo-controlled clinical trial of racotumomab-alum vaccine as switch maintenance therapy in advanced non-small cell lung cancer patients.
+Phase: Phase III
+Abstract: PURPOSE: Racotumomab-alum is an anti-idiotype vaccine targeting the NeuGcGM3 tumor-associated ganglioside. This clinical trial was conducted to provide a preliminary estimate of efficacy and safety of racotumomab as switch maintenance for patients with advanced non-small cell lung cancer (NSCLC). EXPERIMENTAL DESIGN: Patients with stage IIIb/IV NSCLC who have at least stable disease after first-line chemotherapy were randomized 1:1 to racotumomab-alum (5 immunizations every 2 weeks and re-immunizations every 4 weeks) or placebo. Treatment was administered beyond progressive disease, until severe performance status worsening or toxicity. At progression, only five patients per group received further anticancer therapy. The primary endpoint was overall survival (OS). RESULTS: One-hundred and seventy-six patients were randomized to racotumomab-alum (n = 87) and placebo (n = 89). Median OS was 8.23 and 6.80 months, respectively [HR, 0.63; 95% confidence interval (CI), 0.46-0.87; P = 0.004]. Median progression-free survival (PFS) in vaccinated patients was 5.33 versus 3.90 months for placebo (HR, 0.73; 95% CI 0.53-0.99; P = 0.039). The most common adverse events in the racotumomab-alum arm were burning and pain at the injection site, bone pain, and asthenia. A high antibody response of IgM and IgG isotype against the NeuGcGM3 ganglioside was obtained. Hyperimmune sera were able to specifically recognize and kill the NeuGcGM3-expressing L1210 cell line. Patients who developed anti-NeuGcGM3 antibodies capable to bind and kill ≥30% L1210 cells showed longer median survival times. CONCLUSIONS: Switch maintenance with racotumomab-alum is an effective and a well-tolerated treatment option for patients with advanced NSCLC.

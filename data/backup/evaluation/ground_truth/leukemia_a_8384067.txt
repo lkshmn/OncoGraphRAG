@@ -1,0 +1,71 @@
+[
+  {
+    "source_id": "PMID:8384067",
+    "type": "Simple 1-Hop",
+    "question": "What disease does the treatment MST-16 treat?",
+    "options": null,
+    "ground_truth_answer": "Adult T-cell leukemia lymphoma.",
+    "ground_truth_context": "[treatment] \"MST-16\" --treat--> [disease] \"adult T-cell leukemia lymphoma\" | Efficacy: Positive: complete and partial remissions observed in 23 of 24 patients | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "MST-16",
+      "adult T-cell leukemia lymphoma"
+    ]
+  },
+  {
+    "source_id": "PMID:8384067",
+    "type": "Simple MCQ",
+    "question": "Which of the following complications is affected by MST-16?",
+    "options": [
+      "A) Hypertension",
+      "B) Leukopenia",
+      "C) Heart failure",
+      "D) Asthma"
+    ],
+    "ground_truth_answer": "B) Leukopenia",
+    "ground_truth_context": "[treatment] \"MST-16\" --affect--> [complication] \"leukopenia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "MST-16",
+      "leukopenia"
+    ]
+  },
+  {
+    "source_id": "PMID:8384067",
+    "type": "Simple True/False",
+    "question": "True or False: The trial phase evaluating the relation between MST-16 and adult T-cell leukemia lymphoma is Phase III.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "False. The trial phase is Phase II.",
+    "ground_truth_context": "[treatment] \"MST-16\" --treat--> [disease] \"adult T-cell leukemia lymphoma\" | Efficacy: Positive: complete and partial remissions observed in 23 of 24 patients | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "MST-16",
+      "adult T-cell leukemia lymphoma",
+      "Phase II"
+    ]
+  },
+  {
+    "source_id": "PMID:8384067",
+    "type": "Simple Open-Ended",
+    "question": "What is the efficacy outcome of MST-16 for treating adult T-cell leukemia lymphoma?",
+    "options": null,
+    "ground_truth_answer": "Positive, with complete and partial remissions observed in 23 of 24 patients.",
+    "ground_truth_context": "[treatment] \"MST-16\" --treat--> [disease] \"adult T-cell leukemia lymphoma\" | Efficacy: Positive: complete and partial remissions observed in 23 of 24 patients | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "MST-16",
+      "adult T-cell leukemia lymphoma"
+    ]
+  },
+  {
+    "source_id": "PMID:8384067",
+    "type": "Simple 1-Hop",
+    "question": "What is the reliability score for the relation showing MST-16 affects anemia?",
+    "options": null,
+    "ground_truth_answer": "55",
+    "ground_truth_context": "[treatment] \"MST-16\" --affect--> [complication] \"anemia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "MST-16",
+      "anemia"
+    ]
+  }
+]

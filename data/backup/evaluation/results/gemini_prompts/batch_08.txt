@@ -1,0 +1,264 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 71
+**Question:** What is the reported efficacy of nivolumab ipilimumab for treating non-small cell lung cancer?
+**Answer:** **Reported efficacy of nivolumab + ipilimumab for treating non‑small cell lung cancer**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 80 | Phase II | Positive: encouraging treatment response |
+
+Supporting evidence: [PMID37402581](https://pubmed.ncbi.nlm.nih.gov/37402581/)
+**Retrieved Context:** **Reported efficacy of nivolumab + ipilimumab for treating non‑small cell lung cancer**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 80 | Phase II | Positive: encouraging treatment response |
+
+Supporting evidence: [PMID37402581](https://pubmed.ncbi.nlm.nih.gov/37402581/)
+**Ground Truth Answer:** Positive: encouraging treatment response.
+**Ground Truth Context:** [treatment] "nivolumab ipilimumab" --treat--> [disease] "non-small cell lung cancer" | Efficacy: Positive: encouraging treatment response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 72
+**Question:** What trial phase is associated with the evaluation of stereotactic radiosurgery for treating brain metastasis?
+**Answer:** **Trial phase associated with the evaluation of stereotactic radiosurgery for treating brain metastasis**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 55 | Phase II | Not Stated |
+
+Supporting evidence: [PMID37402581](https://pubmed.ncbi.nlm.nih.gov/37402581/)
+**Retrieved Context:** **Trial phase associated with the evaluation of stereotactic radiosurgery for treating brain metastasis**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 55 | Phase II | Not Stated |
+
+Supporting evidence: [PMID37402581](https://pubmed.ncbi.nlm.nih.gov/37402581/)
+**Ground Truth Answer:** B) Phase II
+**Ground Truth Context:** [treatment] "stereotactic radiosurgery" --treat--> [disease] "brain metastasis" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 73
+**Question:** True or False: The efficacy of nivolumab ipilimumab for treating brain metastasis is reported as positive with an encouraging intracranial treatment response.
+**Answer:** **True**
+
+- **reliabilityScore:** 80  
+- **trialPhase:** Phase II  
+- **efficacyEvidence:** Positive: encouraging intracranial treatment response  
+
+Supporting evidence: [PMID 37402581](https://pubmed.ncbi.nlm.nih.gov/37402581/)
+**Retrieved Context:** **True**
+
+- **reliabilityScore:** 80  
+- **trialPhase:** Phase II  
+- **efficacyEvidence:** Positive: encouraging intracranial treatment response  
+
+Supporting evidence: [PMID 37402581](https://pubmed.ncbi.nlm.nih.gov/37402581/)
+**Ground Truth Answer:** True
+**Ground Truth Context:** [treatment] "nivolumab ipilimumab" --treat--> [disease] "brain metastasis" | Efficacy: Positive: encouraging intracranial treatment response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 74
+**Question:** Which three treatments are noted to treat brain metastasis with an efficacy of 'Not Stated'?
+**Answer:** **Treatments for brain metastasis with “Not Stated” efficacy**
+
+| Treatment | Reliability Score | Trial Phase | Efficacy Evidence |
+|-----------|-------------------|-------------|--------------------|
+| radiation_therapy | 55 | Phase II | Not Stated |
+| surgery | 55 | Phase II | Not Stated |
+| stereotactic_radiosurgery | 55 | Phase II | Not Stated |
+
+**Supporting PMID**
+
+- [PMID37402581](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid37402581)
+**Retrieved Context:** **Treatments for brain metastasis with “Not Stated” efficacy**
+
+| Treatment | Reliability Score | Trial Phase | Efficacy Evidence |
+|-----------|-------------------|-------------|--------------------|
+| radiation_therapy | 55 | Phase II | Not Stated |
+| surgery | 55 | Phase II | Not Stated |
+| stereotactic_radiosurgery | 55 | Phase II | Not Stated |
+
+**Supporting PMID**
+
+- [PMID37402581](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid37402581)
+**Ground Truth Answer:** Radiation therapy, surgery, and stereotactic radiosurgery.
+**Ground Truth Context:** [treatment] "radiation therapy" --treat--> [disease] "brain metastasis" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55; [treatment] "surgery" --treat--> [disease] "brain metastasis" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55; [treatment] "stereotactic radiosurgery" --treat--> [disease] "brain metastasis" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 75
+**Question:** What is the reliability score for the treatment relation between nivolumab ipilimumab and non-small cell lung cancer?
+**Answer:** **Reliability score for the nivolumab + ipilimumab treatment relation in non‑small cell lung cancer**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: encouraging treatment response |
+
+*No PubMed identifiers are provided in the query results.*
+**Retrieved Context:** **Reliability score for the nivolumab + ipilimumab treatment relation in non‑small cell lung cancer**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: encouraging treatment response |
+
+*No PubMed identifiers are provided in the query results.*
+**Ground Truth Answer:** 80
+**Ground Truth Context:** [treatment] "nivolumab ipilimumab" --treat--> [disease] "non-small cell lung cancer" | Efficacy: Positive: encouraging treatment response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 76
+**Question:** What diseases does the semiallogeneic vaccine treat?
+**Answer:** **Metastatic melanoma**
+
+- **Reliability score:** 80  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+- **Supporting PMID:** [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+
+**Metastatic adenocarcinoma**
+
+- **Reliability score:** 80  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+- **Supporting PMID:** [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Retrieved Context:** **Metastatic melanoma**
+
+- **Reliability score:** 80  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+- **Supporting PMID:** [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+
+**Metastatic adenocarcinoma**
+
+- **Reliability score:** 80  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+- **Supporting PMID:** [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Ground Truth Answer:** Metastatic melanoma and metastatic adenocarcinoma.
+**Ground Truth Context:** [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic melanoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+[treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic adenocarcinoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 77
+**Question:** True or False: The use of the semiallogeneic vaccine for metastatic melanoma was evaluated in a Phase II trial.
+**Answer:** **True**
+
+- **reliabilityScore:** 80  
+- **trialPhase:** Phase II  
+- **efficacyEvidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+
+Supporting PMID: [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Retrieved Context:** **True**
+
+- **reliabilityScore:** 80  
+- **trialPhase:** Phase II  
+- **efficacyEvidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+
+Supporting PMID: [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Ground Truth Answer:** True.
+**Ground Truth Context:** [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic melanoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 78
+**Question:** What is the reported efficacy of the semiallogeneic vaccine when treating metastatic adenocarcinoma?
+**Answer:** **Reported Efficacy of the Semiallogeneic Vaccine for Metastatic Adenocarcinoma**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response |
+
+**Supporting PMID:** [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Retrieved Context:** **Reported Efficacy of the Semiallogeneic Vaccine for Metastatic Adenocarcinoma**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response |
+
+**Supporting PMID:** [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Ground Truth Answer:** (B) Positive with minimal or no toxicity and induction of a specific anti-tumor immune response
+**Ground Truth Context:** [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic adenocarcinoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 79
+**Question:** What is the reliability score for the data on using the semiallogeneic vaccine to treat metastatic melanoma?
+**Answer:** **Reliability score:** 80  
+**Trial phase:** Phase II  
+**Efficacy evidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+
+Supporting study: [PMID10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Retrieved Context:** **Reliability score:** 80  
+**Trial phase:** Phase II  
+**Efficacy evidence:** Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response  
+
+Supporting study: [PMID10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Ground Truth Answer:** 80
+**Ground Truth Context:** [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic melanoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 80
+**Question:** What phase of trial investigated the semiallogeneic vaccine for metastatic adenocarcinoma?
+**Answer:** **Trial phase investigated the semiallogeneic vaccine for metastatic adenocarcinoma**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response |
+
+Supporting PMID: [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Retrieved Context:** **Trial phase investigated the semiallogeneic vaccine for metastatic adenocarcinoma**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: minimal or no toxicity and can induce a specific anti‑tumor immune response |
+
+Supporting PMID: [10746551](https://pubmed.ncbi.nlm.nih.gov/10746551/)
+**Ground Truth Answer:** Phase II
+**Ground Truth Context:** [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic adenocarcinoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+
+---
+

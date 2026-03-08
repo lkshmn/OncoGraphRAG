@@ -1,0 +1,207 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 111
+**Question:** What symptom is present in castration resistant prostate cancer?
+**Answer:** **Castration‑resistant prostate cancer – reported symptoms**
+
+| Symptom | Reliability Score | Trial Phase | Efficacy Evidence |
+|---------|-------------------|-------------|--------------------|
+| Bone disease | 55 | Phase II | Not Stated |
+| Lymph‑node disease | 55 | Phase II | Not Stated |
+
+**Supporting literature**
+
+- [PMID:19815486](https://pubmed.ncbi.nlm.nih.gov/19815486/)
+**Retrieved Context:** **Castration‑resistant prostate cancer – reported symptoms**
+
+| Symptom | Reliability Score | Trial Phase | Efficacy Evidence |
+|---------|-------------------|-------------|--------------------|
+| Bone disease | 55 | Phase II | Not Stated |
+| Lymph‑node disease | 55 | Phase II | Not Stated |
+
+**Supporting literature**
+
+- [PMID:19815486](https://pubmed.ncbi.nlm.nih.gov/19815486/)
+**Ground Truth Answer:** Pain.
+**Ground Truth Context:** 3. [symptom] "pain" --present--> [disease] "castration resistant prostate cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 112
+**Question:** True or False: The treatment combination of atrasentan and docetaxel showed a positive efficacy with significant improvement in overall survival for castration resistant prostate cancer.
+**Answer:** **False**
+
+- **ReliabilityScore:** 70  
+- **TrialPhase:** Phase III  
+- **EfficacyEvidence:** “Negative: no significant difference in overall survival (p=0.64)”  
+
+Supporting evidence: [PMID23871417](https://pubmed.ncbi.nlm.nih.gov/23871417/)
+**Retrieved Context:** **False**
+
+- **ReliabilityScore:** 70  
+- **TrialPhase:** Phase III  
+- **EfficacyEvidence:** “Negative: no significant difference in overall survival (p=0.64)”  
+
+Supporting evidence: [PMID23871417](https://pubmed.ncbi.nlm.nih.gov/23871417/)
+**Ground Truth Answer:** False. The efficacy was negative, showing no significant difference in overall survival (p=0.64).
+**Ground Truth Context:** 1. [treatment] "atrasentan and docetaxel" --treat--> [disease] "castration resistant prostate cancer" | Efficacy: Negative: no significant difference in overall survival (p=0.64) | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 113
+**Question:** Which body part is identified as having metastases present in castration resistant prostate cancer?
+**Answer:** **Metastatic castration‑resistant prostate cancer – body parts with identified metastases**
+
+| Body part | reliabilityScore | trialPhase | efficacyEvidence |
+|-----------|------------------|------------|------------------|
+| bone_disease | 55 | Phase II | Not Stated |
+| lymph_node_disease | 55 | Phase II | Not Stated |
+
+**Supporting evidence**
+
+- [PMID:19815486](https://pubmed.ncbi.nlm.nih.gov/19815486/)
+**Retrieved Context:** **Metastatic castration‑resistant prostate cancer – body parts with identified metastases**
+
+| Body part | reliabilityScore | trialPhase | efficacyEvidence |
+|-----------|------------------|------------|------------------|
+| bone_disease | 55 | Phase II | Not Stated |
+| lymph_node_disease | 55 | Phase II | Not Stated |
+
+**Supporting evidence**
+
+- [PMID:19815486](https://pubmed.ncbi.nlm.nih.gov/19815486/)
+**Ground Truth Answer:** C) Bone metastases
+**Ground Truth Context:** 4. [body_part] "bone metastases" --present--> [disease] "castration resistant prostate cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 114
+**Question:** What was the efficacy outcome of treating castration resistant prostate cancer with atrasentan and docetaxel?
+**Answer:** **Efficacy outcome for treating castration‑resistant prostate cancer with atrasentan and docetaxel**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 70 | Phase III | Negative: no significant difference in overall survival (p=0.64) |
+
+**Supporting evidence:** [PMID23871417](https://pubmed.ncbi.nlm.nih.gov/23871417/)
+**Retrieved Context:** **Efficacy outcome for treating castration‑resistant prostate cancer with atrasentan and docetaxel**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 70 | Phase III | Negative: no significant difference in overall survival (p=0.64) |
+
+**Supporting evidence:** [PMID23871417](https://pubmed.ncbi.nlm.nih.gov/23871417/)
+**Ground Truth Answer:** The treatment resulted in a negative efficacy outcome, with no significant difference in overall survival (p=0.64).
+**Ground Truth Context:** 1. [treatment] "atrasentan and docetaxel" --treat--> [disease] "castration resistant prostate cancer" | Efficacy: Negative: no significant difference in overall survival (p=0.64) | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 115
+**Question:** What disease does docetaxel treat according to Phase III trial data?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** Castration resistant prostate cancer.
+**Ground Truth Context:** 2. [treatment] "docetaxel" --treat--> [disease] "castration resistant prostate cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 116
+**Question:** What disease is DIM evaluated to prevent?
+**Answer:** I’m sorry, but the query results do not contain any information about a specific disease that DIM is evaluated to prevent.
+**Retrieved Context:** I’m sorry, but the query results do not contain any information about a specific disease that DIM is evaluated to prevent.
+**Ground Truth Answer:** Prostate cancer.
+**Ground Truth Context:** [treatment] "DIM" --prevent--> [disease] "prostate cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 117
+**Question:** In which body part is DIM reported to be present?
+**Answer:** I’m sorry, but I don’t have any information on that.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that.
+**Ground Truth Answer:** C) Prostate tissue
+**Ground Truth Context:** [treatment] "DIM" --present--> [body_part] "prostate tissue" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 118
+**Question:** True or False: BR-DIM affects the biomarker urinary 2-hydroxyestrone/16-hydroxyestrone ratio.
+**Answer:** I’m sorry, but I don’t have any information on that.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that.
+**Ground Truth Answer:** True.
+**Ground Truth Context:** [treatment] "BR-DIM" --affect--> [biomarker] "urinary 2-hydroxyestrone/16-hydroxyestrone ratio" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 119
+**Question:** What trial phase was recorded for the treatment of prostate cancer with DIM?
+**Answer:** **Findings**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 55 | Phase II | Not Stated |
+| 40 | Phase I | Not Stated |
+
+**Supporting PMIDs**
+
+- [14529764](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid14529764)
+- [26313229](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid26313229)
+**Retrieved Context:** **Findings**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 55 | Phase II | Not Stated |
+| 40 | Phase I | Not Stated |
+
+**Supporting PMIDs**
+
+- [14529764](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid14529764)
+- [26313229](http://www.semanticweb.org/lkshmn/ontologies/2026/1/OncoGraphRAG#pmid26313229)
+**Ground Truth Answer:** Phase I.
+**Ground Truth Context:** [treatment] "DIM" --treat--> [disease] "prostate cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 120
+**Question:** What biomarker does the treatment BR-DIM affect?
+**Answer:** I’m sorry, but the information returned by the SPARQL query does not include any mention of a specific biomarker that the treatment BR‑DIM affects.
+**Retrieved Context:** I’m sorry, but the information returned by the SPARQL query does not include any mention of a specific biomarker that the treatment BR‑DIM affects.
+**Ground Truth Answer:** The urinary 2-hydroxyestrone/16-hydroxyestrone ratio.
+**Ground Truth Context:** [treatment] "BR-DIM" --affect--> [biomarker] "urinary 2-hydroxyestrone/16-hydroxyestrone ratio" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+

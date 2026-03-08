@@ -1,0 +1,72 @@
+[
+  {
+    "source_id": "PMID:29269325",
+    "type": "Simple 1-Hop",
+    "question": "What phase of clinical trial demonstrated that the 9vHPV vaccine prevents high-grade cervical dysplasia?",
+    "options": null,
+    "ground_truth_answer": "Phase III",
+    "ground_truth_context": "[treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade cervical dysplasia\" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "9vHPV vaccine",
+      "high-grade cervical dysplasia"
+    ]
+  },
+  {
+    "source_id": "PMID:29269325",
+    "type": "Simple MCQ",
+    "question": "What was the reported efficacy of the 9vHPV vaccine in preventing high-grade vulvar dysplasia?",
+    "options": [
+      "A) 75.0%",
+      "B) 82.1%",
+      "C) 92.3%",
+      "D) 99.6%"
+    ],
+    "ground_truth_answer": "C) 92.3%",
+    "ground_truth_context": "[treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade vulvar dysplasia\" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "9vHPV vaccine",
+      "high-grade vulvar dysplasia"
+    ]
+  },
+  {
+    "source_id": "PMID:29269325",
+    "type": "Simple True/False",
+    "question": "True or False: Evidence shows that the 9vHPV vaccine prevents high-grade vaginal dysplasia.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade vaginal dysplasia\" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "9vHPV vaccine",
+      "high-grade vaginal dysplasia"
+    ]
+  },
+  {
+    "source_id": "PMID:29269325",
+    "type": "Simple Open-Ended",
+    "question": "Which specific types of high-grade dysplasia does the 9vHPV vaccine prevent?",
+    "options": null,
+    "ground_truth_answer": "High-grade cervical dysplasia, high-grade vulvar dysplasia, and high-grade vaginal dysplasia.",
+    "ground_truth_context": "1. [treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade cervical dysplasia\" ... 2. [treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade vulvar dysplasia\" ... 3. [treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade vaginal dysplasia\"",
+    "key_entities": [
+      "9vHPV vaccine",
+      "high-grade cervical dysplasia",
+      "high-grade vulvar dysplasia",
+      "high-grade vaginal dysplasia"
+    ]
+  },
+  {
+    "source_id": "PMID:29269325",
+    "type": "Simple 1-Hop",
+    "question": "What is the reliability score for the extraction indicating the 9vHPV vaccine prevents high-grade cervical dysplasia?",
+    "options": null,
+    "ground_truth_answer": "95",
+    "ground_truth_context": "[treatment] \"9vHPV vaccine\" --prevent--> [disease] \"high-grade cervical dysplasia\" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "9vHPV vaccine",
+      "high-grade cervical dysplasia"
+    ]
+  }
+]

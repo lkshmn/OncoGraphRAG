@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:10684124",
+    "type": "Simple 1-Hop",
+    "question": "What risk factor is known to cause micronuclei frequency?",
+    "options": null,
+    "ground_truth_answer": "Cigarette smoking.",
+    "ground_truth_context": "[risk_factor] \"cigarette smoking\" --cause--> [test] \"micronuclei frequency\" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75",
+    "key_entities": [
+      "cigarette smoking",
+      "micronuclei frequency"
+    ]
+  },
+  {
+    "source_id": "PMID:10684124",
+    "type": "Simple True/False",
+    "question": "True or False: Mixed tea is shown to prevent oral cancer.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[treatment] \"mixed tea\" --prevent--> [disease] \"oral cancer\" | Efficacy: Positive: reduced oral cancer risk | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea",
+      "oral cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:10684124",
+    "type": "Simple MCQ",
+    "question": "What effect does mixed tea have on micronuclei frequency?",
+    "options": [
+      "A) It significantly increases micronuclei formation.",
+      "B) It has no effect on micronuclei frequency.",
+      "C) It causes oral cancer.",
+      "D) It significantly decreases micronuclei formation."
+    ],
+    "ground_truth_answer": "D) It significantly decreases micronuclei formation.",
+    "ground_truth_context": "[treatment] \"mixed tea\" --prevent--> [test] \"micronuclei frequency\" | Efficacy: Positive: significantly decreased micronuclei formation | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea",
+      "micronuclei frequency"
+    ]
+  },
+  {
+    "source_id": "PMID:10684124",
+    "type": "Simple 1-Hop",
+    "question": "What phase of clinical trial investigated the preventative effect of mixed tea on oral cancer?",
+    "options": null,
+    "ground_truth_answer": "Randomized Controlled Trial.",
+    "ground_truth_context": "[treatment] \"mixed tea\" --prevent--> [disease] \"oral cancer\" | Efficacy: Positive: reduced oral cancer risk | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea",
+      "oral cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:10684124",
+    "type": "Simple Open-Ended",
+    "question": "What is the specific efficacy outcome of using mixed tea for oral cancer?",
+    "options": null,
+    "ground_truth_answer": "It has a positive efficacy by reducing oral cancer risk.",
+    "ground_truth_context": "[treatment] \"mixed tea\" --prevent--> [disease] \"oral cancer\" | Efficacy: Positive: reduced oral cancer risk | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea",
+      "oral cancer"
+    ]
+  }
+]

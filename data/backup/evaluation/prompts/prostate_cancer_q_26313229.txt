@@ -1,0 +1,64 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "DIM" --prevent--> [disease] "prostate cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  2. [treatment] "DIM" --treat--> [disease] "prostate cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  3. [treatment] "DIM" --present--> [body_part] "prostate tissue" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  4. [treatment] "BR-DIM" --affect--> [biomarker] "urinary 2-hydroxyestrone/16-hydroxyestrone ratio" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:26313229
+Title: Phase Ib placebo-controlled, tissue biomarker trial of diindolylmethane (BR-DIMNG) in patients with prostate cancer who are undergoing prostatectomy.
+Phase: Phase I
+Abstract: Epidemiologic, preclinical, and early phase I studies of the cruciferous vegetable bioactive metabolite, 3,3'-diindolylmethane (DIM), support its potential prostate cancer chemopreventive ability. We performed a multicenter, double-blind, placebo-controlled trial of DIM in patients diagnosed with prostate cancer and scheduled for radical prostatectomy. A total of 45 patients with organ-confined prostate cancer were randomized to 21-28 days of an absorption-enhanced formulation of DIM (BR-DIM) at doses of 100 or 200 mg per os twice daily or to placebo twice daily. Prostate tissue levels of DIM were the primary endpoint, with selected secondary biomarker endpoints including blood levels of DIM, total prostate-specific antigen, testosterone, and the insulin-like growth factor-1: insulin-like growth factor binding protein-3 ratio and the urinary 2-hydroxyestrone/16-hydroxyestrone ratio, obtained at baseline, at day 15, and before surgery, as well as tissue expression of androgen receptor, prostate-specific antigen, Ki67, caspase 3 with cytochrome p450 mRNA expression and genotyping (polymorphisms). DIM was well tolerated with excellent study compliance and relatively rapid accrual of all 45 patients within 1 year. DIM levels were detected in only seven of 28 prostate tissue specimens. There was a statistically significant difference in the change in the urinary 2-hydroxyestrone/16-hydroxyestrone ratio from baseline until before surgery between the placebo and 400 mg DIM groups, with otherwise statistically nonsignificant changes in plasma biomarker expression. The administration of BR-DIM to prostate cancer patients before prostatectomy yields detectable plasma levels but without consistent or significant tissue accumulation or biomarker modulation. This study demonstrates the feasibility of biologic evaluation of relatively nontoxic preventive agents in the preprostatectomy setting with the potential for rapid accrual.

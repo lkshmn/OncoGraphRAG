@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:9862057",
+    "type": "Simple 1-Hop",
+    "question": "What disease is treated with paclitaxel according to the extracted relation?",
+    "options": null,
+    "ground_truth_answer": "Breast cancer.",
+    "ground_truth_context": "[treatment] \"paclitaxel\" --treat--> [disease] \"breast cancer\" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "paclitaxel",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9862057",
+    "type": "Simple Open-Ended",
+    "question": "What was the reported efficacy of paclitaxel in treating breast cancer?",
+    "options": null,
+    "ground_truth_answer": "Positive, with an overall response rate (RR) of 67%.",
+    "ground_truth_context": "[treatment] \"paclitaxel\" --treat--> [disease] \"breast cancer\" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "paclitaxel",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9862057",
+    "type": "Simple True/False",
+    "question": "True or False: The data regarding paclitaxel treating breast cancer was derived from a Phase III trial.",
+    "options": null,
+    "ground_truth_answer": "False. It was a Phase II trial.",
+    "ground_truth_context": "[treatment] \"paclitaxel\" --treat--> [disease] \"breast cancer\" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "paclitaxel",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9862057",
+    "type": "Simple MCQ",
+    "question": "What phase was the trial evaluating paclitaxel for breast cancer?",
+    "options": [
+      "A) Phase I",
+      "B) Phase II",
+      "C) Phase III",
+      "D) Phase IV"
+    ],
+    "ground_truth_answer": "B) Phase II",
+    "ground_truth_context": "[treatment] \"paclitaxel\" --treat--> [disease] \"breast cancer\" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "paclitaxel",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9862057",
+    "type": "Simple 1-Hop",
+    "question": "What is the reliability score for the finding that paclitaxel treats breast cancer?",
+    "options": null,
+    "ground_truth_answer": "80",
+    "ground_truth_context": "[treatment] \"paclitaxel\" --treat--> [disease] \"breast cancer\" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "paclitaxel",
+      "breast cancer"
+    ]
+  }
+]

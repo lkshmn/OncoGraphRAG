@@ -1,0 +1,71 @@
+[
+  {
+    "source_id": "PMID:8075031",
+    "type": "Simple 1-Hop",
+    "question": "What symptom is caused by mitoxantrone?",
+    "options": null,
+    "ground_truth_answer": "Leucopenia.",
+    "ground_truth_context": "[treatment] \"mitoxantrone\" --cause--> [symptom] \"leucopenia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "mitoxantrone",
+      "leucopenia"
+    ]
+  },
+  {
+    "source_id": "PMID:8075031",
+    "type": "Simple True/False",
+    "question": "True or False: Mitoxantrone has a documented positive efficacy of complete remissions in breast cancer.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"mitoxantrone\" --treat--> [disease] \"breast cancer\" | Efficacy: Positive: complete remissions documented | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "mitoxantrone",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:8075031",
+    "type": "Simple MCQ",
+    "question": "Which of the following diseases is treated by intraperitoneal carboplatin according to the extracted relations?",
+    "options": [
+      "A) Breast cancer",
+      "B) Ovarian cancer",
+      "C) Mesothelioma",
+      "D) Lung cancer"
+    ],
+    "ground_truth_answer": "B) Ovarian cancer.",
+    "ground_truth_context": "[treatment] \"intraperitoneal carboplatin\" --treat--> [disease] \"ovarian cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "intraperitoneal carboplatin",
+      "ovarian cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:8075031",
+    "type": "Simple Open-Ended",
+    "question": "What complications are caused by mitoxantrone?",
+    "options": null,
+    "ground_truth_answer": "Peritoneal irritation and local toxicity.",
+    "ground_truth_context": "[treatment] \"mitoxantrone\" --cause--> [complication] \"peritoneal irritation\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55, [treatment] \"mitoxantrone\" --cause--> [complication] \"local toxicity\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "mitoxantrone",
+      "peritoneal irritation",
+      "local toxicity"
+    ]
+  },
+  {
+    "source_id": "PMID:8075031",
+    "type": "Simple 1-Hop",
+    "question": "What was the trial phase for evaluating mitoxantrone as a treatment for mesothelioma?",
+    "options": null,
+    "ground_truth_answer": "Phase II.",
+    "ground_truth_context": "[treatment] \"mitoxantrone\" --treat--> [disease] \"mesothelioma\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "mitoxantrone",
+      "mesothelioma"
+    ]
+  }
+]

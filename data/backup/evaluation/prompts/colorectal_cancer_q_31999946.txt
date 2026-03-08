@@ -1,0 +1,64 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "TAS-102 plus bevacizumab" --treat--> [disease] "metastatic colorectal cancer" | Efficacy: Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015) | Phase: Phase II | Reliability: 80
+  2. [treatment] "TAS-102 monotherapy" --treat--> [disease] "metastatic colorectal cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  3. [treatment] "TAS-102 plus bevacizumab" --present--> [symptom] "neutropenia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  4. [treatment] "TAS-102 monotherapy" --present--> [symptom] "neutropenia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:31999946
+Title: TAS-102 with or without bevacizumab in patients with chemorefractory metastatic colorectal cancer: an investigator-initiated, open-label, randomised, phase 2 trial.
+Phase: Phase II
+Abstract: BACKGROUND: TAS-102 (trifluridine-tipiracil) has shown a significant overall survival benefit compared with placebo in patients with chemorefractory metastatic colorectal cancer. Inspired by the encouraging results of a small phase 1-2 study, C-TASK FORCE, which evaluated the combination of TAS-102 plus bevacizumab in patients with chemorefractory metastatic colorectal cancer, we aimed to compare the efficacy of TAS-102 plus bevacizumab versus TAS-102 monotherapy in patients receiving refractory therapy for metastatic colorectal cancer . METHODS: This investigator-initiated, open-label, randomised, phase 2 study enrolled patients (aged ≥18 years) with metastatic colorectal from four cancer centres in Denmark. The main inclusion criteria were histopathologically confirmed metastatic colorectal cancer refractory or intolerant to a fluoropyrimidine, irinotecan, oxaliplatin, and cetuximab or panitumumab (only for RAS wild-type), and WHO performance status of 0 or 1. Previous therapy with bevacizumab, aflibercept, ramucirumab, or regorafenib was allowed but not mandatory. Participants were enrolled and randomly assigned (1:1) in block sizes of two, four, or six by a web-based tool to receive oral TAS-102 (35 mg/m<sup>2</sup> twice daily on days 1-5 and 8-12 every 28 days) alone or combined with intravenous bevacizumab (5 mg/kg on days 1 and 15) until progression, unacceptable toxicity, or patient decision to withdraw. Treatment assignment was not masked, and randomisation was stratified by institution and RAS mutation status. The primary endpoint was investigator-evaluated progression-free survival. All analyses were based on intention to treat. This trial is registered with EudraCT, 2016-005241-23. FINDINGS: From Aug 24, 2017, to Oct 31, 2018, 93 patients were enrolled and randomly assigned to TAS-102 (n=47) or TAS-102 plus bevacizumab (n=46). The clinical cut-off date was Feb 15, 2019, after a median follow-up of 10·0 months (IQR 6·8-14·0). Median progression-free survival was 2·6 months (95% CI 1·6-3·5) in the TAS-102 group versus 4·6 months (3·5-6·5) in the TAS-102 plus bevacizumab group (hazard ratio 0·45 [95% CI 0·29-0·72]; p=0·0015). The most frequent grade 3 or worse adverse event was neutropenia (18 [38%] of 47 in the TAS-102 monotherapy group vs 31 [67%] of 46 in the TAS-102 plus bevacizumab group). Serious adverse events were observed in 21 (45%) patients in the TAS-102 group and 19 (41%) in the TAS-102 plus bevacizumab group. No deaths were deemed treatment related. INTERPRETATION: In patients with chemorefractory metastatic colorectal cancer, TAS-102 plus bevacizumab, as compared with TAS-102 monotherapy, was associated with a significant and clinically relevant improvement in progression-free survival with tolerable toxicity. The combination of TAS-102 plus bevacizumab could be a new treatment option for patients with refractory metastatic colorectal cancer and could be a practice-changing development. FUNDING: Servier.

@@ -1,0 +1,265 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 31
+**Question:** What disease does chemotherapy treat?
+**Answer:** **Chemotherapy treatment findings (based on the query results)**  
+
+| Disease | ReliabilityScore | TrialPhase | EfficacyEvidence | Supporting PMID |
+|---------|------------------|------------|------------------|-----------------|
+| oral_cancer | 100 | Randomized Controlled Trial | Positive: success rate 96% for SLA implants and 100% for modSLA implants | [21121960](https://pubmed.ncbi.nlm.nih.gov/21121960/) |
+| her2_breast_cancer | 95 | Phase III | Positive: improved recurrence‑free survival (hazard ratio 0.60, P< .001) | [31622131](https://pubmed.ncbi.nlm.nih.gov/31622131/) |
+| breast_cancer | 95 | Phase III | Positive: positive response | [35550508](https://pubmed.ncbi.nlm.nih.gov/35550508/) |
+| low_grade_glioma | 95 | Phase III | Positive: progression free survival benefit | [24769600](https://pubmed.ncbi.nlm.nih.gov/24769600/) |
+| locally_advanced_cervical_cancer | 95 | Phase III | Positive: 5‑year overall survival HR 0.60 (p=0.015) | [39419054](https://pubmed.ncbi.nlm.nih.gov/39419054/) |
+| cervical_cancer | 95 | Phase III | Positive: improved progression‑free survival (hazard ratio 0.62, p<0.0001) and overall survival (hazard ratio 0.64, p=0.0011) | [39426385](https://pubmed.ncbi.nlm.nih.gov/39426385/) |
+| cervical_cancer | 95 | Phase III | Positive: improved overall survival (hazard ratio 0.77, p=0.007) | [28756902](https://pubmed.ncbi.nlm.nih.gov/28756902/) |
+| cervical_cancer | 95 | Phase III | Positive: improved overall survival and progression‑free survival (HRs 0.56-0.61) | [39393777](https://pubmed.ncbi.nlm.nih.gov/39393777/) |
+| cervical_cancer | 95 | Phase III | Positive: improved overall survival (HR=0.53) and progression‑free survival (HR=0.42) | [40590325](https://pubmed.ncbi.nlm.nih.gov/40590325/) |
+
+These are the diseases for which chemotherapy treatment results were reported in the provided SPARQL query output.
+**Retrieved Context:** **Chemotherapy treatment findings (based on the query results)**  
+
+| Disease | ReliabilityScore | TrialPhase | EfficacyEvidence | Supporting PMID |
+|---------|------------------|------------|------------------|-----------------|
+| oral_cancer | 100 | Randomized Controlled Trial | Positive: success rate 96% for SLA implants and 100% for modSLA implants | [21121960](https://pubmed.ncbi.nlm.nih.gov/21121960/) |
+| her2_breast_cancer | 95 | Phase III | Positive: improved recurrence‑free survival (hazard ratio 0.60, P< .001) | [31622131](https://pubmed.ncbi.nlm.nih.gov/31622131/) |
+| breast_cancer | 95 | Phase III | Positive: positive response | [35550508](https://pubmed.ncbi.nlm.nih.gov/35550508/) |
+| low_grade_glioma | 95 | Phase III | Positive: progression free survival benefit | [24769600](https://pubmed.ncbi.nlm.nih.gov/24769600/) |
+| locally_advanced_cervical_cancer | 95 | Phase III | Positive: 5‑year overall survival HR 0.60 (p=0.015) | [39419054](https://pubmed.ncbi.nlm.nih.gov/39419054/) |
+| cervical_cancer | 95 | Phase III | Positive: improved progression‑free survival (hazard ratio 0.62, p<0.0001) and overall survival (hazard ratio 0.64, p=0.0011) | [39426385](https://pubmed.ncbi.nlm.nih.gov/39426385/) |
+| cervical_cancer | 95 | Phase III | Positive: improved overall survival (hazard ratio 0.77, p=0.007) | [28756902](https://pubmed.ncbi.nlm.nih.gov/28756902/) |
+| cervical_cancer | 95 | Phase III | Positive: improved overall survival and progression‑free survival (HRs 0.56-0.61) | [39393777](https://pubmed.ncbi.nlm.nih.gov/39393777/) |
+| cervical_cancer | 95 | Phase III | Positive: improved overall survival (HR=0.53) and progression‑free survival (HR=0.42) | [40590325](https://pubmed.ncbi.nlm.nih.gov/40590325/) |
+
+These are the diseases for which chemotherapy treatment results were reported in the provided SPARQL query output.
+**Ground Truth Answer:** Stage IV colorectal cancer.
+**Ground Truth Context:** [treatment] "chemotherapy" --treat--> [disease] "stage IV colorectal cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 32
+**Question:** True or False: The efficacy of chemotherapy for stage IV colorectal cancer is explicitly stated as positive.
+**Answer:** **False**
+
+- **reliabilityScore:** 70  
+- **trialPhase:** Phase III  
+- **efficacyEvidence:** Not Stated  
+
+Supporting PMID: [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Retrieved Context:** **False**
+
+- **reliabilityScore:** 70  
+- **trialPhase:** Phase III  
+- **efficacyEvidence:** Not Stated  
+
+Supporting PMID: [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Ground Truth Answer:** False. The efficacy is listed as "Not Stated".
+**Ground Truth Context:** [treatment] "chemotherapy" --treat--> [disease] "stage IV colorectal cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 33
+**Question:** How do eligibility criteria affect overall survival?
+**Answer:** **Effect of Eligibility Criteria on Overall Survival**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 1.03, p = 0.70) |
+
+*Supporting PMID:* [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Retrieved Context:** **Effect of Eligibility Criteria on Overall Survival**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 1.03, p = 0.70) |
+
+*Supporting PMID:* [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Ground Truth Answer:** Eligibility criteria have a positive effect, resulting in improved overall survival (HR 1.03, p = 0.70).
+**Ground Truth Context:** [risk_factor] "eligibility criteria" --affect--> [prognosis] "overall survival" | Efficacy: Positive: improved overall survival (HR 1.03, p = 0.70) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 34
+**Question:** What is the reliability score for the recorded relationship between eligibility criteria and overall survival?
+**Answer:** **Reliability Score:** 95  
+**Trial Phase:** Phase III  
+**Efficacy Evidence:** Positive: improved overall survival (HR 1.03, p = 0.70)  
+
+*Supporting PMID:* [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Retrieved Context:** **Reliability Score:** 95  
+**Trial Phase:** Phase III  
+**Efficacy Evidence:** Positive: improved overall survival (HR 1.03, p = 0.70)  
+
+*Supporting PMID:* [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Ground Truth Answer:** D) 95
+**Ground Truth Context:** [risk_factor] "eligibility criteria" --affect--> [prognosis] "overall survival" | Efficacy: Positive: improved overall survival (HR 1.03, p = 0.70) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 35
+**Question:** What clinical trial phase evaluated the effect of eligibility criteria on overall survival?
+**Answer:** **Clinical Trial Phase Evaluating Eligibility Criteria on Overall Survival**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|-------------------|-------------|--------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 1.03, p = 0.70) |
+
+*Supporting PMID:* [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Retrieved Context:** **Clinical Trial Phase Evaluating Eligibility Criteria on Overall Survival**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|-------------------|-------------|--------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 1.03, p = 0.70) |
+
+*Supporting PMID:* [23517248](https://pubmed.ncbi.nlm.nih.gov/23517248/)
+**Ground Truth Answer:** Phase III
+**Ground Truth Context:** [risk_factor] "eligibility criteria" --affect--> [prognosis] "overall survival" | Efficacy: Positive: improved overall survival (HR 1.03, p = 0.70) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 36
+**Question:** What disease is treated by TAS-102 plus bevacizumab?
+**Answer:** **Disease treated by TAS‑102 + bevacizumab**
+
+| Reliability score | Trial phase | Efficacy evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: improved progression‑free survival (hazard ratio 0.45, p=0.0015) [PMID31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/) |
+| 80 | Phase II | Positive: significant overall survival benefit compared with placebo [PMID28760399](https://pubmed.ncbi.nlm.nih.gov/28760399/) |
+| 80 | Phase II | Positive: enhanced activity compared with either drug alone [PMID28760399](https://pubmed.ncbi.nlm.nih.gov/28760399/) |
+
+All three findings refer to **metastatic colorectal cancer**.
+**Retrieved Context:** **Disease treated by TAS‑102 + bevacizumab**
+
+| Reliability score | Trial phase | Efficacy evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: improved progression‑free survival (hazard ratio 0.45, p=0.0015) [PMID31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/) |
+| 80 | Phase II | Positive: significant overall survival benefit compared with placebo [PMID28760399](https://pubmed.ncbi.nlm.nih.gov/28760399/) |
+| 80 | Phase II | Positive: enhanced activity compared with either drug alone [PMID28760399](https://pubmed.ncbi.nlm.nih.gov/28760399/) |
+
+All three findings refer to **metastatic colorectal cancer**.
+**Ground Truth Answer:** Metastatic colorectal cancer.
+**Ground Truth Context:** [treatment] "TAS-102 plus bevacizumab" --treat--> [disease] "metastatic colorectal cancer" | Efficacy: Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 37
+**Question:** True or False: TAS-102 monotherapy treats metastatic colorectal cancer.
+**Answer:** **Answer:** False
+
+| Finding | reliabilityScore | trialPhase | efficacyEvidence |
+|---------|------------------|------------|------------------|
+| TAS‑102 monotherapy | 55 | Phase II | Not Stated |
+
+Supporting evidence: [PMID31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/)
+**Retrieved Context:** **Answer:** False
+
+| Finding | reliabilityScore | trialPhase | efficacyEvidence |
+|---------|------------------|------------|------------------|
+| TAS‑102 monotherapy | 55 | Phase II | Not Stated |
+
+Supporting evidence: [PMID31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/)
+**Ground Truth Answer:** True.
+**Ground Truth Context:** [treatment] "TAS-102 monotherapy" --treat--> [disease] "metastatic colorectal cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 38
+**Question:** Which symptom is present when using TAS-102 plus bevacizumab?
+**Answer:** **Symptom observed with TAS‑102 plus bevacizumab**
+
+| Symptom | Reliability Score | Trial Phase | Efficacy Evidence |
+|---------|-------------------|-------------|--------------------|
+| neutropenia | 55 | Phase II | Not Stated |
+
+*Supporting evidence:* [PMID:31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/)
+**Retrieved Context:** **Symptom observed with TAS‑102 plus bevacizumab**
+
+| Symptom | Reliability Score | Trial Phase | Efficacy Evidence |
+|---------|-------------------|-------------|--------------------|
+| neutropenia | 55 | Phase II | Not Stated |
+
+*Supporting evidence:* [PMID:31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/)
+**Ground Truth Answer:** C) Neutropenia
+**Ground Truth Context:** [treatment] "TAS-102 plus bevacizumab" --present--> [symptom] "neutropenia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 39
+**Question:** What was the efficacy outcome of TAS-102 plus bevacizumab for treating metastatic colorectal cancer?
+**Answer:** **Efficacy outcomes for TAS‑102 plus bevacizumab in metastatic colorectal cancer**
+
+| Reliability Score | Trial Phase | Efficacy Evidence | Supporting PMID |
+|--------------------|-------------|-------------------|-----------------|
+| 80 | Phase II | Positive: improved progression‑free survival (hazard ratio 0.45, p=0.0015) | [31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/) |
+| 80 | Phase II | Positive: significant overall survival benefit compared with placebo | [28760399](https://pubmed.ncbi.nlm.nih.gov/28760399/) |
+
+These are the exact values returned by the SPARQL query.
+**Retrieved Context:** **Efficacy outcomes for TAS‑102 plus bevacizumab in metastatic colorectal cancer**
+
+| Reliability Score | Trial Phase | Efficacy Evidence | Supporting PMID |
+|--------------------|-------------|-------------------|-----------------|
+| 80 | Phase II | Positive: improved progression‑free survival (hazard ratio 0.45, p=0.0015) | [31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/) |
+| 80 | Phase II | Positive: significant overall survival benefit compared with placebo | [28760399](https://pubmed.ncbi.nlm.nih.gov/28760399/) |
+
+These are the exact values returned by the SPARQL query.
+**Ground Truth Answer:** Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015).
+**Ground Truth Context:** [treatment] "TAS-102 plus bevacizumab" --treat--> [disease] "metastatic colorectal cancer" | Efficacy: Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 40
+**Question:** What phase was the trial for TAS-102 monotherapy in treating metastatic colorectal cancer?
+**Answer:** **Trial phase for TAS‑102 monotherapy in metastatic colorectal cancer**
+
+- **Reliability score:** 55  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Not Stated  
+
+Supporting study: [PMID31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/)
+**Retrieved Context:** **Trial phase for TAS‑102 monotherapy in metastatic colorectal cancer**
+
+- **Reliability score:** 55  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Not Stated  
+
+Supporting study: [PMID31999946](https://pubmed.ncbi.nlm.nih.gov/31999946/)
+**Ground Truth Answer:** Phase II.
+**Ground Truth Context:** [treatment] "TAS-102 monotherapy" --treat--> [disease] "metastatic colorectal cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+

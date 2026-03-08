@@ -1,0 +1,62 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "medication reminder and symptom management intervention" --treat--> [treatment] "oral oncolytic agents" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75
+  2. [treatment] "printed Medication Management and Symptom Management Toolkit" --treat--> [symptom] "18 symptoms" | Efficacy: Positive: significantly lower symptom severity at Week 8 (P<0.01) | Phase: Randomized Controlled Trial | Reliability: 100
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:30096441
+Title: An Automated Intervention Did Not Improve Adherence to Oral Oncolytic Agents While Managing Symptoms: Results From a Two-Arm Randomized Controlled Trial.
+Phase: Randomized Controlled Trial
+Abstract: CONTEXT: An increasing number of oral cancer treatments require patient adherence and symptom self-management. OBJECTIVES: The report presents the effects of a medication reminder and symptom management intervention directed at patients initiating new oral oncolytic agents. METHODS: Patients (N = 272) were recruited at six comprehensive cancer centers, interviewed over the telephone after oral agent initiation, and randomized to either standard care or a medication reminder and symptom management intervention. In the intervention arm, the automated system called patients daily to remind them about taking their medications and weekly to assess 18 symptoms and refer patients to a printed Medication Management and Symptom Management Toolkit. Severity of 18 symptoms was also assessed during telephone interviews at Week 4 (midintervention), Week 8 (postintervention), and Week 12 (follow-up). Adherence was measured using the relative dose intensity, the ratio of dose taken by patient out of dose prescribed by the oncologist, and assessed using pill counts at Weeks 4, 8, and 12 and prescribing information from medical records. RESULTS: The relative dose intensity was high and did not differ by trial arm. Symptom severity was significantly lower (P < 0.01) in the experimental arm at Week 8 but not at Weeks 4 or 12. CONCLUSION: Adherence may be less of a problem than originally anticipated, and intervention was not efficacious possibly because of already high rates of patient adherence to oral oncolytic medication during first 12 weeks. Longer follow-up in future research may identify subgroups of patients who need interventions to sustain adherence.

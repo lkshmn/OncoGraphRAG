@@ -1,0 +1,68 @@
+[
+  {
+    "source_id": "PMID:10746551",
+    "type": "Simple 1-Hop",
+    "question": "What diseases does the semiallogeneic vaccine treat?",
+    "options": null,
+    "ground_truth_answer": "Metastatic melanoma and metastatic adenocarcinoma.",
+    "ground_truth_context": "[treatment] \"semiallogeneic vaccine\" --treat--> [disease] \"metastatic melanoma\" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80\n[treatment] \"semiallogeneic vaccine\" --treat--> [disease] \"metastatic adenocarcinoma\" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "semiallogeneic vaccine",
+      "metastatic melanoma",
+      "metastatic adenocarcinoma"
+    ]
+  },
+  {
+    "source_id": "PMID:10746551",
+    "type": "Simple True/False",
+    "question": "True or False: The use of the semiallogeneic vaccine for metastatic melanoma was evaluated in a Phase II trial.",
+    "options": null,
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"semiallogeneic vaccine\" --treat--> [disease] \"metastatic melanoma\" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "semiallogeneic vaccine",
+      "metastatic melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:10746551",
+    "type": "Simple MCQ",
+    "question": "What is the reported efficacy of the semiallogeneic vaccine when treating metastatic adenocarcinoma?",
+    "options": [
+      "(A) Negative with high toxicity",
+      "(B) Positive with minimal or no toxicity and induction of a specific anti-tumor immune response",
+      "(C) Unknown efficacy",
+      "(D) Positive but with severe adverse events"
+    ],
+    "ground_truth_answer": "(B) Positive with minimal or no toxicity and induction of a specific anti-tumor immune response",
+    "ground_truth_context": "[treatment] \"semiallogeneic vaccine\" --treat--> [disease] \"metastatic adenocarcinoma\" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "semiallogeneic vaccine",
+      "metastatic adenocarcinoma"
+    ]
+  },
+  {
+    "source_id": "PMID:10746551",
+    "type": "Simple Open-Ended",
+    "question": "What is the reliability score for the data on using the semiallogeneic vaccine to treat metastatic melanoma?",
+    "options": null,
+    "ground_truth_answer": "80",
+    "ground_truth_context": "[treatment] \"semiallogeneic vaccine\" --treat--> [disease] \"metastatic melanoma\" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "semiallogeneic vaccine",
+      "metastatic melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:10746551",
+    "type": "Simple 1-Hop",
+    "question": "What phase of trial investigated the semiallogeneic vaccine for metastatic adenocarcinoma?",
+    "options": null,
+    "ground_truth_answer": "Phase II",
+    "ground_truth_context": "[treatment] \"semiallogeneic vaccine\" --treat--> [disease] \"metastatic adenocarcinoma\" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "semiallogeneic vaccine",
+      "metastatic adenocarcinoma"
+    ]
+  }
+]

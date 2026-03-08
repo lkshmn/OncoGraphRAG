@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:16283570",
+    "type": "Simple 1-Hop",
+    "question": "What disease does the anti-CTLA-4 antibody treat?",
+    "options": null,
+    "ground_truth_answer": "Metastatic melanoma.",
+    "ground_truth_context": "[treatment] \"anti-CTLA-4 antibody\" --treat--> [disease] \"metastatic melanoma\" | Efficacy: Positive: 22% objective response rate | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "anti-CTLA-4 antibody",
+      "metastatic melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:16283570",
+    "type": "Simple True/False",
+    "question": "True or False: Anti-CTLA-4 administration causes autoimmune toxicities.",
+    "options": null,
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"anti-CTLA-4 administration\" --cause--> [complication] \"autoimmune toxicities\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "anti-CTLA-4 administration",
+      "autoimmune toxicities"
+    ]
+  },
+  {
+    "source_id": "PMID:16283570",
+    "type": "Simple MCQ",
+    "question": "What was the reported efficacy of the anti-CTLA-4 antibody in treating metastatic melanoma?",
+    "options": [
+      "A) Not Stated",
+      "B) Positive: 10% objective response rate",
+      "C) Positive: 22% objective response rate",
+      "D) Negative: 0% objective response rate"
+    ],
+    "ground_truth_answer": "C) Positive: 22% objective response rate",
+    "ground_truth_context": "[treatment] \"anti-CTLA-4 antibody\" --treat--> [disease] \"metastatic melanoma\" | Efficacy: Positive: 22% objective response rate | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "anti-CTLA-4 antibody",
+      "metastatic melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:16283570",
+    "type": "Simple 1-Hop",
+    "question": "In what clinical trial phase was IL-2 therapy evaluated for metastatic melanoma?",
+    "options": null,
+    "ground_truth_answer": "Phase II.",
+    "ground_truth_context": "[treatment] \"IL-2 therapy\" --treat--> [disease] \"metastatic melanoma\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "IL-2 therapy",
+      "metastatic melanoma"
+    ]
+  },
+  {
+    "source_id": "PMID:16283570",
+    "type": "Simple Open-Ended",
+    "question": "What complication is identified as being caused by anti-CTLA-4 administration?",
+    "options": null,
+    "ground_truth_answer": "Autoimmune toxicities.",
+    "ground_truth_context": "[treatment] \"anti-CTLA-4 administration\" --cause--> [complication] \"autoimmune toxicities\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "anti-CTLA-4 administration",
+      "autoimmune toxicities"
+    ]
+  }
+]

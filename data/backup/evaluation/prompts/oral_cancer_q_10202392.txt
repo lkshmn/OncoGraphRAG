@@ -1,0 +1,67 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "mixed tea product" --treat--> [disease] "oral mucosa leukoplakia" | Efficacy: Positive: decreased lesion size 37.9% vs 10%, incidence lower P<0.01 | Phase: Randomized Controlled Trial | Reliability: 100
+  2. [treatment] "mixed tea product" --affect--> [biomarker] "micronucleated exfoliated oral mucosa cells" | Efficacy: Positive: lower rate 5.4 per 1000 vs 11.3 per 1000, P<0.01 | Phase: Randomized Controlled Trial | Reliability: 100
+  3. [treatment] "mixed tea product" --affect--> [biomarker] "micronuclei and chromosome aberration rate in peripheral blood lymphocytes" | Efficacy: Positive: decreased rate, same results as exfoliated cells | Phase: Randomized Controlled Trial | Reliability: 100
+  4. [treatment] "mixed tea product" --affect--> [biomarker] "AgNOR number and total volume" | Efficacy: Positive: decreased proliferation, P<0.05 | Phase: Randomized Controlled Trial | Reliability: 100
+  5. [treatment] "mixed tea product" --affect--> [biomarker] "PCNA proliferating index" | Efficacy: Positive: decreased proliferation, P<0.05 | Phase: Randomized Controlled Trial | Reliability: 100
+  6. [test] "established clinical and pathological criteria" --diagnose--> [disease] "oral mucosa leukoplakia" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75
+  7. [treatment] "placebo and glycerin treatment" --treat--> [disease] "oral mucosa leukoplakia" | Efficacy: Neutral: no significant improvement | Phase: Randomized Controlled Trial | Reliability: 85
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:10202392
+Title: The chemopreventive effects of tea on human oral precancerous mucosa lesions.
+Phase: Randomized Controlled Trial
+Abstract: A double-blind intervention trial was conducted in patients with oral mucosa leukoplakia using a mixed tea product developed by the authors. Fifty-nine oral mucosa leukoplakia patients, diagnosed by established clinical and pathological criteria, were randomly divided into a treated group (3 g mixed tea oral administration and topical treatment) and a control group (placebo and glycerin treatment). After the 6-month trial, the size of oral lesion was decreased in 37.9% of the 29 treated patients and increased in 3.4%; whereas the oral lesion was decreased in 10.0% of the 30 control patients and increased in 6.7%. At the same time, the incidence of micronucleated exfoliated oral mucosa cells in the treated group (5. 4 per 1000 cells) was lower than that in the control group (11.3 per 1000 cells)(P < 0.01); whereas it was 1.4 per 1000 cells in 20 healthy subjects. The micronuclei and chromosome aberration rate in the peripheral blood lymphocytes showed the same results. In pathological examination, there were significant differences (P < 0. 05) in the number and total volume of the silver-stained Nucleolar Organizer Regions (AgNOR) and the proliferating index of Proliferation Cell Nuclear Antigen (PCNA) in oral mucosa cell nuclei between the treated group and the control group which indicates that cell proliferation was decreased in the treated patients. The overall results provide some direct evidence on the protective effects of tea on oral cancer.

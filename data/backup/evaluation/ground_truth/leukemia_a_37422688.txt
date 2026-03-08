@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:37422688",
+    "type": "Simple 1-Hop",
+    "question": "What is the reported efficacy outcome of the combination treatment of azacitidine, venetoclax and pevonedistat for acute myeloid leukemia?",
+    "options": null,
+    "ground_truth_answer": "Positive: CR/CRi 66%",
+    "ground_truth_context": "[treatment] \"azacitidine, venetoclax and pevonedistat\" --treat--> [disease] \"acute myeloid leukemia\" | Efficacy: Positive: CR/CRi 66% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "azacitidine, venetoclax and pevonedistat",
+      "acute myeloid leukemia"
+    ]
+  },
+  {
+    "source_id": "PMID:37422688",
+    "type": "Simple MCQ",
+    "question": "What was the overall response rate for the combination of azacitidine, venetoclax and pevonedistat when treating myelodysplastic syndromes or chronic myelomonocytic leukemia?",
+    "options": [
+      "A) 16%",
+      "B) 50%",
+      "C) 66%",
+      "D) 75%"
+    ],
+    "ground_truth_answer": "D) 75%",
+    "ground_truth_context": "[treatment] \"azacitidine, venetoclax and pevonedistat\" --treat--> [disease] \"myelodysplastic syndromes or chronic myelomonocytic leukemia\" | Efficacy: Positive: overall response rate 75% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "azacitidine, venetoclax and pevonedistat",
+      "myelodysplastic syndromes or chronic myelomonocytic leukemia"
+    ]
+  },
+  {
+    "source_id": "PMID:37422688",
+    "type": "Simple True/False",
+    "question": "True or False: TP53 mutation is identified as a risk factor that affects acute myeloid leukemia.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[risk_factor] \"TP53 mutation\" --affect--> [disease] \"acute myeloid leukemia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "TP53 mutation",
+      "acute myeloid leukemia"
+    ]
+  },
+  {
+    "source_id": "PMID:37422688",
+    "type": "Simple Open-Ended",
+    "question": "What overall survival (OS) efficacy is reported for pevonedistat in the treatment of acute myeloid leukemia?",
+    "options": null,
+    "ground_truth_answer": "OS 8.1 months.",
+    "ground_truth_context": "[treatment] \"pevonedistat\" --treat--> [disease] \"acute myeloid leukemia\" | Efficacy: Positive: OS 8.1 months | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "pevonedistat",
+      "acute myeloid leukemia"
+    ]
+  },
+  {
+    "source_id": "PMID:37422688",
+    "type": "Simple 1-Hop",
+    "question": "What trial phase evaluated azacitidine for the treatment of acute myeloid leukemia?",
+    "options": null,
+    "ground_truth_answer": "Phase II",
+    "ground_truth_context": "[treatment] \"azacitidine\" --treat--> [disease] \"acute myeloid leukemia\" | Efficacy: Positive: CR 50% | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "azacitidine",
+      "acute myeloid leukemia"
+    ]
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:10202392",
+    "type": "Simple 1-Hop",
+    "question": "What disease does the mixed tea product treat?",
+    "options": null,
+    "ground_truth_answer": "Oral mucosa leukoplakia.",
+    "ground_truth_context": "[treatment] \"mixed tea product\" --treat--> [disease] \"oral mucosa leukoplakia\" | Efficacy: Positive: decreased lesion size 37.9% vs 10%, incidence lower P<0.01 | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea product",
+      "oral mucosa leukoplakia"
+    ]
+  },
+  {
+    "source_id": "PMID:10202392",
+    "type": "Simple True/False",
+    "question": "True or False: Placebo and glycerin treatment results in significant improvement for oral mucosa leukoplakia.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "False. The treatment showed neutral efficacy with no significant improvement.",
+    "ground_truth_context": "[treatment] \"placebo and glycerin treatment\" --treat--> [disease] \"oral mucosa leukoplakia\" | Efficacy: Neutral: no significant improvement | Phase: Randomized Controlled Trial | Reliability: 85",
+    "key_entities": [
+      "placebo and glycerin treatment",
+      "oral mucosa leukoplakia"
+    ]
+  },
+  {
+    "source_id": "PMID:10202392",
+    "type": "Simple MCQ",
+    "question": "What is the effect of the mixed tea product on the biomarker AgNOR number and total volume?",
+    "options": [
+      "A) Increased proliferation",
+      "B) Decreased proliferation",
+      "C) Neutral effect",
+      "D) Not stated"
+    ],
+    "ground_truth_answer": "B) Decreased proliferation",
+    "ground_truth_context": "[treatment] \"mixed tea product\" --affect--> [biomarker] \"AgNOR number and total volume\" | Efficacy: Positive: decreased proliferation, P<0.05 | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea product",
+      "AgNOR number and total volume"
+    ]
+  },
+  {
+    "source_id": "PMID:10202392",
+    "type": "Simple Open-Ended",
+    "question": "How does the mixed tea product affect the rate of micronucleated exfoliated oral mucosa cells?",
+    "options": null,
+    "ground_truth_answer": "It positively lowers the rate, reducing it to 5.4 per 1000 compared to 11.3 per 1000.",
+    "ground_truth_context": "[treatment] \"mixed tea product\" --affect--> [biomarker] \"micronucleated exfoliated oral mucosa cells\" | Efficacy: Positive: lower rate 5.4 per 1000 vs 11.3 per 1000, P<0.01 | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "mixed tea product",
+      "micronucleated exfoliated oral mucosa cells"
+    ]
+  },
+  {
+    "source_id": "PMID:10202392",
+    "type": "Simple 1-Hop",
+    "question": "What is used to diagnose oral mucosa leukoplakia according to the extracted relation?",
+    "options": null,
+    "ground_truth_answer": "Established clinical and pathological criteria.",
+    "ground_truth_context": "[test] \"established clinical and pathological criteria\" --diagnose--> [disease] \"oral mucosa leukoplakia\" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75",
+    "key_entities": [
+      "established clinical and pathological criteria",
+      "oral mucosa leukoplakia"
+    ]
+  }
+]

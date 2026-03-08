@@ -1,0 +1,64 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "atrasentan and docetaxel" --treat--> [disease] "castration resistant prostate cancer" | Efficacy: Negative: no significant difference in overall survival (p=0.64) | Phase: Phase III | Reliability: 70
+  2. [treatment] "docetaxel" --treat--> [disease] "castration resistant prostate cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+  3. [symptom] "pain" --present--> [disease] "castration resistant prostate cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+  4. [body_part] "bone metastases" --present--> [disease] "castration resistant prostate cancer" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:23871417
+Title: Docetaxel and atrasentan versus docetaxel and placebo for men with advanced castration-resistant prostate cancer (SWOG S0421): a randomised phase 3 trial.
+Phase: Phase III
+Abstract: BACKGROUND: The endothelin pathway has a role in bone metastases, which are characteristic of advanced prostate cancer. Atrasentan, an endothelin receptor antagonist, has shown activity in prostate cancer. We therefore assessed its effect on survival in patients with castration-resistant prostate cancer with bone metastases. METHODS: In a double-blind phase 3 trial, men with metastatic castration-resistant prostate cancer, stratified for progression type (prostate-specific antigen or radiological), baseline pain, extraskeletal metastases, and bisphosphonate use, were randomly assigned in a 1:1 ratio to docetaxel (75 mg/m(2) every 21 days, intravenously) with atrasentan (10 mg/day, orally) or placebo for up to 12 cycles and treated until disease progression or unacceptable toxicity. Patients who did not progress on treatment were permitted to continue atrasentan or placebo for up to 52 weeks. Coprimary endpoints were progression-free survival (PFS) and overall survival. Analysis was by intention to treat. This trial is registered with ClinicalTrials.gov, number NCT00134056. FINDINGS: 498 patients were randomly assigned to the atrasentan group and 496 to the placebo group. The trial was halted early for futility in April, 2011, after a planned interim analysis. Median PFS was 9·2 months (95% CI 8·5-9·9) in the atrasentan group and 9·1 months (8·4-10·2) in the placebo group (hazard ratio 1·02, 0·89-1·16; p=0·81). Median overall survival was 17·8 months (16·4-19·8) in the atrasentan group versus 17·6 months (16·4-20·1) in the placebo group (1·04, 0·90-1·19; p=0·64). 278 (57%) of 492 patients in the atrasentan group had grade 3 and greater toxicity compared with 294 (60%) of 486 in the placebo group (p=0·22). Three deaths in the atrasentan group and seven in the placebo group were judged to be possibly or probably due to protocol treatment. INTERPRETATION: Atrasentan, when added to docetaxel, does not improve overall survival or PFS in men with castration-resistant prostate cancer and bone metastases; therefore, single-agent docetaxel should remain as one of the standard treatments. FUNDED: National Cancer Institute, Sanofi-Aventis, and Abbott Laboratories.

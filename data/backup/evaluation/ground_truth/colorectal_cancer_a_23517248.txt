@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:23517248",
+    "type": "Simple 1-Hop",
+    "question": "What disease does chemotherapy treat?",
+    "options": null,
+    "ground_truth_answer": "Stage IV colorectal cancer.",
+    "ground_truth_context": "[treatment] \"chemotherapy\" --treat--> [disease] \"stage IV colorectal cancer\" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "chemotherapy",
+      "stage IV colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23517248",
+    "type": "Simple True/False",
+    "question": "True or False: The efficacy of chemotherapy for stage IV colorectal cancer is explicitly stated as positive.",
+    "options": null,
+    "ground_truth_answer": "False. The efficacy is listed as \"Not Stated\".",
+    "ground_truth_context": "[treatment] \"chemotherapy\" --treat--> [disease] \"stage IV colorectal cancer\" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "chemotherapy",
+      "stage IV colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23517248",
+    "type": "Simple Open-Ended",
+    "question": "How do eligibility criteria affect overall survival?",
+    "options": null,
+    "ground_truth_answer": "Eligibility criteria have a positive effect, resulting in improved overall survival (HR 1.03, p = 0.70).",
+    "ground_truth_context": "[risk_factor] \"eligibility criteria\" --affect--> [prognosis] \"overall survival\" | Efficacy: Positive: improved overall survival (HR 1.03, p = 0.70) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "eligibility criteria",
+      "overall survival"
+    ]
+  },
+  {
+    "source_id": "PMID:23517248",
+    "type": "Simple MCQ",
+    "question": "What is the reliability score for the recorded relationship between eligibility criteria and overall survival?",
+    "options": [
+      "A) 50",
+      "B) 70",
+      "C) 85",
+      "D) 95"
+    ],
+    "ground_truth_answer": "D) 95",
+    "ground_truth_context": "[risk_factor] \"eligibility criteria\" --affect--> [prognosis] \"overall survival\" | Efficacy: Positive: improved overall survival (HR 1.03, p = 0.70) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "eligibility criteria",
+      "overall survival"
+    ]
+  },
+  {
+    "source_id": "PMID:23517248",
+    "type": "Simple 1-Hop",
+    "question": "What clinical trial phase evaluated the effect of eligibility criteria on overall survival?",
+    "options": null,
+    "ground_truth_answer": "Phase III",
+    "ground_truth_context": "[risk_factor] \"eligibility criteria\" --affect--> [prognosis] \"overall survival\" | Efficacy: Positive: improved overall survival (HR 1.03, p = 0.70) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "eligibility criteria",
+      "overall survival"
+    ]
+  }
+]

@@ -1,0 +1,64 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "Polyphenon E" --prevent--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  2. [treatment] "Polyphenon E" --prevent--> [disease] "cervical intraepithelial neoplasia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  3. [treatment] "Polyphenon E" --aggravate--> [progression] "cervical intraepithelial neoplasia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  4. [treatment] "Polyphenon E" --affect--> [disease] "human papillomavirus infection" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:24388920
+Title: Results of a phase II randomized, double-blind, placebo-controlled trial of Polyphenon E in women with persistent high-risk HPV infection and low-grade cervical intraepithelial neoplasia.
+Phase: Phase II
+Abstract: OBJECTIVE: In vitro data and pilot data suggest that green tea catechins may possess chemopreventive activity for cervical cancer and precursor lesions. We conducted a randomized, double-blind, placebo-controlled trial of Polyphenon E (decaffeinated and enriched green tea catechin extract) in women with persistent human papillomavirus (HPV) infection and low-grade cervical intraepithelial neoplasia (CIN1) to evaluate the potential of Polyphenon E for cervical cancer prevention. METHODS: Ninety-eight eligible women were randomized to receive either Polyphenon E (containing 800 mg epigallocatechin gallate) or placebo once daily for 4 months. The primary study outcome was oncogenic HPV clearance and clearance of CIN1. RESULTS: Polyphenon E was shown to be acceptable, safe and well tolerated. There was no difference in the response rate by treatment allocation. Complete response, defined as negative for high-risk HPV and normal histopathology, was noted in 7 (17.1%) and 6 (14.6%) women in the Polyphenon E and placebo arms, respectively. Progression, defined as persistent oncogenic HPV with histopathologic evidence of progression, was more common in the Polyphenon E group than in the placebo group [6 (14.6%) vs. 3 (7.7%)]. CONCLUSION: Based on the largest randomized placebo-controlled trial of a green tea extract for HPV related cervical disease, we conclude that 4 months of Polyphenon E intervention did not promote the clearance of persistent high-risk HPV and related CIN1. Further studies may be necessary to better delineate the risk factors for persistent HPV infection and biology of the disease to facilitate the evaluation of chemopreventive strategies.

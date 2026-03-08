@@ -1,0 +1,68 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "mitoxantrone" --treat--> [disease] "ovarian cancer" | Efficacy: Positive: complete remissions documented | Phase: Phase II | Reliability: 80
+  2. [treatment] "mitoxantrone" --treat--> [disease] "breast cancer" | Efficacy: Positive: complete remissions documented | Phase: Phase II | Reliability: 80
+  3. [treatment] "mitoxantrone" --treat--> [disease] "mesothelioma" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  4. [treatment] "intraperitoneal carboplatin" --treat--> [disease] "ovarian cancer" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  5. [treatment] "mitoxantrone" --treat--> [disease] "ovarian cancer" | Efficacy: Negative: no objective responses seen in phase II evaluation | Phase: Phase II | Reliability: 55
+  6. [treatment] "mitoxantrone" --cause--> [complication] "peritoneal irritation" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  7. [treatment] "mitoxantrone" --cause--> [symptom] "leucopenia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  8. [treatment] "mitoxantrone" --cause--> [complication] "local toxicity" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:8075031
+Title: Phase I/II study of intraperitoneal mitoxantrone in refractory ovarian cancer.
+Phase: Phase II
+Abstract: BACKGROUND: Mitoxantrone has demonstrable clinical activity when administered intravenously in a wide range of malignancies. The feasibility and toxicity of intra-peritoneal administration was established in a phase I study. The optimal dose from the phase I was subsequently evaluated in a phase II study. PATIENTS AND METHODS: 19 patients with refractory malignancies and extensive abdominal disease (13 ovarian cancer, 4 breast cancer, 2 mesothelioma) were entered in a phase I study. The dose of intraperitoneal mitoxantrone was escalated from 10 mg/m2, administered in 21 of fluid via a Tenckhoff catheter, to 55 mg/m2, in increments of 5 mg/m2. Cycles were repeated every three weeks. Sixty-seven cycles of mitoxantrone were administered, the maximum tolerable dose being 25 mg/m2. A phase II study at this dose was conducted in 14 patients with refractory ovarian cancer, all of whom had previously received systemic platinum based therapy. Five of the 14 had also previously been treated with intraperitoneal carboplatin. Fifty-one cycles were administered. RESULTS: The dose limiting toxicity in the phase I study was peritoneal irritation and pain. Leucopenia was frequent at doses equal or greater than 30 mg/m2. Three complete remissions were documented in the phase I study (2 breast cancer and 1 ovarian cancer). There was no significant haematological toxicity in the phase II assessment, though local toxicity precluded further therapy in 2 patients. No objective responses were seen in the phase II evaluation. CONCLUSIONS: These studies demonstrate the feasibility of intra-peritoneal mitoxantrone therapy in patients with peritoneal disease, but do not support its routine use in ovarian cancer.

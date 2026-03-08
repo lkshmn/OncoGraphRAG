@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:28718760",
+    "type": "Simple 1-Hop",
+    "question": "What disease is decitabine used to treat?",
+    "options": null,
+    "ground_truth_answer": "Acute myelogenous leukemia.",
+    "ground_truth_context": "[treatment] \"decitabine\" --treat--> [disease] \"acute myelogenous leukemia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "decitabine",
+      "acute myelogenous leukemia"
+    ]
+  },
+  {
+    "source_id": "PMID:28718760",
+    "type": "Simple MCQ",
+    "question": "What risk factor is caused by the biomarker CD25 expression?",
+    "options": [
+      "A) Improved immune response",
+      "B) Decreased white blood cell count",
+      "C) Resistance to therapy",
+      "D) Enhanced drug metabolism"
+    ],
+    "ground_truth_answer": "C) Resistance to therapy",
+    "ground_truth_context": "[biomarker] \"CD25 expression\" --cause--> [risk_factor] \"resistance to therapy\" | Efficacy: Positive: increased odds of resistance (p=0.015) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "CD25 expression",
+      "resistance to therapy"
+    ]
+  },
+  {
+    "source_id": "PMID:28718760",
+    "type": "Simple True/False",
+    "question": "True or False: CD25 expression aggravates overall survival, resulting in inferior survival.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[biomarker] \"CD25 expression\" --aggravate--> [prognosis] \"overall survival\" | Efficacy: Negative: inferior survival (p=0.002) | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "CD25 expression",
+      "overall survival"
+    ]
+  },
+  {
+    "source_id": "PMID:28718760",
+    "type": "Simple Open-Ended",
+    "question": "What clinical trial phase evaluated plerixafor for the treatment of acute myelogenous leukemia?",
+    "options": null,
+    "ground_truth_answer": "Phase II.",
+    "ground_truth_context": "[treatment] \"plerixafor\" --treat--> [disease] \"acute myelogenous leukemia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "plerixafor",
+      "acute myelogenous leukemia"
+    ]
+  },
+  {
+    "source_id": "PMID:28718760",
+    "type": "Simple 1-Hop",
+    "question": "What is the statistical p-value associated with CD25 expression causing increased odds of resistance to therapy?",
+    "options": null,
+    "ground_truth_answer": "p=0.015",
+    "ground_truth_context": "[biomarker] \"CD25 expression\" --cause--> [risk_factor] \"resistance to therapy\" | Efficacy: Positive: increased odds of resistance (p=0.015) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "CD25 expression",
+      "resistance to therapy"
+    ]
+  }
+]

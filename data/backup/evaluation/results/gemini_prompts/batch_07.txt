@@ -1,0 +1,221 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 61
+**Question:** What disease is treated by the combination of bexarotene with cisplatin and vinorelbine?
+**Answer:** I’m sorry, but the query results do not contain a reliability score for this finding. The available information is:
+
+- **Disease treated:** non‑small‑cell lung cancer  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: better‑than‑expected survival (14‑month median)  
+
+Supporting PMID: [11352954](https://pubmed.ncbi.nlm.nih.gov/11352954/)
+**Retrieved Context:** I’m sorry, but the query results do not contain a reliability score for this finding. The available information is:
+
+- **Disease treated:** non‑small‑cell lung cancer  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: better‑than‑expected survival (14‑month median)  
+
+Supporting PMID: [11352954](https://pubmed.ncbi.nlm.nih.gov/11352954/)
+**Ground Truth Answer:** Non-small-cell lung cancer.
+**Ground Truth Context:** [treatment] "bexarotene with cisplatin and vinorelbine" --treat--> [disease] "non-small-cell lung cancer" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 62
+**Question:** True or False: The trial evaluating bexarotene with cisplatin and vinorelbine for non-small-cell lung cancer was a Phase III trial.
+**Answer:** I’m sorry, but I don’t have any information on that trial.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that trial.
+**Ground Truth Answer:** False, it was a Phase II trial.
+**Ground Truth Context:** [treatment] "bexarotene with cisplatin and vinorelbine" --treat--> [disease] "non-small-cell lung cancer" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 63
+**Question:** What was the efficacy outcome for the treatment of non-small-cell lung cancer using bexarotene with cisplatin and vinorelbine?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** C) Positive: better-than-expected survival (14-month median)
+**Ground Truth Context:** [treatment] "bexarotene with cisplatin and vinorelbine" --treat--> [disease] "non-small-cell lung cancer" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 64
+**Question:** What median survival time was achieved when non-small-cell lung cancer was treated with bexarotene, cisplatin, and vinorelbine?
+**Answer:** **Median survival time achieved**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 80 | Phase II | Positive: better‑than‑expected survival (14‑month median) |
+
+*Supporting evidence:* [PMID11352954](https://pubmed.ncbi.nlm.nih.gov/11352954/)
+**Retrieved Context:** **Median survival time achieved**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 80 | Phase II | Positive: better‑than‑expected survival (14‑month median) |
+
+*Supporting evidence:* [PMID11352954](https://pubmed.ncbi.nlm.nih.gov/11352954/)
+**Ground Truth Answer:** A 14-month median survival.
+**Ground Truth Context:** [treatment] "bexarotene with cisplatin and vinorelbine" --treat--> [disease] "non-small-cell lung cancer" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 65
+**Question:** What is the reliability score for the finding that bexarotene with cisplatin and vinorelbine treats non-small-cell lung cancer?
+**Answer:** **Reliability Score for the Finding that Bexarotene + Cisplatin + Vinorelbine Treats Non‑Small‑Cell Lung Cancer**
+
+| ReliabilityScore | TrialPhase | EfficacyEvidence | Supporting PMID |
+|-------------------|------------|------------------|-----------------|
+| 95 | Phase III | Positive: clinical benefit observed | [38525811](https://pubmed.ncbi.nlm.nih.gov/38525811) |
+| 95 | Phase III | Positive: improved overall survival (median 19.4 months in group 1, 14.9 months in group 2, 9.2 months in group 3) | [26051236](https://pubmed.ncbi.nlm.nih.gov/26051236) |
+| 95 | Phase III | Positive: improved overall survival (HR 0.199, P=0.033) | [27378175](https://pubmed.ncbi.nlm.nih.gov/27378175) |
+| 95 | Phase III | Positive: survival difference significant (p<0.0001) | [21640518](https://pubmed.ncbi.nlm.nih.gov/21640518) |
+| 80 | Phase II | Positive: confirmed ORR 66.7% (14 of 21) | [40301557](https://pubmed.ncbi.nlm.nih.gov/40301557) |
+| 80 | Phase II | Positive: confirmed ORR 30.0% (6 of 20) | [40301557](https://pubmed.ncbi.nlm.nih.gov/40301557) |
+| 80 | Phase II | Positive: disease control rate 80.0% (16 of 20) | [40301557](https://pubmed.ncbi.nlm.nih.gov/40301557) |
+| 80 | Phase II | Positive: confirmed ORR 40% (17/43); median PFS 6.2 months | [40210967](https://pubmed.ncbi.nlm.nih.gov/40210967) |
+| 80 | Phase II | Positive: confirmed ORR 55% (12/22); median PFS 11.1 months | [40210967](https://pubmed.ncbi.nlm.nih.gov/40210967) |
+| 80 | Phase II | Positive: confirmed ORR 34% (22/64); median PFS 9.3 months | [40210967](https://pubmed.ncbi.nlm.nih.gov/40210967) |
+
+These are the exact values returned by the SPARQL query for the specified finding.
+**Retrieved Context:** **Reliability Score for the Finding that Bexarotene + Cisplatin + Vinorelbine Treats Non‑Small‑Cell Lung Cancer**
+
+| ReliabilityScore | TrialPhase | EfficacyEvidence | Supporting PMID |
+|-------------------|------------|------------------|-----------------|
+| 95 | Phase III | Positive: clinical benefit observed | [38525811](https://pubmed.ncbi.nlm.nih.gov/38525811) |
+| 95 | Phase III | Positive: improved overall survival (median 19.4 months in group 1, 14.9 months in group 2, 9.2 months in group 3) | [26051236](https://pubmed.ncbi.nlm.nih.gov/26051236) |
+| 95 | Phase III | Positive: improved overall survival (HR 0.199, P=0.033) | [27378175](https://pubmed.ncbi.nlm.nih.gov/27378175) |
+| 95 | Phase III | Positive: survival difference significant (p<0.0001) | [21640518](https://pubmed.ncbi.nlm.nih.gov/21640518) |
+| 80 | Phase II | Positive: confirmed ORR 66.7% (14 of 21) | [40301557](https://pubmed.ncbi.nlm.nih.gov/40301557) |
+| 80 | Phase II | Positive: confirmed ORR 30.0% (6 of 20) | [40301557](https://pubmed.ncbi.nlm.nih.gov/40301557) |
+| 80 | Phase II | Positive: disease control rate 80.0% (16 of 20) | [40301557](https://pubmed.ncbi.nlm.nih.gov/40301557) |
+| 80 | Phase II | Positive: confirmed ORR 40% (17/43); median PFS 6.2 months | [40210967](https://pubmed.ncbi.nlm.nih.gov/40210967) |
+| 80 | Phase II | Positive: confirmed ORR 55% (12/22); median PFS 11.1 months | [40210967](https://pubmed.ncbi.nlm.nih.gov/40210967) |
+| 80 | Phase II | Positive: confirmed ORR 34% (22/64); median PFS 9.3 months | [40210967](https://pubmed.ncbi.nlm.nih.gov/40210967) |
+
+These are the exact values returned by the SPARQL query for the specified finding.
+**Ground Truth Answer:** 80
+**Ground Truth Context:** [treatment] "bexarotene with cisplatin and vinorelbine" --treat--> [disease] "non-small-cell lung cancer" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 66
+**Question:** What disease does racotumomab alum treat according to the Phase III trial relations?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** Non small cell lung cancer.
+**Ground Truth Context:** [treatment] "racotumomab alum" --treat--> [disease] "non small cell lung cancer" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 67
+**Question:** Which symptoms are presented as associated with racotumomab alum treatment?
+**Answer:** **Symptom reported for racotumomab alum treatment**
+
+| Symptom | Reliability Score | Trial Phase | Efficacy Evidence |
+|---------|-------------------|-------------|-------------------|
+| burning_pain_injection_site_bone_pain_asthenia | 70 | Phase III | Not Stated |
+
+**Supporting evidence:** [24788102](https://pubmed.ncbi.nlm.nih.gov/24788102/)
+**Retrieved Context:** **Symptom reported for racotumomab alum treatment**
+
+| Symptom | Reliability Score | Trial Phase | Efficacy Evidence |
+|---------|-------------------|-------------|-------------------|
+| burning_pain_injection_site_bone_pain_asthenia | 70 | Phase III | Not Stated |
+
+**Supporting evidence:** [24788102](https://pubmed.ncbi.nlm.nih.gov/24788102/)
+**Ground Truth Answer:** B
+**Ground Truth Context:** [treatment] "racotumomab alum" --present--> [symptom] "burning pain injection site bone pain asthenia" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70
+
+---
+
+### Question ID: 68
+**Question:** True or False: An anti neuGcgm3 antibody response negatively affects survival times in non small cell lung cancer.
+**Answer:** I’m sorry, but I don’t have any information on that.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that.
+**Ground Truth Answer:** False. It has a positive efficacy, leading to longer median survival times.
+**Ground Truth Context:** [test] "anti neuGcgm3 antibody response" --affect--> [disease] "non small cell lung cancer" | Efficacy: Positive: longer median survival times | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 69
+**Question:** What was the specific efficacy on overall survival and progression free survival when racotumomab alum was used to treat non small cell lung cancer?
+**Answer:** **Efficacy of racotumomab alum in non‑small cell lung cancer**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) |
+
+**Supporting evidence:** [24788102](https://pubmed.ncbi.nlm.nih.gov/24788102/)
+**Retrieved Context:** **Efficacy of racotumomab alum in non‑small cell lung cancer**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) |
+
+**Supporting evidence:** [24788102](https://pubmed.ncbi.nlm.nih.gov/24788102/)
+**Ground Truth Answer:** It showed positive efficacy by improving overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039).
+**Ground Truth Context:** [treatment] "racotumomab alum" --treat--> [disease] "non small cell lung cancer" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95
+
+---
+
+### Question ID: 70
+**Question:** What clinical trial phase evaluated racotumomab alum for treating non small cell lung cancer?
+**Answer:** **Clinical trial phase evaluated racotumomab alum for treating non‑small cell lung cancer**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) |
+
+**Supporting PMID**
+
+- [24788102](https://pubmed.ncbi.nlm.nih.gov/24788102/)
+**Retrieved Context:** **Clinical trial phase evaluated racotumomab alum for treating non‑small cell lung cancer**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 95 | Phase III | Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) |
+
+**Supporting PMID**
+
+- [24788102](https://pubmed.ncbi.nlm.nih.gov/24788102/)
+**Ground Truth Answer:** Phase III.
+**Ground Truth Context:** [treatment] "racotumomab alum" --treat--> [disease] "non small cell lung cancer" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95
+
+---
+

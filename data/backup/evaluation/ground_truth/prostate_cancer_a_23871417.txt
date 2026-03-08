@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:23871417",
+    "type": "Simple 1-Hop",
+    "question": "What symptom is present in castration resistant prostate cancer?",
+    "options": null,
+    "ground_truth_answer": "Pain.",
+    "ground_truth_context": "3. [symptom] \"pain\" --present--> [disease] \"castration resistant prostate cancer\" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "pain",
+      "castration resistant prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23871417",
+    "type": "Simple True/False",
+    "question": "True or False: The treatment combination of atrasentan and docetaxel showed a positive efficacy with significant improvement in overall survival for castration resistant prostate cancer.",
+    "options": null,
+    "ground_truth_answer": "False. The efficacy was negative, showing no significant difference in overall survival (p=0.64).",
+    "ground_truth_context": "1. [treatment] \"atrasentan and docetaxel\" --treat--> [disease] \"castration resistant prostate cancer\" | Efficacy: Negative: no significant difference in overall survival (p=0.64) | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "atrasentan and docetaxel",
+      "castration resistant prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23871417",
+    "type": "Simple MCQ",
+    "question": "Which body part is identified as having metastases present in castration resistant prostate cancer?",
+    "options": [
+      "A) Brain metastases",
+      "B) Lung metastases",
+      "C) Bone metastases",
+      "D) Liver metastases"
+    ],
+    "ground_truth_answer": "C) Bone metastases",
+    "ground_truth_context": "4. [body_part] \"bone metastases\" --present--> [disease] \"castration resistant prostate cancer\" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "bone metastases",
+      "castration resistant prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23871417",
+    "type": "Simple Open-Ended",
+    "question": "What was the efficacy outcome of treating castration resistant prostate cancer with atrasentan and docetaxel?",
+    "options": null,
+    "ground_truth_answer": "The treatment resulted in a negative efficacy outcome, with no significant difference in overall survival (p=0.64).",
+    "ground_truth_context": "1. [treatment] \"atrasentan and docetaxel\" --treat--> [disease] \"castration resistant prostate cancer\" | Efficacy: Negative: no significant difference in overall survival (p=0.64) | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "atrasentan and docetaxel",
+      "castration resistant prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:23871417",
+    "type": "Simple 1-Hop",
+    "question": "What disease does docetaxel treat according to Phase III trial data?",
+    "options": null,
+    "ground_truth_answer": "Castration resistant prostate cancer.",
+    "ground_truth_context": "2. [treatment] \"docetaxel\" --treat--> [disease] \"castration resistant prostate cancer\" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "docetaxel",
+      "castration resistant prostate cancer"
+    ]
+  }
+]

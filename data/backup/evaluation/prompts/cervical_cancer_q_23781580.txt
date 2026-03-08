@@ -1,0 +1,67 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "irinotecan" --treat--> [disease] "ovarian carcinoma" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  2. [treatment] "irinotecan" --treat--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  3. [treatment] "cisplatin" --treat--> [disease] "ovarian carcinoma" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  4. [treatment] "cisplatin" --treat--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  5. [treatment] "CPT-P therapy" --treat--> [disease] "ovarian carcinoma" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  6. [treatment] "CPT-P therapy" --treat--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+  7. [risk_factor] "UGT1A1 polymorphisms" --affect--> [treatment] "irinotecan RD" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:23781580
+Title: UGT1A1 genotype-specific phase I and pharmacokinetic study for combination chemotherapy with irinotecan and cisplatin: a Saitama Tumor Board study.
+Phase: Phase I
+Abstract: INTRODUCTION: Genotyping of UGTI1Al could be useful for prediction of severe toxicities for patients treated with irinotecan; however, genotype-based recommended dose (RD) has not been established. The aim of the present study was to determine the RD of irinotecan in combination with cisplatin (CPT-P) for individuals with or without UGT1A1 polymorphisms. MATERIALS AND METHODS: According to polymorphisms of UGTIAl*28, *6, and *27, RDs were determined by three-case cohort methods for patients with wild-type and heterotype, and by inter-patient dose escalation for homotype patients. Pharmacokinetic studies were also evaluated. During May 2009 and July 2011, 18 Japanese patients were enrolled; 16 patients with ovarian carcinoma, and two cases with cervical cancer. The RD of irinotecan was determined as 50 mg/m2 for the patients with wild-type, 40 mg/m2 for those with heterotype, and 30 mg/m2 for homotype UGT IAl genotype. RESULTS: Patients with homotype UGTIAl1 alleles had a significantly lower glucuronidation ratio in comparison with UGTIAI wild-type and heterotype cases. CONCLUSION: UGT1A1 genotype-based RDs of irinotecan in CPT-P therapy were determined. Further studies to investigate efficacy of the RD including response evaluation are needed to confirm the present results.

@@ -1,0 +1,207 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 11
+**Question:** What disease is treated with paclitaxel according to the extracted relation?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** Breast cancer.
+**Ground Truth Context:** [treatment] "paclitaxel" --treat--> [disease] "breast cancer" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 12
+**Question:** What was the reported efficacy of paclitaxel in treating breast cancer?
+**Answer:** **Reported efficacy of paclitaxel in treating breast cancer**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 95 | Phase III | Positive: significantly higher overall response rate (P=0.022) vs paclitaxel |
+
+*Supporting PMID:* [23563958](https://pubmed.ncbi.nlm.nih.gov/23563958/)
+**Retrieved Context:** **Reported efficacy of paclitaxel in treating breast cancer**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 95 | Phase III | Positive: significantly higher overall response rate (P=0.022) vs paclitaxel |
+
+*Supporting PMID:* [23563958](https://pubmed.ncbi.nlm.nih.gov/23563958/)
+**Ground Truth Answer:** Positive, with an overall response rate (RR) of 67%.
+**Ground Truth Context:** [treatment] "paclitaxel" --treat--> [disease] "breast cancer" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 13
+**Question:** True or False: The data regarding paclitaxel treating breast cancer was derived from a Phase III trial.
+**Answer:** **True**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 95 | Phase III | Positive: significantly higher overall response rate (P=0.022) vs paclitaxel |
+
+Supporting study: [PMID 23563958](https://pubmed.ncbi.nlm.nih.gov/23563958/)
+**Retrieved Context:** **True**
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 95 | Phase III | Positive: significantly higher overall response rate (P=0.022) vs paclitaxel |
+
+Supporting study: [PMID 23563958](https://pubmed.ncbi.nlm.nih.gov/23563958/)
+**Ground Truth Answer:** False. It was a Phase II trial.
+**Ground Truth Context:** [treatment] "paclitaxel" --treat--> [disease] "breast cancer" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 14
+**Question:** What phase was the trial evaluating paclitaxel for breast cancer?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** B) Phase II
+**Ground Truth Context:** [treatment] "paclitaxel" --treat--> [disease] "breast cancer" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 15
+**Question:** What is the reliability score for the finding that paclitaxel treats breast cancer?
+**Answer:** I’m sorry, but the query results do not contain any entries that describe a finding where paclitaxel treats breast cancer.
+**Retrieved Context:** I’m sorry, but the query results do not contain any entries that describe a finding where paclitaxel treats breast cancer.
+**Ground Truth Answer:** 80
+**Ground Truth Context:** [treatment] "paclitaxel" --treat--> [disease] "breast cancer" | Efficacy: Positive: overall RR of 67% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 16
+**Question:** Which diseases are treated by irinotecan?
+**Answer:** I’m sorry, but I don’t have any information on that.
+**Retrieved Context:** I’m sorry, but I don’t have any information on that.
+**Ground Truth Answer:** Ovarian carcinoma and cervical cancer.
+**Ground Truth Context:** 1. [treatment] "irinotecan" --treat--> [disease] "ovarian carcinoma" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40; 2. [treatment] "irinotecan" --treat--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 17
+**Question:** True or False: The efficacy of CPT-P therapy for treating ovarian carcinoma is explicitly stated as positive.
+**Answer:** **Answer:** False
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 40 | Phase I | Not Stated |
+
+Supporting evidence: [PMID 23781580](https://pubmed.ncbi.nlm.nih.gov/23781580/)
+**Retrieved Context:** **Answer:** False
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 40 | Phase I | Not Stated |
+
+Supporting evidence: [PMID 23781580](https://pubmed.ncbi.nlm.nih.gov/23781580/)
+**Ground Truth Answer:** False, the efficacy is listed as Not Stated.
+**Ground Truth Context:** 5. [treatment] "CPT-P therapy" --treat--> [disease] "ovarian carcinoma" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 18
+**Question:** Which risk factor affects irinotecan RD?
+**Answer:** **Risk Factor:** *ugt1a1_polymorphisms*  
+- **Reliability Score:** 40  
+- **Trial Phase:** Phase I  
+- **Efficacy Evidence:** Not Stated  
+
+Supporting evidence: [PMID23781580](https://pubmed.ncbi.nlm.nih.gov/23781580/)
+**Retrieved Context:** **Risk Factor:** *ugt1a1_polymorphisms*  
+- **Reliability Score:** 40  
+- **Trial Phase:** Phase I  
+- **Efficacy Evidence:** Not Stated  
+
+Supporting evidence: [PMID23781580](https://pubmed.ncbi.nlm.nih.gov/23781580/)
+**Ground Truth Answer:** B) UGT1A1 polymorphisms
+**Ground Truth Context:** 7. [risk_factor] "UGT1A1 polymorphisms" --affect--> [treatment] "irinotecan RD" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 19
+**Question:** What phase of trial is associated with the use of cisplatin for treating cervical cancer?
+**Answer:** **Phase III trials (reliability score = 95)**  
+- **Trial Phase:** Phase III – *Positive: improved disease‑free survival* (hazard ratio 1.38; P = 0.038) – [PMID 29432076](https://pubmed.ncbi.nlm.nih.gov/29432076/)  
+- **Trial Phase:** Phase III – *Positive: comparable overall survival* (HR 0.994) – [PMID 25732161](https://pubmed.ncbi.nlm.nih.gov/25732161/)  
+- **Trial Phase:** Phase III – *Positive: statistically significant non‑inferiority of overall survival* – [PMID 27553435](https://pubmed.ncbi.nlm.nih.gov/27553435/)  
+- **Trial Phase:** Phase III – *Positive: significant benefit in DFS and OS* – [PMID 33341239](https://pubmed.ncbi.nlm.nih.gov/33341239/)  
+- **Trial Phase:** Phase III – *Positive: significantly increased progression‑free survival* (HR 0.62, P < 0.001) – [PMID 30072745](https://pubmed.ncbi.nlm.nih.gov/30072745/)  
+- **Trial Phase:** Phase III – *Positive: improved overall survival* (log‑rank P = 0.0224) and progression‑free survival at 3 years (P = 0.029) – [PMID 21444871](https://pubmed.ncbi.nlm.nih.gov/21444871/)  
+- **Trial Phase:** Phase III – *Positive: higher response rate and progression‑free survival* – [PMID 16376417](https://pubmed.ncbi.nlm.nih.gov/16376417/)  
+- **Trial Phase:** Phase III – *Positive: improved objective response rate (67.74%)* – [PMID 33285664](https://pubmed.ncbi.nlm.nih.gov/33285664/)  
+
+**Phase II trial (reliability score = 80)**  
+- **Trial Phase:** Phase II – *Positive: significant progression‑free and overall‑survival benefits* – [PMID 19381891](https://pubmed.ncbi.nlm.nih.gov/19381891/)
+**Retrieved Context:** **Phase III trials (reliability score = 95)**  
+- **Trial Phase:** Phase III – *Positive: improved disease‑free survival* (hazard ratio 1.38; P = 0.038) – [PMID 29432076](https://pubmed.ncbi.nlm.nih.gov/29432076/)  
+- **Trial Phase:** Phase III – *Positive: comparable overall survival* (HR 0.994) – [PMID 25732161](https://pubmed.ncbi.nlm.nih.gov/25732161/)  
+- **Trial Phase:** Phase III – *Positive: statistically significant non‑inferiority of overall survival* – [PMID 27553435](https://pubmed.ncbi.nlm.nih.gov/27553435/)  
+- **Trial Phase:** Phase III – *Positive: significant benefit in DFS and OS* – [PMID 33341239](https://pubmed.ncbi.nlm.nih.gov/33341239/)  
+- **Trial Phase:** Phase III – *Positive: significantly increased progression‑free survival* (HR 0.62, P < 0.001) – [PMID 30072745](https://pubmed.ncbi.nlm.nih.gov/30072745/)  
+- **Trial Phase:** Phase III – *Positive: improved overall survival* (log‑rank P = 0.0224) and progression‑free survival at 3 years (P = 0.029) – [PMID 21444871](https://pubmed.ncbi.nlm.nih.gov/21444871/)  
+- **Trial Phase:** Phase III – *Positive: higher response rate and progression‑free survival* – [PMID 16376417](https://pubmed.ncbi.nlm.nih.gov/16376417/)  
+- **Trial Phase:** Phase III – *Positive: improved objective response rate (67.74%)* – [PMID 33285664](https://pubmed.ncbi.nlm.nih.gov/33285664/)  
+
+**Phase II trial (reliability score = 80)**  
+- **Trial Phase:** Phase II – *Positive: significant progression‑free and overall‑survival benefits* – [PMID 19381891](https://pubmed.ncbi.nlm.nih.gov/19381891/)
+**Ground Truth Answer:** Phase I
+**Ground Truth Context:** 4. [treatment] "cisplatin" --treat--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+
+### Question ID: 20
+**Question:** What does CPT-P therapy treat in addition to cervical cancer?
+**Answer:** I’m sorry, but the query results do not contain a **reliabilityScore** for either finding, so I can’t report that value. However, the results do indicate that CPT‑P therapy is also used to treat **ovarian carcinoma** in addition to cervical cancer.
+
+| Finding | Trial Phase | Efficacy Evidence |
+|---------|-------------|-------------------|
+| Ovarian carcinoma | Phase I | Not Stated |
+
+Supporting PMID: [23781580](https://pubmed.ncbi.nlm.nih.gov/23781580/)
+**Retrieved Context:** I’m sorry, but the query results do not contain a **reliabilityScore** for either finding, so I can’t report that value. However, the results do indicate that CPT‑P therapy is also used to treat **ovarian carcinoma** in addition to cervical cancer.
+
+| Finding | Trial Phase | Efficacy Evidence |
+|---------|-------------|-------------------|
+| Ovarian carcinoma | Phase I | Not Stated |
+
+Supporting PMID: [23781580](https://pubmed.ncbi.nlm.nih.gov/23781580/)
+**Ground Truth Answer:** Ovarian carcinoma.
+**Ground Truth Context:** 5. [treatment] "CPT-P therapy" --treat--> [disease] "ovarian carcinoma" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40; 6. [treatment] "CPT-P therapy" --treat--> [disease] "cervical cancer" | Efficacy: Not Stated | Phase: Phase I | Reliability: 40
+
+---
+

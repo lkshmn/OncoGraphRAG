@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:31999946",
+    "type": "Simple 1-Hop",
+    "question": "What disease is treated by TAS-102 plus bevacizumab?",
+    "options": null,
+    "ground_truth_answer": "Metastatic colorectal cancer.",
+    "ground_truth_context": "[treatment] \"TAS-102 plus bevacizumab\" --treat--> [disease] \"metastatic colorectal cancer\" | Efficacy: Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "TAS-102 plus bevacizumab",
+      "metastatic colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:31999946",
+    "type": "Simple True/False",
+    "question": "True or False: TAS-102 monotherapy treats metastatic colorectal cancer.",
+    "options": null,
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"TAS-102 monotherapy\" --treat--> [disease] \"metastatic colorectal cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "TAS-102 monotherapy",
+      "metastatic colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:31999946",
+    "type": "Simple MCQ",
+    "question": "Which symptom is present when using TAS-102 plus bevacizumab?",
+    "options": [
+      "A) Nausea",
+      "B) Fatigue",
+      "C) Neutropenia",
+      "D) Headache"
+    ],
+    "ground_truth_answer": "C) Neutropenia",
+    "ground_truth_context": "[treatment] \"TAS-102 plus bevacizumab\" --present--> [symptom] \"neutropenia\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "TAS-102 plus bevacizumab",
+      "neutropenia"
+    ]
+  },
+  {
+    "source_id": "PMID:31999946",
+    "type": "Simple Open-Ended",
+    "question": "What was the efficacy outcome of TAS-102 plus bevacizumab for treating metastatic colorectal cancer?",
+    "options": null,
+    "ground_truth_answer": "Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015).",
+    "ground_truth_context": "[treatment] \"TAS-102 plus bevacizumab\" --treat--> [disease] \"metastatic colorectal cancer\" | Efficacy: Positive: improved progression-free survival (hazard ratio 0.45, p=0.0015) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "TAS-102 plus bevacizumab",
+      "metastatic colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:31999946",
+    "type": "Simple 1-Hop",
+    "question": "What phase was the trial for TAS-102 monotherapy in treating metastatic colorectal cancer?",
+    "options": null,
+    "ground_truth_answer": "Phase II.",
+    "ground_truth_context": "[treatment] \"TAS-102 monotherapy\" --treat--> [disease] \"metastatic colorectal cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "TAS-102 monotherapy",
+      "metastatic colorectal cancer"
+    ]
+  }
+]

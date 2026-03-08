@@ -1,0 +1,241 @@
+You are an evaluation judge for a RAG chatbot. Score each question below on three metrics using a fine-grained scale from 0.0 to 1.0. Use intermediate values (e.g., 0.2, 0.4, 0.6, 0.8) - do NOT just use 0 or 1.
+
+1. **faithfulness**: What fraction of claims in the Answer are supported by the Retrieved Context?
+   - 1.0 = all claims supported
+   - 0.8 = most claims supported, minor unsupported detail
+   - 0.6 = core answer supported but some claims lack evidence
+   - 0.4 = partially supported, significant unsupported claims
+   - 0.2 = mostly unsupported, only minor overlap
+   - 0.0 = completely fabricated or no context available
+
+2. **answer_relevancy**: How well does the Answer address the Question?
+   - 1.0 = directly and completely answers the question
+   - 0.8 = answers the question but includes extra irrelevant info
+   - 0.6 = partially answers, missing some key details
+   - 0.4 = tangentially related but doesn't clearly answer
+   - 0.2 = mostly irrelevant, only vaguely related
+   - 0.0 = does not address the question at all or says "I don't know"
+
+3. **context_recall**: What fraction of the Ground Truth Context is covered by the Retrieved Context?
+   - 1.0 = all ground truth entities, relations, and metadata are present
+   - 0.8 = most ground truth info present, minor detail missing
+   - 0.6 = key relation present but some metadata (phase/efficacy/score) missing
+   - 0.4 = only some ground truth info present
+   - 0.2 = very little overlap with ground truth
+   - 0.0 = no overlap or context is empty/"I don't know"
+
+IMPORTANT: Use the full range of scores. Most answers will fall between 0.2 and 0.8.
+Return ONLY a valid JSON array. No explanation, no markdown fences.
+
+Format:
+[
+  {"question_id": 1, "faithfulness": 0.8, "answer_relevancy": 0.9, "context_recall": 0.7},
+  ...
+]
+
+---
+
+### Question ID: 51
+**Question:** What is the reported efficacy outcome of the combination treatment of azacitidine, venetoclax and pevonedistat for acute myeloid leukemia?
+**Answer:** **Reported efficacy outcome**
+
+- **Reliability score:** 80  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: CR/CRi 66%  
+
+Supporting study: [PMID37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Retrieved Context:** **Reported efficacy outcome**
+
+- **Reliability score:** 80  
+- **Trial phase:** Phase II  
+- **Efficacy evidence:** Positive: CR/CRi 66%  
+
+Supporting study: [PMID37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Ground Truth Answer:** Positive: CR/CRi 66%
+**Ground Truth Context:** [treatment] "azacitidine, venetoclax and pevonedistat" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: CR/CRi 66% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 52
+**Question:** What was the overall response rate for the combination of azacitidine, venetoclax and pevonedistat when treating myelodysplastic syndromes or chronic myelomonocytic leukemia?
+**Answer:** **Overall Response Rate for the Combination of Azacitidine, Venetoclax, and Pevonedistat in Myelodysplastic Syndromes or Chronic Myelomonocytic Leukemia**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: overall response rate 75% |
+
+**Supporting PMID:** [PMID37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Retrieved Context:** **Overall Response Rate for the Combination of Azacitidine, Venetoclax, and Pevonedistat in Myelodysplastic Syndromes or Chronic Myelomonocytic Leukemia**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: overall response rate 75% |
+
+**Supporting PMID:** [PMID37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Ground Truth Answer:** D) 75%
+**Ground Truth Context:** [treatment] "azacitidine, venetoclax and pevonedistat" --treat--> [disease] "myelodysplastic syndromes or chronic myelomonocytic leukemia" | Efficacy: Positive: overall response rate 75% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 53
+**Question:** True or False: TP53 mutation is identified as a risk factor that affects acute myeloid leukemia.
+**Answer:** **True**
+
+- **Reliability Score:** 55  
+- **Trial Phase:** Phase II  
+- **Efficacy Evidence:** Not Stated  
+
+Supporting evidence: [PMID37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Retrieved Context:** **True**
+
+- **Reliability Score:** 55  
+- **Trial Phase:** Phase II  
+- **Efficacy Evidence:** Not Stated  
+
+Supporting evidence: [PMID37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Ground Truth Answer:** True
+**Ground Truth Context:** [risk_factor] "TP53 mutation" --affect--> [disease] "acute myeloid leukemia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 54
+**Question:** What overall survival (OS) efficacy is reported for pevonedistat in the treatment of acute myeloid leukemia?
+**Answer:** **Overall Survival (OS) efficacy reported for pevonedistat in acute myeloid leukemia**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: OS 8.1 months |
+
+*Supporting PMID:* [37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Retrieved Context:** **Overall Survival (OS) efficacy reported for pevonedistat in acute myeloid leukemia**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: OS 8.1 months |
+
+*Supporting PMID:* [37422688](https://pubmed.ncbi.nlm.nih.gov/37422688/)
+**Ground Truth Answer:** OS 8.1 months.
+**Ground Truth Context:** [treatment] "pevonedistat" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: OS 8.1 months | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 55
+**Question:** What trial phase evaluated azacitidine for the treatment of acute myeloid leukemia?
+**Answer:** I’m sorry, but I don’t have that information.
+**Retrieved Context:** I’m sorry, but I don’t have that information.
+**Ground Truth Answer:** Phase II
+**Ground Truth Context:** [treatment] "azacitidine" --treat--> [disease] "acute myeloid leukemia" | Efficacy: Positive: CR 50% | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 56
+**Question:** What disease does the treatment MST-16 treat?
+**Answer:** **Disease treated by MST‑16**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: complete and partial remissions observed in 23 of 24 patients |
+
+*Supporting PMID:* [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Retrieved Context:** **Disease treated by MST‑16**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|--------------------|-------------|-------------------|
+| 80 | Phase II | Positive: complete and partial remissions observed in 23 of 24 patients |
+
+*Supporting PMID:* [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Ground Truth Answer:** Adult T-cell leukemia lymphoma.
+**Ground Truth Context:** [treatment] "MST-16" --treat--> [disease] "adult T-cell leukemia lymphoma" | Efficacy: Positive: complete and partial remissions observed in 23 of 24 patients | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 57
+**Question:** Which of the following complications is affected by MST-16?
+**Answer:** **Complications reported to be affected by MST‑16**
+
+| Complication | Reliability Score | Trial Phase | Efficacy Evidence | Supporting PMID |
+|--------------|-------------------|-------------|------------------|-----------------|
+| leukopenia | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+| anemia | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+| thrombocytopenia | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+| gastrointestinal disorders | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+
+All four complications listed in the query results are reported to be affected by MST‑16.
+**Retrieved Context:** **Complications reported to be affected by MST‑16**
+
+| Complication | Reliability Score | Trial Phase | Efficacy Evidence | Supporting PMID |
+|--------------|-------------------|-------------|------------------|-----------------|
+| leukopenia | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+| anemia | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+| thrombocytopenia | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+| gastrointestinal disorders | 55 | Phase II | Not Stated | [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067) |
+
+All four complications listed in the query results are reported to be affected by MST‑16.
+**Ground Truth Answer:** B) Leukopenia
+**Ground Truth Context:** [treatment] "MST-16" --affect--> [complication] "leukopenia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+
+### Question ID: 58
+**Question:** True or False: The trial phase evaluating the relation between MST-16 and adult T-cell leukemia lymphoma is Phase III.
+**Answer:** **Answer:** False
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 80 | Phase II | Positive: complete and partial remissions observed in 23 of 24 patients |
+
+Supporting PMID: [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Retrieved Context:** **Answer:** False
+
+| reliabilityScore | trialPhase | efficacyEvidence |
+|------------------|------------|------------------|
+| 80 | Phase II | Positive: complete and partial remissions observed in 23 of 24 patients |
+
+Supporting PMID: [8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Ground Truth Answer:** False. The trial phase is Phase II.
+**Ground Truth Context:** [treatment] "MST-16" --treat--> [disease] "adult T-cell leukemia lymphoma" | Efficacy: Positive: complete and partial remissions observed in 23 of 24 patients | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 59
+**Question:** What is the efficacy outcome of MST-16 for treating adult T-cell leukemia lymphoma?
+**Answer:** **Efficacy outcome of MST‑16 for treating adult T‑cell leukemia lymphoma**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|-------------------|-------------|--------------------|
+| 80 | Phase II | Positive: complete and partial remissions observed in 23 of 24 patients |
+
+Supporting evidence: [PMID8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Retrieved Context:** **Efficacy outcome of MST‑16 for treating adult T‑cell leukemia lymphoma**
+
+| Reliability Score | Trial Phase | Efficacy Evidence |
+|-------------------|-------------|--------------------|
+| 80 | Phase II | Positive: complete and partial remissions observed in 23 of 24 patients |
+
+Supporting evidence: [PMID8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Ground Truth Answer:** Positive, with complete and partial remissions observed in 23 of 24 patients.
+**Ground Truth Context:** [treatment] "MST-16" --treat--> [disease] "adult T-cell leukemia lymphoma" | Efficacy: Positive: complete and partial remissions observed in 23 of 24 patients | Phase: Phase II | Reliability: 80
+
+---
+
+### Question ID: 60
+**Question:** What is the reliability score for the relation showing MST-16 affects anemia?
+**Answer:** **Reliability score for the relation showing MST‑16 affects anemia**
+
+- **reliabilityScore:** 55  
+- **trialPhase:** Phase II  
+- **efficacyEvidence:** Not Stated  
+
+Supporting evidence: [PMID8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Retrieved Context:** **Reliability score for the relation showing MST‑16 affects anemia**
+
+- **reliabilityScore:** 55  
+- **trialPhase:** Phase II  
+- **efficacyEvidence:** Not Stated  
+
+Supporting evidence: [PMID8384067](https://pubmed.ncbi.nlm.nih.gov/8384067/)
+**Ground Truth Answer:** 55
+**Ground Truth Context:** [treatment] "MST-16" --affect--> [complication] "anemia" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+---
+

@@ -1,0 +1,63 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "anti-CTLA-4 antibody" --treat--> [disease] "metastatic melanoma" | Efficacy: Positive: 22% objective response rate | Phase: Phase II | Reliability: 80
+  2. [treatment] "IL-2 therapy" --treat--> [disease] "metastatic melanoma" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+  3. [treatment] "anti-CTLA-4 administration" --cause--> [complication] "autoimmune toxicities" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:16283570
+Title: Tumor regression and autoimmunity in patients treated with cytotoxic T lymphocyte-associated antigen 4 blockade and interleukin 2: a phase I/II study.
+Phase: Phase II
+Abstract: BACKGROUND: Cytotoxic T lymphocyte-associated antigen (CTLA)-4 can inhibit T-cell responses and is involved in tolerance against self antigens. We previously reported autoimmune manifestations and objective cancer regressions in patients with metastatic melanoma treated with CTLA-4 blockade. The possibility of activating tumor-reactive T cells while removing inhibitory activity with CTLA-4 blockade has stimulated interest in using anti-CTLA-4 antibodies in combination with other cancer immunotherapies to improve clinical outcomes. In this study, we assessed the antitumor activity and autoimmune toxicity of CTLA-4 blockade in combination with an immune-activating stimulus, interleukin (IL)-2, in patients with metastatic melanoma. METHODS: Thirty-six patients received anti-CTLA-4 antibody every 3 weeks. Three patients per cohort received doses of .1, .3, 1.0, and 2.0 mg/kg. Twenty-four patients received 3.0 mg/kg. All patients received IL-2 therapy (720,000 IU/kg every 8 hours to a maximum of 15 doses). RESULTS: Eight patients (22%) experienced objective tumor responses (three complete and five partial), including metastases in the lungs, lymph nodes, mediastinum, and subcutaneous tissues. Six of the eight patients have ongoing objective responses at 11 to 19 months. Five patients (14%) developed grade III/IV autoimmune toxicities secondary to anti-CTLA-4 administration, including four patients with enterocolitis and one with arthritis and uveitis. CONCLUSIONS: There is not evidence to support a synergistic effect of CTLA-4 blockade plus IL-2 administration, because the 22% objective response rate is that expected from the sum of these two agents administered alone. Durable cancer regressions were seen in patients treated with this combination.

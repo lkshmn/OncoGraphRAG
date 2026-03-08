@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:30096441",
+    "type": "Simple 1-Hop",
+    "question": "What type of clinical trial evaluated the medication reminder and symptom management intervention for oral oncolytic agents?",
+    "options": null,
+    "ground_truth_answer": "Randomized Controlled Trial.",
+    "ground_truth_context": "[treatment] \"medication reminder and symptom management intervention\" --treat--> [treatment] \"oral oncolytic agents\" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75",
+    "key_entities": [
+      "medication reminder and symptom management intervention",
+      "oral oncolytic agents"
+    ]
+  },
+  {
+    "source_id": "PMID:30096441",
+    "type": "Simple MCQ",
+    "question": "What target does the printed Medication Management and Symptom Management Toolkit aim to treat?",
+    "options": [
+      "A) Oral oncolytic agents",
+      "B) 18 symptoms",
+      "C) Medication reminder",
+      "D) Unspecified adverse events"
+    ],
+    "ground_truth_answer": "B) 18 symptoms",
+    "ground_truth_context": "[treatment] \"printed Medication Management and Symptom Management Toolkit\" --treat--> [symptom] \"18 symptoms\" | Efficacy: Positive: significantly lower symptom severity at Week 8 (P<0.01) | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "printed Medication Management and Symptom Management Toolkit",
+      "18 symptoms"
+    ]
+  },
+  {
+    "source_id": "PMID:30096441",
+    "type": "Simple True/False",
+    "question": "True or False: The efficacy of the medication reminder and symptom management intervention for oral oncolytic agents is listed as 'Not Stated'.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[treatment] \"medication reminder and symptom management intervention\" --treat--> [treatment] \"oral oncolytic agents\" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75",
+    "key_entities": [
+      "medication reminder and symptom management intervention",
+      "oral oncolytic agents"
+    ]
+  },
+  {
+    "source_id": "PMID:30096441",
+    "type": "Simple Open-Ended",
+    "question": "What was the specific efficacy outcome of the printed Medication Management and Symptom Management Toolkit for the 18 symptoms?",
+    "options": null,
+    "ground_truth_answer": "Positive, showing significantly lower symptom severity at Week 8 (P<0.01).",
+    "ground_truth_context": "[treatment] \"printed Medication Management and Symptom Management Toolkit\" --treat--> [symptom] \"18 symptoms\" | Efficacy: Positive: significantly lower symptom severity at Week 8 (P<0.01) | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "printed Medication Management and Symptom Management Toolkit",
+      "18 symptoms"
+    ]
+  },
+  {
+    "source_id": "PMID:30096441",
+    "type": "Simple 1-Hop",
+    "question": "Which treatment intervention is recorded as actively treating 18 symptoms?",
+    "options": null,
+    "ground_truth_answer": "The printed Medication Management and Symptom Management Toolkit.",
+    "ground_truth_context": "[treatment] \"printed Medication Management and Symptom Management Toolkit\" --treat--> [symptom] \"18 symptoms\" | Efficacy: Positive: significantly lower symptom severity at Week 8 (P<0.01) | Phase: Randomized Controlled Trial | Reliability: 100",
+    "key_entities": [
+      "printed Medication Management and Symptom Management Toolkit",
+      "18 symptoms"
+    ]
+  }
+]

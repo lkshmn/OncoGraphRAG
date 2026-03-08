@@ -1,0 +1,63 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "mixed tea" --prevent--> [test] "micronuclei frequency" | Efficacy: Positive: significantly decreased micronuclei formation | Phase: Randomized Controlled Trial | Reliability: 100
+  2. [risk_factor] "cigarette smoking" --cause--> [test] "micronuclei frequency" | Efficacy: Not Stated | Phase: Randomized Controlled Trial | Reliability: 75
+  3. [treatment] "mixed tea" --prevent--> [disease] "oral cancer" | Efficacy: Positive: reduced oral cancer risk | Phase: Randomized Controlled Trial | Reliability: 100
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:10684124
+Title: [Study on the preventive effect of tea on DNA damage of the buccal mucosa cells in oral leukoplakias induce by cigarette smoking].
+Phase: Randomized Controlled Trial
+Abstract: In order to study the preventive effect of tea on DNA damage induced by cigarette smoking and to provide further evidence on the protective effects of tea in human cancer, a 6-month, double-blind and randomized placebo-controlled intervention trial was carried out. The effect of tea on micronuclei frequency in exfoliated oral buccal mucosa cells in 36 oral leukoplakias of smokers was investigated. A kind of mixed tea given in an oral dose of 3 g/day and a concentration of 0.1% smeared on mucosa lession three times a day for 3 months and 6 months, significantly decreased the micronuclei formation in exfoliated oral buccal mucosa cells in subjects with oral leukoplakias. In contrast, there was no change in the micronuclei frequency after 6 months in the placebo group. The results indicate that mixed tea may reduce the oral cancer risk by preventing DNA damage in oral leukopiakias induced by cigarette smoking.

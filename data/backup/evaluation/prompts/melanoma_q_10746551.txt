@@ -1,0 +1,62 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic melanoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+  2. [treatment] "semiallogeneic vaccine" --treat--> [disease] "metastatic adenocarcinoma" | Efficacy: Positive: minimal or no toxicity and can induce a specific anti-tumor immune response | Phase: Phase II | Reliability: 80
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:10746551
+Title: Semiallogeneic cell hybrids as therapeutic vaccines for cancer.
+Phase: Phase II
+Abstract: The authors have engineered a cell line that can be used in human studies as a universal donor cell for the formation of semiallogeneic cell hybrids after fusion with patient-derived tumor cells. These hybrids can be irradiated and injected as a patient-tailored therapeutic vaccine in patients affected by virtually any type of cancer. A crucial step in this research effort has been the derivation of an allogeneic cell line (FO1-12) that expresses both a dominant selectable marker (neomycin resistance) and a recessive selectable marker (sensitivity to hypoxanthine, aminopterin, and thymidine), which allows easy selection of semiallogeneic cell hybrids derived from the fusion of FO1-12 cells with patient-derived tumor cells. Tumor-infiltrating lymphocytes derived from select patients with melanoma and exposed to semiallogeneic cell hybrids from the same patient were better able to specifically lyse autologous tumor cells. Furthermore, FO1-12 cells express carcinoembryonic antigen, which is ubiquitous in adenocarcinomas, and fusion of FO1-12 cells with various patient-derived adenocarcinoma cells showed that the hybrid cells also express carcinoembryonic antigen. Because of the results of these preclinical studies, the authors were given permission to use semiallogeneic cell hybrids for immunotherapy of patients with metastatic melanoma or metastatic adenocarcinoma who had not responded to standard treatment regimens. Treatment with semiallogeneic vaccines is associated with minimal or no toxicity and can induce a specific anti-tumor immune response.

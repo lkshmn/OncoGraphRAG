@@ -1,0 +1,70 @@
+[
+  {
+    "source_id": "PMID:9548610",
+    "type": "Simple 1-Hop",
+    "question": "What disease do fluoropyrimidines treat according to the extracted data?",
+    "options": null,
+    "ground_truth_answer": "Liver metastases derived from colorectal cancer.",
+    "ground_truth_context": "[treatment] \"fluoropyrimidines\" --treat--> [disease] \"liver metastases derived from colorectal cancer\" | Efficacy: Positive: increased mean survival 17 to 26 months | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "fluoropyrimidines",
+      "liver metastases derived from colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9548610",
+    "type": "Simple MCQ",
+    "question": "Which treatment for liver metastases derived from colorectal cancer has an efficacy outcome of increased mean survival from 17 to 26 months?",
+    "options": [
+      "A) mitomycin C",
+      "B) fluoropyrimidines",
+      "C) melphalan",
+      "D) gene therapy"
+    ],
+    "ground_truth_answer": "B) fluoropyrimidines",
+    "ground_truth_context": "[treatment] \"fluoropyrimidines\" --treat--> [disease] \"liver metastases derived from colorectal cancer\" | Efficacy: Positive: increased mean survival 17 to 26 months | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "liver metastases derived from colorectal cancer",
+      "fluoropyrimidines"
+    ]
+  },
+  {
+    "source_id": "PMID:9548610",
+    "type": "Simple True/False",
+    "question": "True or False: The use of isolated hepatic perfusion to treat liver metastases derived from colorectal cancer was evaluated in a Phase II trial.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[treatment] \"isolated hepatic perfusion\" --treat--> [disease] \"liver metastases derived from colorectal cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "isolated hepatic perfusion",
+      "liver metastases derived from colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9548610",
+    "type": "Simple Open-Ended",
+    "question": "What is the stated efficacy of fluoropyrimidines for treating liver metastases derived from colorectal cancer?",
+    "options": null,
+    "ground_truth_answer": "Positive, showing increased mean survival of 17 to 26 months.",
+    "ground_truth_context": "[treatment] \"fluoropyrimidines\" --treat--> [disease] \"liver metastases derived from colorectal cancer\" | Efficacy: Positive: increased mean survival 17 to 26 months | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "fluoropyrimidines",
+      "liver metastases derived from colorectal cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:9548610",
+    "type": "Simple 1-Hop",
+    "question": "What clinical trial phase is associated with the use of mitomycin C for treating liver metastases derived from colorectal cancer?",
+    "options": null,
+    "ground_truth_answer": "Phase II",
+    "ground_truth_context": "[treatment] \"mitomycin C\" --treat--> [disease] \"liver metastases derived from colorectal cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "mitomycin C",
+      "liver metastases derived from colorectal cancer"
+    ]
+  }
+]

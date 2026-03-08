@@ -1,0 +1,61 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "bexarotene with cisplatin and vinorelbine" --treat--> [disease] "non-small-cell lung cancer" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:11352954
+Title: Multi-institutional phase I/II trial of oral bexarotene in combination with cisplatin and vinorelbine in previously untreated patients with advanced non-small-cell lung cancer.
+Phase: Phase II
+Abstract: PURPOSE: Bexarotene (Targretin; Ligand Pharmaceuticals, Inc, San Diego, CA) is a retinoid-X-receptor (RXR)-selective retinoid with preclinical antitumor activity in squamous cell cancers. In this phase I/II trial, we combined bexarotene with cisplatin and vinorelbine in the treatment of patients with non-small-cell lung cancer (NSCLC). PATIENTS AND METHODS: Forty-three patients who had stage IIIB NSCLC with pleural effusion or stage IV NSCLC and had received no prior therapy received bexarotene in combination with cisplatin (100 mg/m2) and vinorelbine (alternating doses of 30 mg/m2 and 15 mg/m2). In the phase I portion, the daily dose of bexarotene was escalated in cohorts of three patients from 150 mg/m2 to 600 mg/m2, beginning 1 week before the start of the cisplatin-vinorelbine regimen. Once the maximum-tolerated dose (MTD) of bexarotene was determined, the study entered the phase II portion. Response rate was the primary end point; median survival time and 1-year survival rate were secondary end points. RESULTS: In the phase I portion, the daily MTD of bexarotene was determined to be 400 mg/m2. Eight of 43 patients exhibited major responses. Seven (25%) of the 28 patients in the phase II portion responded to treatment. The median survival time in the phase II portion was 14 months; nine (32%) of the 28 patients were still alive at a minimum follow-up of 2 years. One-year and projected 3-year survival rates were 61% and 30%, respectively. The most common grade 3 and 4 adverse events were hyperlipemia, leukopenia, nausea, vomiting, pneumonia, dyspnea, anemia, and asthenia. Grade 3 and 4 laboratory abnormalities with incidences greater than 5% were decreased hemoglobin levels and WBC, absolute neutrophil, and absolute lymphocyte counts and increased prothrombin time and creatinine and amylase levels. Of the two cases of pancreatitis, one required hospitalization and both were associated with increased triglyceride levels. There was one death secondary to renal insufficiency unrelated to bexarotene treatment. CONCLUSION: In patients with advanced NSCLC, bexarotene with cisplatin and vinorelbine yielded acceptable phase II response rates (25%) and was associated with better-than-expected survival (14-month median survival time; 61% 1-year, 32% 2-year, and 30% projected 3-year survival rates). The regimen should be studied in larger clinical trials.

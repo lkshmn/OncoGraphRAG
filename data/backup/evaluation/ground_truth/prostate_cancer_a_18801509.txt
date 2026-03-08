@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:18801509",
+    "type": "Simple 1-Hop",
+    "question": "What clinical trial phase evaluated granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy for prostate cancer?",
+    "options": null,
+    "ground_truth_answer": "Phase II",
+    "ground_truth_context": "[treatment] \"granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy\" --treat--> [disease] \"prostate cancer\" | Efficacy: Positive: increased median prostate specific antigen doubling time (p=0.0095) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy",
+      "prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:18801509",
+    "type": "Simple True/False",
+    "question": "True or False: Granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy affects prostate specific antigen kinetics.",
+    "options": null,
+    "ground_truth_answer": "True.",
+    "ground_truth_context": "[treatment] \"granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy\" --affect--> [biomarker] \"prostate specific antigen kinetics\" | Efficacy: Positive: negative deflection in prostate specific antigen slope observed in 84% of patients | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy",
+      "prostate specific antigen kinetics"
+    ]
+  },
+  {
+    "source_id": "PMID:18801509",
+    "type": "Simple MCQ",
+    "question": "Which disease is associated with the presence of the biomarker prostate specific antigen?",
+    "options": [
+      "A) Breast cancer",
+      "B) Lung cancer",
+      "C) Prostate cancer",
+      "D) Melanoma"
+    ],
+    "ground_truth_answer": "C) Prostate cancer",
+    "ground_truth_context": "[biomarker] \"prostate specific antigen\" --present--> [disease] \"prostate cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "prostate specific antigen",
+      "prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:18801509",
+    "type": "Simple Open-Ended",
+    "question": "What is the reported efficacy of granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy in treating prostate cancer?",
+    "options": null,
+    "ground_truth_answer": "It showed positive efficacy by increasing the median prostate specific antigen doubling time (p=0.0095).",
+    "ground_truth_context": "[treatment] \"granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy\" --treat--> [disease] \"prostate cancer\" | Efficacy: Positive: increased median prostate specific antigen doubling time (p=0.0095) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "granulocyte-macrophage colony-stimulating factor secreting cellular immunotherapy",
+      "prostate cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:18801509",
+    "type": "Simple 1-Hop",
+    "question": "Which biomarker does an antibody response reactive against PC-3 affect?",
+    "options": null,
+    "ground_truth_answer": "Prostate specific antigen kinetics.",
+    "ground_truth_context": "[biomarker] \"antibody response reactive against PC-3\" --affect--> [biomarker] \"prostate specific antigen kinetics\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "antibody response reactive against PC-3",
+      "prostate specific antigen kinetics"
+    ]
+  }
+]

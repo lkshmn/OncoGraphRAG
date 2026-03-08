@@ -1,0 +1,68 @@
+[
+  {
+    "source_id": "PMID:11352954",
+    "type": "Simple 1-Hop",
+    "question": "What disease is treated by the combination of bexarotene with cisplatin and vinorelbine?",
+    "options": null,
+    "ground_truth_answer": "Non-small-cell lung cancer.",
+    "ground_truth_context": "[treatment] \"bexarotene with cisplatin and vinorelbine\" --treat--> [disease] \"non-small-cell lung cancer\" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "bexarotene with cisplatin and vinorelbine",
+      "non-small-cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:11352954",
+    "type": "Simple True/False",
+    "question": "True or False: The trial evaluating bexarotene with cisplatin and vinorelbine for non-small-cell lung cancer was a Phase III trial.",
+    "options": null,
+    "ground_truth_answer": "False, it was a Phase II trial.",
+    "ground_truth_context": "[treatment] \"bexarotene with cisplatin and vinorelbine\" --treat--> [disease] \"non-small-cell lung cancer\" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "bexarotene with cisplatin and vinorelbine",
+      "non-small-cell lung cancer",
+      "Phase III"
+    ]
+  },
+  {
+    "source_id": "PMID:11352954",
+    "type": "Simple MCQ",
+    "question": "What was the efficacy outcome for the treatment of non-small-cell lung cancer using bexarotene with cisplatin and vinorelbine?",
+    "options": [
+      "A) Negative: worsened survival",
+      "B) Neutral: no change in survival",
+      "C) Positive: better-than-expected survival (14-month median)",
+      "D) Unknown: survival was not measured"
+    ],
+    "ground_truth_answer": "C) Positive: better-than-expected survival (14-month median)",
+    "ground_truth_context": "[treatment] \"bexarotene with cisplatin and vinorelbine\" --treat--> [disease] \"non-small-cell lung cancer\" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "bexarotene with cisplatin and vinorelbine",
+      "non-small-cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:11352954",
+    "type": "Simple Open-Ended",
+    "question": "What median survival time was achieved when non-small-cell lung cancer was treated with bexarotene, cisplatin, and vinorelbine?",
+    "options": null,
+    "ground_truth_answer": "A 14-month median survival.",
+    "ground_truth_context": "[treatment] \"bexarotene with cisplatin and vinorelbine\" --treat--> [disease] \"non-small-cell lung cancer\" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "bexarotene with cisplatin and vinorelbine",
+      "non-small-cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:11352954",
+    "type": "Simple 1-Hop",
+    "question": "What is the reliability score for the finding that bexarotene with cisplatin and vinorelbine treats non-small-cell lung cancer?",
+    "options": null,
+    "ground_truth_answer": "80",
+    "ground_truth_context": "[treatment] \"bexarotene with cisplatin and vinorelbine\" --treat--> [disease] \"non-small-cell lung cancer\" | Efficacy: Positive: better-than-expected survival (14-month median) | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "bexarotene with cisplatin and vinorelbine",
+      "non-small-cell lung cancer"
+    ]
+  }
+]

@@ -1,0 +1,71 @@
+[
+  {
+    "source_id": "PMID:15661548",
+    "type": "Simple 1-Hop",
+    "question": "What disease does sentinel node biopsy treat?",
+    "options": null,
+    "ground_truth_answer": "Breast cancer.",
+    "ground_truth_context": "[treatment] \"sentinel node biopsy\" --treat--> [disease] \"breast cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "sentinel node biopsy",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:15661548",
+    "type": "Simple Open-Ended",
+    "question": "What is the specific positive efficacy outcome when preoperative lymphoscintigraphy is used to improve sentinel node biopsy?",
+    "options": null,
+    "ground_truth_answer": "Significantly higher intraoperative localisation rate.",
+    "ground_truth_context": "[test] \"preoperative lymphoscintigraphy\" --improve--> [treatment] \"sentinel node biopsy\" | Efficacy: Positive: significantly higher intraoperative localisation rate | Phase: Phase II | Reliability: 80",
+    "key_entities": [
+      "preoperative lymphoscintigraphy",
+      "sentinel node biopsy"
+    ]
+  },
+  {
+    "source_id": "PMID:15661548",
+    "type": "Simple MCQ",
+    "question": "Which of the following patient groups act as risk factors that aggravate sentinel node biopsy?",
+    "options": [
+      "A) Young patients and low BMI patients",
+      "B) Obese patients and old patients",
+      "C) Diabetic patients and hypertensive patients",
+      "D) Male patients and smokers"
+    ],
+    "ground_truth_answer": "B",
+    "ground_truth_context": "[risk_factor] \"obese patients\" --aggravate--> [treatment] \"sentinel node biopsy\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55 AND [risk_factor] \"old patients\" --aggravate--> [treatment] \"sentinel node biopsy\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "obese patients",
+      "old patients",
+      "sentinel node biopsy"
+    ]
+  },
+  {
+    "source_id": "PMID:15661548",
+    "type": "Simple True/False",
+    "question": "True or False: Preoperative lymphoscintigraphy is a test used to diagnose breast cancer.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "ground_truth_answer": "True",
+    "ground_truth_context": "[test] \"preoperative lymphoscintigraphy\" --diagnose--> [disease] \"breast cancer\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "preoperative lymphoscintigraphy",
+      "breast cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:15661548",
+    "type": "Simple 1-Hop",
+    "question": "What trial phase evaluated the use of blue dye mapping to treat sentinel node biopsy?",
+    "options": null,
+    "ground_truth_answer": "Phase II.",
+    "ground_truth_context": "[treatment] \"blue dye mapping\" --treat--> [treatment] \"sentinel node biopsy\" | Efficacy: Not Stated | Phase: Phase II | Reliability: 55",
+    "key_entities": [
+      "blue dye mapping",
+      "sentinel node biopsy"
+    ]
+  }
+]

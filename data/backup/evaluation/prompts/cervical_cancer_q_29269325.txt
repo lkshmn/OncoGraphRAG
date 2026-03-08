@@ -1,0 +1,63 @@
+I am building an evaluation dataset for an Oncology RAG chatbot that answers questions using a Knowledge Graph.
+
+**IMPORTANT CONTEXT — HOW THE SYSTEM WORKS:**
+The chatbot does NOT read raw abstracts. It can ONLY answer questions by querying a Knowledge Graph that stores extracted relations in this structure:
+  [entity1_type] "entity1_name" --relation_type--> [entity2_type] "entity2_name"
+  + metadata: efficacy, trial_phase, reliability_score, source PMID
+
+The chatbot retrieves these relations via SPARQL and uses them to generate answers. It CANNOT answer questions about details that are NOT captured in the extracted relations (e.g., specific dosages, sample sizes, confidence intervals, adverse event percentages, study methodology).
+
+**EXTRACTED RELATIONS FROM THIS ABSTRACT (this is ALL the chatbot knows):**
+  1. [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade cervical dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+  2. [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade vulvar dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+  3. [treatment] "9vHPV vaccine" --prevent--> [disease] "high-grade vaginal dysplasia" | Efficacy: Positive: 92.3% efficacy (95% confidence interval 54.4, 99.6) | Phase: Phase III | Reliability: 95
+
+**TASK:**
+Generate exactly 5 simple questions that the chatbot CAN answer using ONLY the extracted relations above.
+
+**CRITICAL REQUIREMENT 1: Answerability from Relations**
+Every question MUST be answerable using the extracted relations provided above. Do NOT ask about:
+- Specific dosages, sample sizes, or detailed statistics not in the relations
+- Study methodology or design details
+- Adverse event rates or specific percentages
+- Any facts only found in the abstract text but NOT in the relations
+The ground_truth_answer must be derivable from the relation data (entity names, relation types, efficacy, trial phase, reliability score).
+
+**CRITICAL REQUIREMENT 2: Simplicity**
+Keep questions short, direct, and simple. Ask about the treatment, disease, relation type, efficacy outcome, or trial phase as captured in the relations.
+
+**CRITICAL REQUIREMENT 3: Self-Contained Questions**
+Every question MUST be standalone. Do NOT use "in this study" or "the patients."
+Explicitly mention the specific drug/disease names from the relations.
+
+**Question Types:**
+- **Simple 1-Hop**: Basic fact from a single relation (e.g., "What does trastuzumab treat?", "What phase was the trial for erlotinib in lung cancer?").
+- **Simple MCQ**: Brief question with 4 options (A, B, C, D), one correct.
+- **Simple True/False**: A statement that is clearly supported or contradicted by the relations.
+- **Simple Open-Ended**: Short question about the main finding/efficacy for a treatment-disease pair.
+
+**Sample Format:**
+Return valid JSON list:
+[
+  {
+    "source_id": "PMID:12345",
+    "type": "Simple 1-Hop",
+    "question": "What does trastuzumab treat?",
+    "options": null,
+    "ground_truth_answer": "HER2-positive early breast cancer.",
+    "ground_truth_context": "[treatment] trastuzumab --treat--> [disease] HER2-positive early breast cancer | Efficacy: Positive: improved disease-free survival | Phase: Phase III | Reliability: 95",
+    "key_entities": ["trastuzumab", "HER2-positive early breast cancer"]
+  }
+]
+
+**New field — ground_truth_context**: For each question, include the specific relation(s) from the list above that support the answer. This will be used to calculate Context Recall.
+
+**Constraint**: The ground_truth_answer MUST be derivable from the extracted relations, NOT from the raw abstract.
+
+**DATA SNIPPET (for reference only — questions must be answerable from RELATIONS above):**
+
+
+ID: PMID:29269325
+Title: Efficacy, immunogenicity, and safety of a 9-valent human papillomavirus vaccine in Latin American girls, boys, and young women.
+Phase: Phase III
+Abstract: BACKGROUND: A 9-valent human papillomavirus (HPV6/11/16/18/31/33/45/52/58; 9vHPV) vaccine was developed to expand coverage of the previously developed quadrivalent (HPV6/11/16/18; qHPV) vaccine. METHODS: Efficacy, immunogenicity, and safety outcomes were assessed in Latin American participants enrolled in 2 international studies of the 9vHPV vaccine, including a randomized, double-blinded, controlled with qHPV vaccine, efficacy, immunogenicity, and safety study in young women aged 16-26 years, and an immunogenicity and safety study in girls and boys aged 9-15 years. Participants (N=5312) received vaccination at Day 1, Month 2, and Month 6. Gynecological swabs were collected regularly in young women for cytological and HPV DNA testing. Serum was analyzed for HPV antibodies in all participants. Adverse events (AEs) were also monitored in all participants. RESULTS: The 9vHPV vaccine prevented HPV 31-, 33-, 45-, 52-, and 58-related high-grade cervical, vulvar, and vaginal dysplasia with 92.3% efficacy (95% confidence interval 54.4, 99.6). Anti-HPV6, 11, 16, and 18 geometric mean titers at Month 7 were similar in the 9vHPV and qHPV vaccination groups. Anti-HPV antibody responses following vaccination were higher among girls and boys than in young women. Most (>99%) 9vHPV vaccine recipients seroconverted for all 9 HPV types at Month 7. Antibody responses to the 9 HPV types persisted over 5 years. The most common AEs were injection-site related, mostly of mild to moderate intensity. CONCLUSIONS: The 9vHPV vaccine is efficacious, immunogenic, and well tolerated in Latin American young women, girls, and boys. These data support 9vHPV vaccination programs in Latin America, a region with substantial cervical cancer burden.

@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "PMID:24788102",
+    "type": "Simple 1-Hop",
+    "question": "What disease does racotumomab alum treat according to the Phase III trial relations?",
+    "options": null,
+    "ground_truth_answer": "Non small cell lung cancer.",
+    "ground_truth_context": "[treatment] \"racotumomab alum\" --treat--> [disease] \"non small cell lung cancer\" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "racotumomab alum",
+      "non small cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:24788102",
+    "type": "Simple MCQ",
+    "question": "Which symptoms are presented as associated with racotumomab alum treatment?",
+    "options": [
+      "A) Nausea, vomiting, and dizziness",
+      "B) Burning pain injection site bone pain asthenia",
+      "C) Hair loss and severe weight loss",
+      "D) High fever, chills, and muscle spasms"
+    ],
+    "ground_truth_answer": "B",
+    "ground_truth_context": "[treatment] \"racotumomab alum\" --present--> [symptom] \"burning pain injection site bone pain asthenia\" | Efficacy: Not Stated | Phase: Phase III | Reliability: 70",
+    "key_entities": [
+      "racotumomab alum",
+      "burning pain injection site bone pain asthenia"
+    ]
+  },
+  {
+    "source_id": "PMID:24788102",
+    "type": "Simple True/False",
+    "question": "True or False: An anti neuGcgm3 antibody response negatively affects survival times in non small cell lung cancer.",
+    "options": null,
+    "ground_truth_answer": "False. It has a positive efficacy, leading to longer median survival times.",
+    "ground_truth_context": "[test] \"anti neuGcgm3 antibody response\" --affect--> [disease] \"non small cell lung cancer\" | Efficacy: Positive: longer median survival times | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "anti neuGcgm3 antibody response",
+      "non small cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:24788102",
+    "type": "Simple Open-Ended",
+    "question": "What was the specific efficacy on overall survival and progression free survival when racotumomab alum was used to treat non small cell lung cancer?",
+    "options": null,
+    "ground_truth_answer": "It showed positive efficacy by improving overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039).",
+    "ground_truth_context": "[treatment] \"racotumomab alum\" --treat--> [disease] \"non small cell lung cancer\" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "racotumomab alum",
+      "non small cell lung cancer"
+    ]
+  },
+  {
+    "source_id": "PMID:24788102",
+    "type": "Simple 1-Hop",
+    "question": "What clinical trial phase evaluated racotumomab alum for treating non small cell lung cancer?",
+    "options": null,
+    "ground_truth_answer": "Phase III.",
+    "ground_truth_context": "[treatment] \"racotumomab alum\" --treat--> [disease] \"non small cell lung cancer\" | Efficacy: Positive: improved overall survival (HR 0.63 P=0.004) and progression free survival (HR 0.73 P=0.039) | Phase: Phase III | Reliability: 95",
+    "key_entities": [
+      "racotumomab alum",
+      "non small cell lung cancer"
+    ]
+  }
+]
